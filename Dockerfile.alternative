@@ -1,9 +1,9 @@
-# Usar imagen oficial de Node.js LTS (Long Term Support)
+# Dockerfile alternativo para casos con problemas de dependencias
 FROM node:18-alpine
 
 # Establecer información del mantenedor
 LABEL maintainer="Fernando Donoso - CFT Valparaíso"
-LABEL description="Portal educativo ciberseguridad - CFT Valparaíso"
+LABEL description="Portal educativo de PowerShell para ciberseguridad - CFT Valparaíso"
 
 # Instalar dependencias del sistema necesarias
 RUN apk add --no-cache \
@@ -17,12 +17,11 @@ RUN addgroup -g 1001 -S nodejs && \
 # Establecer directorio de trabajo
 WORKDIR /app
 
-# Copiar archivos de dependencias primero (para optimizar cache de Docker)
-COPY package*.json ./
+# Copiar solo package.json primero
+COPY package.json ./
 
-# Instalar dependencias de producción
-# Primero intentar npm ci, si falla usar npm install (más robusto)
-RUN npm install && \
+# Instalar dependencias sin usar package-lock.json
+RUN npm install --only=production && \
     npm cache clean --force
 
 # Copiar el código fuente
