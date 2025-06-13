@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerShell para Ciberseguridad - Clase Magistral</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+        
+        .section {
+            margin: 30px 0;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #2a5298;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-top: 0;
+            font-size: 1.8em;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .section h3 {
+            color: #2a5298;
+            margin-top: 25px;
+            font-size: 1.4em;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            border: 1px solid #333;
+        }
+        
+        .command {
+            color: #569cd6;
+        }
+        
+        .parameter {
+            color: #9cdcfe;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .security-tip {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .exercise {
+            background: #e7f3ff;
+            border: 2px solid #2196f3;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .exercise h4 {
+            color: #1976d2;
+            margin-top: 0;
+        }
+        
+        .nav-menu {
+            background: #2a5298;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .nav-menu li {
+            margin: 5px 15px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #2a5298;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ PowerShell para Ciberseguridad</h1>
+            <div class="subtitle">Clase Magistral - Diagnóstico del Sistema y Seguridad Informática</div>
+        </div>
+
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="#introduccion">Introducción</a></li>
+                <li><a href="#fundamentos">Fundamentos</a></li>
+                <li><a href="#diagnostico">Diagnóstico</a></li>
+                <li><a href="#ciberseguridad">Ciberseguridad</a></li>
+                <li><a href="#forense">Análisis Forense</a></li>
+                <li><a href="#ejercicios">Ejercicios</a></li>
+            </ul>
+        </nav>
+
+        <section id="introduccion" class="section">
+            <h2>📚 Introducción a PowerShell</h2>
+            <p>PowerShell es una herramienta poderosa de línea de comandos y lenguaje de scripting desarrollado por Microsoft. Es esencial para profesionales de la ciberseguridad debido a su capacidad para:</p>
+            <ul>
+                <li><strong>Gestión avanzada del sistema:</strong> Control total sobre Windows y servicios</li>
+                <li><strong>Automatización de tareas:</strong> Scripts para auditorías y monitoreo</li>
+                <li><strong>Análisis forense:</strong> Investigación de incidentes de seguridad</li>
+                <li><strong>Administración remota:</strong> Gestión de múltiples sistemas</li>
+                <li><strong>Integración con APIs:</strong> Conexión con servicios de seguridad</li>
+            </ul>
+
+            <div class="security-tip">
+                <strong>💡 Tip de Seguridad:</strong> PowerShell también es usado por atacantes para técnicas de "Living off the Land". Conocer estas técnicas nos ayuda a detectar y prevenir ataques.
+            </div>
+        </section>
+
+        <section id="fundamentos" class="section">
+            <h2>🔧 Fundamentos de PowerShell</h2>
+            
+            <h3>Sintaxis Básica</h3>
+            <div class="code-block">
+<span class="command">Get-Command</span>                    # Lista todos los comandos disponibles
+<span class="command">Get-Help</span> <span class="parameter">Get-Process</span>          # Obtiene ayuda sobre un comando específico
+<span class="command">Get-Member</span>                     # Muestra propiedades y métodos de un objeto
+<span class="command">Get-History</span>                    # Historial de comandos ejecutados
+            </div>
+
+            <h3>Cmdlets Esenciales para Ciberseguridad</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Categoría</th>
+                            <th>Cmdlet</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Procesos</td>
+                            <td>Get-Process</td>
+                            <td>Lista procesos en ejecución</td>
+                        </tr>
+                        <tr>
+                            <td>Servicios</td>
+                            <td>Get-Service</td>
+                            <td>Estado de servicios del sistema</td>
+                        </tr>
+                        <tr>
+                            <td>Red</td>
+                            <td>Get-NetTCPConnection</td>
+                            <td>Conexiones de red activas</td>
+                        </tr>
+                        <tr>
+                            <td>Eventos</td>
+                            <td>Get-WinEvent</td>
+                            <td>Logs del sistema Windows</td>
+                        </tr>
+                        <tr>
+                            <td>Archivos</td>
+                            <td>Get-ChildItem</td>
+                            <td>Lista archivos y directorios</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="diagnostico" class="section">
+            <h2>🔍 Diagnóstico del Sistema Operativo</h2>
+            
+            <h3>Información del Sistema</h3>
+            <div class="code-block">
+<span class="command">Get-ComputerInfo</span>               # Información completa del sistema
+<span class="command">Get-WmiObject</span> -Class Win32_OperatingSystem  # Detalles del SO
+<span class="command">systeminfo</span>                     # Información detallada del sistema
+<span class="command">Get-HotFix</span>                     # Actualizaciones instaladas
+            </div>
+
+            <h3>Monitoreo de Rendimiento</h3>
+            <div class="code-block">
+<span class="command">Get-Process</span> | <span class="command">Sort-Object</span> <span class="parameter">CPU</span> -Descending | <span class="command">Select-Object</span> -First 10
+<span class="command">Get-Counter</span> <span class="parameter">"\Processor(_Total)\% Processor Time"</span>
+<span class="command">Get-WmiObject</span> -Class Win32_LogicalDisk | <span class="command">Select-Object</span> Size,FreeSpace,DeviceID
+            </div>
+
+            <h3>Análisis de Servicios</h3>
+            <div class="code-block">
+<span class="command">Get-Service</span> | <span class="command">Where-Object</span> {$_.Status -eq "Running"}
+<span class="command">Get-Service</span> | <span class="command">Where-Object</span> {$_.StartType -eq "Automatic" -and $_.Status -eq "Stopped"}
+<span class="command">Get-WmiObject</span> -Class Win32_Service | <span class="command">Select-Object</span> Name,State,StartMode,PathName
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Advertencia:</strong> Algunos comandos requieren privilegios de administrador. Ejecuta PowerShell como administrador cuando sea necesario.
+            </div>
+        </section>
+
+        <section id="ciberseguridad" class="section">
+            <h2>🛡️ PowerShell para Ciberseguridad</h2>
+            
+            <h3>Detección de Procesos Sospechosos</h3>
+            <div class="code-block">
+# Procesos con uso elevado de CPU
+<span class="command">Get-Process</span> | <span class="command">Where-Object</span> {$_.CPU -gt 100} | <span class="command">Select-Object</span> Name,CPU,Id,Path
+
+# Procesos ejecutándose desde ubicaciones inusuales
+<span class="command">Get-Process</span> | <span class="command">Where-Object</span> {$_.Path -like "*temp*" -or $_.Path -like "*appdata*"}
+
+# Procesos sin firma digital
+<span class="command">Get-Process</span> | <span class="command">Where-Object</span> {$_.Company -eq $null} | <span class="command">Select-Object</span> Name,Path,Company
+            </div>
+
+            <h3>Análisis de Conexiones de Red</h3>
+            <div class="code-block">
+# Conexiones TCP activas
+<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> {$_.State -eq "Established"} | <span class="command">Select-Object</span> LocalAddress,LocalPort,RemoteAddress,RemotePort
+
+# Conexiones hacia IPs externas sospechosas
+<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> {$_.RemoteAddress -notlike "192.168.*" -and $_.RemoteAddress -notlike "10.*" -and $_.RemoteAddress -ne "127.0.0.1"}
+
+# Puertos en escucha
+<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> {$_.State -eq "Listen"} | <span class="command">Select-Object</span> LocalAddress,LocalPort
+            </div>
+
+            <h3>Monitoreo de Archivos y Directorios</h3>
+            <div class="code-block">
+# Archivos modificados recientemente
+<span class="command">Get-ChildItem</span> -Path C:\ -Recurse -File | <span class="command">Where-Object</span> {$_.LastWriteTime -gt (Get-Date).AddDays(-1)}
+
+# Archivos ejecutables en directorios de usuario
+<span class="command">Get-ChildItem</span> -Path "$env:USERPROFILE" -Recurse -Include "*.exe","*.bat","*.ps1" | <span class="command">Select-Object</span> Name,FullName,LastWriteTime
+
+# Verificar integridad de archivos del sistema
+<span class="command">Get-FileHash</span> -Path "C:\Windows\System32\cmd.exe" -Algorithm SHA256
+            </div>
+
+            <h3>Análisis de Usuarios y Sesiones</h3>
+            <div class="code-block">
+# Usuarios locales y sus propiedades
+<span class="command">Get-LocalUser</span> | <span class="command">Select-Object</span> Name,Enabled,LastLogon,PasswordLastSet
+
+# Sesiones activas
+<span class="command">Get-WmiObject</span> -Class Win32_LogonSession | <span class="command">Select-Object</span> LogonId,LogonType,StartTime
+
+# Intentos de inicio de sesión fallidos
+<span class="command">Get-WinEvent</span> -FilterHashtable @{LogName='Security'; ID=4625} -MaxEvents 10
+            </div>
+
+            <div class="security-tip">
+                <strong>🔒 Tip de Seguridad:</strong> Combina estos comandos con scripts automatizados para crear un sistema de monitoreo continuo de tu infraestructura.
+            </div>
+        </section>
+
+        <section id="forense" class="section">
+            <h2>🔬 Análisis Forense con PowerShell</h2>
+            
+            <h3>Análisis de Logs del Sistema</h3>
+            <div class="code-block">
+# Eventos de seguridad críticos
+<span class="command">Get-WinEvent</span> -FilterHashtable @{LogName='Security'; Level=2} -MaxEvents 50
+
+# Inicios de sesión exitosos
+<span class="command">Get-WinEvent</span> -FilterHashtable @{LogName='Security'; ID=4624} | <span class="command">Select-Object</span> TimeCreated,Id,LevelDisplayName,Message
+
+# Instalación de software
+<span class="command">Get-WinEvent</span> -FilterHashtable @{LogName='Application'; ID=1033,1034} | <span class="command">Select-Object</span> TimeCreated,Message
+
+# Errores del sistema
+<span class="command">Get-WinEvent</span> -FilterHashtable @{LogName='System'; Level=2,3} -MaxEvents 20
+            </div>
+
+            <h3>Análisis de Registro de Windows</h3>
+            <div class="code-block">
+# Programas que se ejecutan al inicio
+<span class="command">Get-ItemProperty</span> -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+<span class="command">Get-ItemProperty</span> -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
+
+# Servicios registrados
+<span class="command">Get-ChildItem</span> -Path "HKLM:\SYSTEM\CurrentControlSet\Services" | <span class="command">Select-Object</span> Name
+
+# Verificar modificaciones recientes en el registro
+<span class="command">Get-ChildItem</span> -Path "HKLM:\SOFTWARE" -Recurse | <span class="command">Where-Object</span> {$_.LastWriteTime -gt (Get-Date).AddDays(-7)}
+            </div>
+
+            <h3>Recopilación de Evidencia</h3>
+            <div class="code-block">
+# Crear un reporte completo del sistema
+$report = @{
+    ComputerInfo = Get-ComputerInfo
+    Processes = Get-Process | Select-Object Name,Id,CPU,Path
+    Services = Get-Service | Select-Object Name,Status,StartType
+    NetworkConnections = Get-NetTCPConnection
+    RecentFiles = Get-ChildItem -Path C:\ -Recurse -File | Where-Object {$_.LastWriteTime -gt (Get-Date).AddDays(-1)}
+}
+
+$report | ConvertTo-Json -Depth 3 | Out-File -FilePath "C:\ForensicReport_$(Get-Date -Format 'yyyyMMdd_HHmmss').json"
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Consideración Legal:</strong> Asegúrate de tener la autorización adecuada antes de realizar análisis forenses en sistemas que no son de tu propiedad.
+            </div>
+        </section>
+
+        <section id="ejercicios" class="section">
+            <h2>💻 Ejercicios Prácticos</h2>
+            
+            <div class="exercise">
+                <h4>Ejercicio 1: Detección de Amenazas Básicas</h4>
+                <p><strong>Objetivo:</strong> Identificar procesos potencialmente maliciosos</p>
+                <p><strong>Tarea:</strong> Ejecuta los siguientes comandos y analiza los resultados:</p>
+                <div class="code-block">
+<span class="command">Get-Process</span> | <span class="command">Where-Object</span> {$_.ProcessName -like "*svchost*"} | <span class="command">Group-Object</span> ProcessName
+<span class="command">Get-Process</span> | <span class="command">Where-Object</span> {$_.Company -eq $null -and $_.Path -ne $null}
+                </div>
+                <p><strong>Pregunta:</strong> ¿Qué procesos svchost están ejecutándose? ¿Hay algún proceso sin información de compañía?</p>
+            </div>
+
+            <div class="exercise">
+                <h4>Ejercicio 2: Análisis de Red</h4>
+                <p><strong>Objetivo:</strong> Identificar conexiones de red sospechosas</p>
+                <p><strong>Tarea:</strong> Analiza las conexiones de red activas:</p>
+                <div class="code-block">
+<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> {$_.State -eq "Established"} | <span class="command">Group-Object</span> RemotePort | <span class="command">Sort-Object</span> Count -Descending
+                </div>
+                <p><strong>Pregunta:</strong> ¿Cuáles son los puertos remotos más utilizados? ¿Alguno parece inusual?</p>
+            </div>
+
+            <div class="exercise">
+                <h4>Ejercicio 3: Auditoría de Seguridad</h4>
+                <p><strong>Objetivo:</strong> Realizar una auditoría básica de seguridad</p>
+                <p><strong>Tarea:</strong> Crea un script que:</p>
+                <ul>
+                    <li>Liste todos los usuarios locales y su último inicio de sesión</li>
+                    <li>Identifique servicios que no están firmados digitalmente</li>
+                    <li>Muestre los últimos 10 eventos de seguridad críticos</li>
+                </ul>
+                <div class="code-block">
+# Tu código aquí
+                </div>
+            </div>
+
+            <div class="exercise">
+                <h4>Ejercicio 4: Investigación Forense</h4>
+                <p><strong>Objetivo:</strong> Simular una investigación de incidente</p>
+                <p><strong>Escenario:</strong> Sospechas que el sistema ha sido comprometido. Crea un script que recopile:</p>
+                <ul>
+                    <li>Procesos ejecutándose desde ubicaciones inusuales</li>
+                    <li>Conexiones de red hacia IPs externas</li>
+                    <li>Archivos modificados en las últimas 24 horas en directorios del sistema</li>
+                    <li>Eventos de inicio de sesión en las últimas 24 horas</li>
+                </ul>
+            </div>
+
+            <div class="security-tip">
+                <strong>📝 Entregable:</strong> Documenta tus hallazgos y proporciona recomendaciones de seguridad basadas en el análisis realizado.
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>📖 Recursos Adicionales</h2>
+            <ul>
+                <li><strong>Documentación Oficial:</strong> <a href="https://docs.microsoft.com/en-us/powershell/" target="_blank">Microsoft PowerShell Docs</a></li>
+                <li><strong>MITRE ATT&CK:</strong> Técnicas de PowerShell utilizadas por atacantes</li>
+                <li><strong>PowerShell Empire:</strong> Framework de post-explotación (para práctica ética)</li>
+                <li><strong>BloodHound:</strong> Herramienta de enumeración de Active Directory con PowerShell</li>
+            </ul>
+
+            <div class="warning">
+                <strong>⚖️ Nota Ética:</strong> Utiliza estos conocimientos únicamente con fines educativos y en sistemas que tienes autorización para analizar. El uso no autorizado de estas técnicas puede tener consecuencias legales.
+            </div>
+        </section>
+
+        <!-- Sección del Quiz -->
+        <section class="section" id="quiz-section" style="margin-top: 50px;">
+            <h2>📝 Evaluación de Conocimientos</h2>
+            <p>Ahora es momento de poner a prueba lo que has aprendido sobre PowerShell para ciberseguridad.</p>
+            
+            <div class="quiz-info" style="background: #e3f2fd; border: 2px solid #2196f3; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h3 style="color: #1976d2; margin-top: 0;">📋 Información del Quiz</h3>
+                <ul style="color: #555;">
+                    <li><strong>Preguntas:</strong> 5 preguntas de opción múltiple</li>
+                    <li><strong>Tiempo límite:</strong> 30 minutos (opcional)</li>
+                    <li><strong>Intentos permitidos:</strong> 5 máximo</li>
+                    <li><strong>Puntuación mínima:</strong> 70% para aprobar</li>
+                    <li><strong>Retroalimentación:</strong> Inmediata al finalizar</li>
+                </ul>
+            </div>
+
+            <div class="quiz-actions" style="text-align: center; margin: 30px 0;">
+                <button id="start-quiz-btn" class="lesson-link" style="font-size: 1.2em; padding: 15px 30px; cursor: pointer; border: none;">
+                    🚀 Comenzar Evaluación
+                </button>
+            </div>
+        </section>
+
+        <div class="header" style="margin-top: 50px;">
+            <h2>🎓 Fin de la Clase Magistral</h2>
+            <p>¡Felicitaciones! Has completado la introducción a PowerShell para ciberseguridad. Continúa practicando y explorando para convertirte en un experto en seguridad informática.</p>
+        </div>
+    </div>
+
+    <!-- Modal para identificación del estudiante -->
+    <div id="student-modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+        <div style="background-color: white; margin: 15% auto; padding: 30px; border-radius: 15px; width: 400px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+            <h2 style="color: #1e3c72; margin-bottom: 20px;">👤 Identificación del Estudiante</h2>
+            <p style="color: #666; margin-bottom: 25px;">Ingresa tu nombre y apellido para acceder al quiz:</p>
+            
+            <div style="margin-bottom: 15px;">
+                <input type="text" id="student-first-name" placeholder="Nombre" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; margin-bottom: 10px;">
+            </div>
+            <div style="margin-bottom: 25px;">
+                <input type="text" id="student-last-name" placeholder="Apellido" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+            </div>
+            
+            <div>
+                <button id="submit-student-info" style="background: linear-gradient(45deg, #2a5298, #1e3c72); color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; margin-right: 10px;">
+                    ✅ Continuar
+                </button>
+                <button id="cancel-quiz" style="background: #666; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
+                    ❌ Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal del Quiz -->
+    <div id="quiz-modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto;">
+        <div style="background-color: white; margin: 2% auto; padding: 30px; border-radius: 15px; width: 90%; max-width: 800px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+            <div id="quiz-header" style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #eee; padding-bottom: 20px;">
+                <h2 style="color: #1e3c72; margin: 0;">📝 Quiz de PowerShell para Ciberseguridad</h2>
+                <div id="quiz-timer" style="color: #666; margin-top: 10px; font-size: 18px;"></div>
+                <div id="quiz-progress" style="margin-top: 15px;">
+                    <div style="background: #eee; height: 8px; border-radius: 4px;">
+                        <div id="progress-bar" style="background: linear-gradient(45deg, #2a5298, #1e3c72); height: 100%; border-radius: 4px; width: 0%; transition: width 0.3s;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="quiz-content">
+                <!-- Las preguntas se cargarán aquí dinámicamente -->
+            </div>
+            
+            <div id="quiz-navigation" style="text-align: center; margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px;">
+                <button id="prev-question" style="background: #666; color: white; padding: 12px 20px; border: none; border-radius: 8px; margin-right: 10px; cursor: pointer;">
+                    ⬅️ Anterior
+                </button>
+                <button id="next-question" style="background: linear-gradient(45deg, #2a5298, #1e3c72); color: white; padding: 12px 20px; border: none; border-radius: 8px; margin-right: 10px; cursor: pointer;">
+                    Siguiente ➡️
+                </button>
+                <button id="submit-quiz" style="background: #4CAF50; color: white; padding: 12px 25px; border: none; border-radius: 8px; cursor: pointer; display: none;">
+                    ✅ Finalizar Quiz
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Resultados -->
+    <div id="results-modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); overflow-y: auto;">
+        <div style="background-color: white; margin: 2% auto; padding: 30px; border-radius: 15px; width: 90%; max-width: 900px; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+            <div id="results-content">
+                <!-- Los resultados se cargarán aquí -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Funcionalidad para navegación suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Efecto de resaltado en bloques de código al hacer clic
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.addEventListener('click', function() {
+                this.style.boxShadow = '0 0 20px rgba(42, 82, 152, 0.5)';
+                setTimeout(() => {
+                    this.style.boxShadow = '';
+                }, 1000);
+            });
+        });
+
+        // Sistema de Quiz
+        class QuizSystem {
+            constructor() {
+                this.student = null;
+                this.quiz = null;
+                this.currentQuestionIndex = 0;
+                this.answers = [];
+                this.startTime = null;
+                this.timer = null;
+                this.attemptId = null;
+                this.init();
+            }
+
+            init() {
+                // Cargar datos del localStorage
+                this.loadStudentFromStorage();
+                
+                // Event listeners
+                document.getElementById('start-quiz-btn').addEventListener('click', () => this.showStudentModal());
+                document.getElementById('submit-student-info').addEventListener('click', () => this.submitStudentInfo());
+                document.getElementById('cancel-quiz').addEventListener('click', () => this.hideStudentModal());
+                document.getElementById('prev-question').addEventListener('click', () => this.prevQuestion());
+                document.getElementById('next-question').addEventListener('click', () => this.nextQuestion());
+                document.getElementById('submit-quiz').addEventListener('click', () => this.submitQuiz());
+            }
+
+            loadStudentFromStorage() {
+                const stored = localStorage.getItem('cft_student_data');
+                if (stored) {
+                    this.student = JSON.parse(stored);
+                }
+            }
+
+            saveStudentToStorage() {
+                localStorage.setItem('cft_student_data', JSON.stringify(this.student));
+            }
+
+            showStudentModal() {
+                // Si ya tenemos datos del estudiante, prellenar
+                if (this.student) {
+                    document.getElementById('student-first-name').value = this.student.firstName;
+                    document.getElementById('student-last-name').value = this.student.lastName;
+                }
+                document.getElementById('student-modal').style.display = 'block';
+            }
+
+            hideStudentModal() {
+                document.getElementById('student-modal').style.display = 'none';
+            }
+
+            async submitStudentInfo() {
+                const firstName = document.getElementById('student-first-name').value.trim();
+                const lastName = document.getElementById('student-last-name').value.trim();
+
+                if (!firstName || !lastName) {
+                    alert('Por favor ingresa tu nombre y apellido');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('/api/quiz/student/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ firstName, lastName })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        this.student = data.student;
+                        this.saveStudentToStorage();
+                        this.hideStudentModal();
+                        await this.checkAttempts();
+                    } else {
+                        alert('Error al registrar: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Error de conexión');
+                    console.error(error);
+                }
+            }
+
+            async checkAttempts() {
+                try {
+                    const response = await fetch(`/api/quiz/student/${this.student.id}/quiz/powershell-cybersecurity/attempts`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        if (data.canAttempt) {
+                            await this.loadQuiz();
+                        } else {
+                            alert(`Has alcanzado el número máximo de intentos (${data.maxAttempts}). Tu mejor puntuación: ${data.bestScore}%`);
+                        }
+                    }
+                } catch (error) {
+                    alert('Error al verificar intentos');
+                    console.error(error);
+                }
+            }
+
+            async loadQuiz() {
+                try {
+                    const response = await fetch('/api/quiz/quiz/powershell-cybersecurity');
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.quiz = data.quiz;
+                        await this.startQuizAttempt();
+                    }
+                } catch (error) {
+                    alert('Error al cargar quiz');
+                    console.error(error);
+                }
+            }
+
+            async startQuizAttempt() {
+                try {
+                    const response = await fetch('/api/quiz/attempt/start', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            studentId: this.student.id,
+                            quizId: 'powershell-cybersecurity'
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        this.attemptId = data.attempt.id;
+                        this.startQuiz();
+                    } else {
+                        alert('Error al iniciar quiz: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Error al iniciar quiz');
+                    console.error(error);
+                }
+            }
+
+            startQuiz() {
+                this.currentQuestionIndex = 0;
+                this.answers = new Array(this.quiz.questions.length).fill(null);
+                this.startTime = Date.now();
+                
+                // Iniciar timer si está configurado
+                if (this.quiz.timeLimit) {
+                    this.startTimer();
+                }
+                
+                this.showQuizModal();
+                this.renderQuestion();
+            }
+
+            startTimer() {
+                const timeLimit = this.quiz.timeLimit * 60 * 1000; // minutos a ms
+                const endTime = this.startTime + timeLimit;
+                
+                this.timer = setInterval(() => {
+                    const remaining = endTime - Date.now();
+                    if (remaining <= 0) {
+                        clearInterval(this.timer);
+                        this.submitQuiz();
+                        return;
+                    }
+                    
+                    const minutes = Math.floor(remaining / 60000);
+                    const seconds = Math.floor((remaining % 60000) / 1000);
+                    document.getElementById('quiz-timer').textContent = 
+                        `⏱️ Tiempo restante: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+
+            showQuizModal() {
+                document.getElementById('quiz-modal').style.display = 'block';
+            }
+
+            hideQuizModal() {
+                document.getElementById('quiz-modal').style.display = 'none';
+                if (this.timer) clearInterval(this.timer);
+            }
+
+            renderQuestion() {
+                const question = this.quiz.questions[this.currentQuestionIndex];
+                const progress = ((this.currentQuestionIndex + 1) / this.quiz.questions.length) * 100;
+                
+                // Actualizar barra de progreso
+                document.getElementById('progress-bar').style.width = progress + '%';
+                
+                // Renderizar pregunta
+                const content = document.getElementById('quiz-content');
+                content.innerHTML = `
+                    <div style="margin-bottom: 30px;">
+                        <h3 style="color: #1e3c72;">Pregunta ${this.currentQuestionIndex + 1} de ${this.quiz.questions.length}</h3>
+                        <p style="font-size: 18px; margin-bottom: 25px;">${question.questionText}</p>
+                        
+                        <div id="question-options">
+                            ${question.options.map((option, index) => `
+                                <label style="display: block; margin-bottom: 15px; padding: 15px; border: 2px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.3s;" 
+                                       onmouseover="this.style.borderColor='#2a5298'" 
+                                       onmouseout="this.style.borderColor='#ddd'"
+                                       onclick="quizSystem.selectAnswer(${index}, this)">
+                                    <input type="radio" name="question-${question.id}" value="${index}" style="margin-right: 10px;">
+                                    ${option}
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                // Restaurar respuesta seleccionada
+                if (this.answers[this.currentQuestionIndex] !== null) {
+                    const radio = content.querySelector(`input[value="${this.answers[this.currentQuestionIndex]}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                        radio.closest('label').style.borderColor = '#2a5298';
+                        radio.closest('label').style.backgroundColor = '#f0f8ff';
+                    }
+                }
+                
+                // Actualizar botones de navegación
+                this.updateNavigationButtons();
+            }
+
+            selectAnswer(answerIndex, labelElement) {
+                this.answers[this.currentQuestionIndex] = answerIndex;
+                
+                // Actualizar estilos
+                document.querySelectorAll('#question-options label').forEach(label => {
+                    label.style.borderColor = '#ddd';
+                    label.style.backgroundColor = 'white';
+                });
+                
+                labelElement.style.borderColor = '#2a5298';
+                labelElement.style.backgroundColor = '#f0f8ff';
+                
+                this.updateNavigationButtons();
+            }
+
+            updateNavigationButtons() {
+                const prevBtn = document.getElementById('prev-question');
+                const nextBtn = document.getElementById('next-question');
+                const submitBtn = document.getElementById('submit-quiz');
+                
+                prevBtn.style.display = this.currentQuestionIndex > 0 ? 'inline-block' : 'none';
+                
+                if (this.currentQuestionIndex === this.quiz.questions.length - 1) {
+                    nextBtn.style.display = 'none';
+                    submitBtn.style.display = 'inline-block';
+                } else {
+                    nextBtn.style.display = 'inline-block';
+                    submitBtn.style.display = 'none';
+                }
+            }
+
+            prevQuestion() {
+                if (this.currentQuestionIndex > 0) {
+                    this.currentQuestionIndex--;
+                    this.renderQuestion();
+                }
+            }
+
+            nextQuestion() {
+                if (this.currentQuestionIndex < this.quiz.questions.length - 1) {
+                    this.currentQuestionIndex++;
+                    this.renderQuestion();
+                }
+            }
+
+            async submitQuiz() {
+                // Verificar que todas las preguntas tengan respuesta
+                const unanswered = this.answers.findIndex(answer => answer === null);
+                if (unanswered !== -1) {
+                    if (!confirm(`La pregunta ${unanswered + 1} no tiene respuesta. ¿Deseas enviar el quiz de todas formas?`)) {
+                        return;
+                    }
+                }
+
+                const timeSpent = Math.floor((Date.now() - this.startTime) / 1000);
+                const answers = this.quiz.questions.map((question, index) => ({
+                    questionId: question.id,
+                    answer: this.answers[index]
+                }));
+
+                try {
+                    const response = await fetch('/api/quiz/attempt/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            attemptId: this.attemptId,
+                            answers,
+                            timeSpent
+                        })
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        this.hideQuizModal();
+                        this.showResults(data.results);
+                    } else {
+                        alert('Error al enviar quiz: ' + data.message);
+                    }
+                } catch (error) {
+                    alert('Error al enviar quiz');
+                    console.error(error);
+                }
+            }
+
+            showResults(results) {
+                const modal = document.getElementById('results-modal');
+                const content = document.getElementById('results-content');
+                
+                const passed = results.passed;
+                const scoreColor = passed ? '#4CAF50' : '#f44336';
+                
+                content.innerHTML = `
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h2 style="color: ${scoreColor}; margin-bottom: 15px;">
+                            ${passed ? '🎉 ¡Felicitaciones!' : '📚 Sigue Estudiando'}
+                        </h2>
+                        <div style="font-size: 48px; color: ${scoreColor}; margin-bottom: 10px;">
+                            ${results.score}%
+                        </div>
+                        <p style="font-size: 18px; color: #666;">
+                            ${results.earnedPoints} de ${results.totalPoints} puntos
+                        </p>
+                        <p style="color: #666;">
+                            ${passed ? 
+                                `¡Has aprobado el quiz! (Mínimo requerido: ${results.passingScore}%)` : 
+                                `No alcanzaste el puntaje mínimo de ${results.passingScore}%. ¡Intenta nuevamente!`
+                            }
+                        </p>
+                    </div>
+                    
+                    <h3 style="color: #1e3c72; margin-bottom: 20px;">📋 Retroalimentación por Pregunta</h3>
+                    
+                    ${results.questions.map((q, index) => `
+                        <div style="margin-bottom: 25px; padding: 20px; border: 2px solid ${q.isCorrect ? '#4CAF50' : '#f44336'}; border-radius: 10px; background: ${q.isCorrect ? '#f1f8e9' : '#ffebee'};">
+                            <h4 style="color: #333; margin-bottom: 15px;">
+                                ${q.isCorrect ? '✅' : '❌'} Pregunta ${q.questionNumber}
+                            </h4>
+                            <p style="margin-bottom: 15px;"><strong>Pregunta:</strong> ${q.questionText}</p>
+                            
+                            <p style="margin-bottom: 10px;"><strong>Tu respuesta:</strong> 
+                                <span style="color: ${q.isCorrect ? '#4CAF50' : '#f44336'};">
+                                    ${q.studentAnswer !== null ? q.options[q.studentAnswer] : 'Sin respuesta'}
+                                </span>
+                            </p>
+                            
+                            ${!q.isCorrect ? `
+                                <p style="margin-bottom: 15px;"><strong>Respuesta correcta:</strong> 
+                                    <span style="color: #4CAF50;">${q.options[q.correctAnswer]}</span>
+                                </p>
+                            ` : ''}
+                            
+                            <div style="background: rgba(255,255,255,0.8); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                <strong>💡 Explicación:</strong> ${q.explanation}
+                            </div>
+                        </div>
+                    `).join('')}
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button onclick="document.getElementById('results-modal').style.display='none'" 
+                                style="background: linear-gradient(45deg, #2a5298, #1e3c72); color: white; padding: 15px 30px; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;">
+                            🏠 Volver a la Lección
+                        </button>
+                    </div>
+                `;
+                
+                modal.style.display = 'block';
+            }
+        }
+
+        // Inicializar el sistema de quiz cuando la página esté lista
+        const quizSystem = new QuizSystem();
+    </script>
+</body>
+</html>

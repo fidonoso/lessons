@@ -1,0 +1,26 @@
+{
+  "name": "cft-powershell-portal",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Portal educativo de PowerShell para ciberseguridad - CFT Valparaíso",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["powershell", "cybersecurity", "education", "cft"],
+  "author": "Fernando Donoso - CFT Valparaíso",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "pg": "^8.11.3",
+    "bcrypt": "^5.1.1",
+    "socket.io": "^4.7.4",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}

