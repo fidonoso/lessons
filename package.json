@@ -7,7 +7,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "railway:check": "node railway-check.js"
   },
   "keywords": ["powershell", "cybersecurity", "education", "cft"],
   "author": "Fernando Donoso - CFT Valparaíso",

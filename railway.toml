@@ -1,0 +1,20 @@
+[build]
+builder = "dockerfile"
+
+[deploy]
+healthcheckPath = "/api/health"
+healthcheckTimeout = 300
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[variables]
+NODE_ENV = "production"
+PORT = "${{ PORT }}"
+
+# Base de datos PostgreSQL (Railway proveerá estas variables automáticamente)
+# DATABASE_URL = "${{ POSTGRES.DATABASE_URL }}"
+# DB_HOST = "${{ POSTGRES.POSTGRES_HOST }}"
+# DB_PORT = "${{ POSTGRES.POSTGRES_PORT }}"
+# DB_NAME = "${{ POSTGRES.POSTGRES_DB }}"
+# DB_USER = "${{ POSTGRES.POSTGRES_USER }}"
+# DB_PASSWORD = "${{ POSTGRES.POSTGRES_PASSWORD }}" 
