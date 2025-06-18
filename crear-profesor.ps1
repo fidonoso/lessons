@@ -1,0 +1,2 @@
+﻿$teacherData = @{ firstName = "Fernando"; lastName = "Donoso"; email = "fidonoso@gmail.com"; password = "191107Ft#" } | ConvertTo-Json; 
+Invoke-RestMethod -Uri "https://nodejs-development-41bd.up.railway.app/api/teacher/register" -Method POST -Body $teacherData -ContentType "application/json"
