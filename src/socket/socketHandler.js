@@ -97,6 +97,34 @@ export const initializeSocket = (server) => {
                 console.error('Error handling lesson quiz completion:', error);
             }
         });
+
+        // Estudiante envía respuestas de ejercicios prácticos
+        socket.on('lesson:exercises:submitted', (data) => {
+            try {
+                const { student, lesson, lessonType, responses, statistics, timestamp } = data;
+                
+                console.log(`📝 [${lessonType}] ${student} envió ${statistics.completedResponses}/${statistics.totalExercises} ejercicios de "${lesson}" (${statistics.completionPercentage}%)`);
+                
+                // Log detallado de las respuestas
+                Object.entries(responses).forEach(([exerciseId, response]) => {
+                    console.log(`  └─ ${response.exerciseType}: ${response.exerciseTitle} [${response.exerciseLevel}] - ${response.characterCount} caracteres`);
+                });
+                
+                // Emitir a todos los profesores conectados
+                socket.broadcast.emit('lesson:student:exercises:submitted', {
+                    student,
+                    lesson,
+                    lessonType,
+                    responses,
+                    statistics,
+                    timestamp,
+                    submissionId: `${student.replace(/\s+/g, '_')}_${Date.now()}` // ID único para esta submisión
+                });
+                
+            } catch (error) {
+                console.error('Error handling lesson exercises submission:', error);
+            }
+        });
         
         // ==================== EVENTOS DE QUIZ CON BASE DE DATOS ====================
         

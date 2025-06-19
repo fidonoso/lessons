@@ -546,6 +546,21 @@
                         <div class="mt-4 p-3 bg-yellow-900 bg-opacity-30 border-l-4 border-yellow-500 rounded">
                             <p class="text-yellow-300 text-sm"><strong>💡 Pista:</strong> Usa Where-Object con la propiedad WorkingSet y Sort-Object</p>
                         </div>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-1')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-1" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script de PowerShell para resolver este ejercicio..."
+                                    style="width: 100%; min-height: 120px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-1')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-1')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -565,6 +580,21 @@
 <span class="keyword">if</span> (<span class="variable">$notepads</span>.<span class="property">Count</span> <span class="operator">-gt</span> 3) {
     <span class="comment"># Tu código aquí</span>
 }</pre>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-2')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-2" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script de PowerShell para resolver este ejercicio..."
+                                    style="width: 100%; min-height: 120px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-2')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-2')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -582,6 +612,21 @@
                         </ul>
                         <div class="mt-4 p-3 bg-red-900 bg-opacity-30 border-l-4 border-red-500 rounded">
                             <p class="text-red-300 text-sm"><strong>⚠️ Nota:</strong> Usa While loop y Start-Sleep para el monitoreo continuo</p>
+                        </div>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-3')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-3" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script de PowerShell para resolver este ejercicio..."
+                                    style="width: 100%; min-height: 150px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-3')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-3')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -607,6 +652,21 @@
                             <li>Identificar servicios detenidos que deberían estar corriendo</li>
                             <li>Exportar reporte a CSV en C:\Temp\ServiciosReporte.csv</li>
                         </ul>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-4')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-4" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script de PowerShell para resolver este ejercicio..."
+                                    style="width: 100%; min-height: 120px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-4')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-4')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -622,6 +682,21 @@
                             <li>Enviar alerta si un servicio falla 3 veces consecutivas</li>
                             <li>Opción de ejecutar como tarea programada</li>
                         </ul>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-5')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-5" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script de PowerShell para resolver este ejercicio..."
+                                    style="width: 100%; min-height: 140px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-5')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-5')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -639,6 +714,21 @@
                         </ul>
                         <div class="mt-4 p-3 bg-purple-900 bg-opacity-30 border-l-4 border-purple-500 rounded">
                             <p class="text-purple-300 text-sm"><strong>🎯 Challenge:</strong> Implementa sistema de scoring para ranking de amenazas</p>
+                        </div>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-6')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-6" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script de PowerShell para resolver este ejercicio..."
+                                    style="width: 100%; min-height: 160px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-6')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-6')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -668,6 +758,21 @@
 <span class="keyword">foreach</span> (<span class="variable">$port</span> <span class="keyword">in</span> <span class="variable">$ports</span>) {
     <span class="comment"># Implementar escaneo</span>
 }</pre>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-7')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-7" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script de PowerShell para resolver este ejercicio..."
+                                    style="width: 100%; min-height: 130px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-7')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-7')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -685,6 +790,21 @@
                         </ul>
                         <div class="mt-4 p-3 bg-blue-900 bg-opacity-30 border-l-4 border-blue-500 rounded">
                             <p class="text-blue-300 text-sm"><strong>💡 Tip:</strong> Usa APIs de geolocalización para determinar países</p>
+                        </div>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-8')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-8" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script de PowerShell para resolver este ejercicio..."
+                                    style="width: 100%; min-height: 150px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-8')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-8')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -708,6 +828,21 @@
                             <li>Detectar archivos con extensiones dobles (.txt.exe)</li>
                             <li>Crear timeline de actividad</li>
                         </ul>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-9')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-9" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script de PowerShell para resolver este ejercicio..."
+                                    style="width: 100%; min-height: 130px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-9')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-9')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -725,6 +860,21 @@
                         </ul>
                         <div class="mt-4 p-3 bg-red-900 bg-opacity-30 border-l-4 border-red-500 rounded">
                             <p class="text-red-300 text-sm"><strong>⚡ Mega Challenge:</strong> Implementa machine learning básico para detección de anomalías</p>
+                        </div>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-10')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-10" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script de PowerShell para resolver este ejercicio..."
+                                    style="width: 100%; min-height: 180px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-10')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-10')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -751,6 +901,21 @@
                         <div class="mt-4 p-3 bg-green-900 bg-opacity-30 border-l-4 border-green-500 rounded">
                             <p class="text-green-300 text-sm"><strong>🎯 Meta:</strong> Crear script master que haga todo esto con un solo comando</p>
                         </div>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-caso1')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-caso1" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu script master de administración de servidores..."
+                                    style="width: 100%; min-height: 200px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-caso1')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-caso1')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -766,6 +931,21 @@
                             <li>Responder automáticamente a incidentes nivel 1</li>
                             <li>Generar IOCs (Indicators of Compromise)</li>
                         </ol>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-caso2')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-caso2" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu sistema de SOC para detección de amenazas..."
+                                    style="width: 100%; min-height: 180px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-caso2')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-caso2')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -781,6 +961,21 @@
                             <li>Reparación automática de servicios Windows</li>
                             <li>Reporte detallado para el usuario final</li>
                         </ol>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-caso3')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-caso3" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Escribe aquí tu herramienta de soporte técnico automatizado..."
+                                    style="width: 100%; min-height: 160px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-caso3')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-caso3')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -806,6 +1001,21 @@
                         <div class="mt-4 p-3 bg-purple-900 bg-opacity-30 border-l-4 border-purple-500 rounded">
                             <p class="text-purple-300 text-sm"><strong>🚀 Extra:</strong> Integra con APIs de threat intelligence</p>
                         </div>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-proyecto1')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-proyecto1" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Diseña aquí tu sistema Mini-SIEM completo..."
+                                    style="width: 100%; min-height: 220px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-proyecto1')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-proyecto1')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -820,6 +1030,74 @@
                             <li>Aprendizaje de patrones de uso</li>
                             <li>Sugerencias proactivas de mantenimiento</li>
                             <li>Integración con sistemas de ticketing</li>
+                        </ul>
+                        
+                        <!-- Campo de Respuesta -->
+                        <div class="mt-4">
+                            <button class="response-btn" onclick="toggleResponse('response-proyecto2')" style="background-color: #bd93f9; color: #282a36; padding: 0.5rem 1rem; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: all 0.3s; text-shadow: none;">
+                                📝 Respuesta
+                            </button>
+                            <div id="response-proyecto2" class="response-area mt-3" style="display: none;">
+                                <textarea class="response-textarea" placeholder="Desarrolla aquí tu Asistente de Administración con IA..."
+                                    style="width: 100%; min-height: 200px; background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 1rem; font-family: 'Fira Code', monospace; font-size: 0.9rem; resize: vertical; text-shadow: none;"></textarea>
+                                <div class="mt-2 text-right">
+                                    <button onclick="clearResponse('response-proyecto2')" style="background-color: #ff5555; color: #f8f8f2; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-right: 0.5rem; text-shadow: none;">Limpiar</button>
+                                    <button onclick="saveResponse('response-proyecto2')" style="background-color: #50fa7b; color: #282a36; padding: 0.25rem 0.75rem; border: none; border-radius: 4px; font-size: 0.8rem; cursor: pointer; text-shadow: none;">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Envío de Respuestas -->
+        <section id="submit-section" class="mb-12">
+            <div class="card">
+                <h2 class="section-title">> Terminal de Envío de Respuestas</h2>
+                <div class="mt-6 p-6 bg-gradient-to-r from-purple-900 to-blue-900 rounded-lg border-2 border-purple-500">
+                    <div class="text-center mb-6">
+                        <h3 class="text-2xl font-bold text-purple-300 mb-2">
+                            🚀 TRANSMISIÓN DE DATOS AL COMANDO CENTRAL
+                        </h3>
+                        <p class="text-cyan-300">Envía tus soluciones al dashboard del instructor para evaluación</p>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label class="form-label text-yellow-300 font-bold">
+                                👤 Identificación del Operador:
+                            </label>
+                            <input type="text" id="studentName" class="form-control" 
+                                   placeholder="Ingresa tu nombre completo"
+                                   style="background-color: #282a36; color: #f8f8f2; border: 2px solid #bd93f9; border-radius: 6px; padding: 0.75rem; font-family: 'Fira Code', monospace;">
+                        </div>
+                        <div class="col-md-6 mb-4 d-flex align-items-end">
+                            <button id="submitResponses" class="btn btn-lg w-100" 
+                                    style="background: linear-gradient(45deg, #50fa7b, #8be9fd); color: #282a36; border: none; border-radius: 8px; font-weight: bold; padding: 0.75rem; text-shadow: none; font-family: 'Fira Code', monospace;">
+                                📡 TRANSMITIR RESPUESTAS
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="submitStatus" class="mt-4" style="display: none;">
+                        <div class="alert alert-info border-0" style="background-color: rgba(139, 233, 253, 0.1); border-left: 4px solid #8be9fd !important;">
+                            <div class="d-flex align-items-center">
+                                <div class="spinner-border spinner-border-sm text-cyan me-2" role="status"></div>
+                                <span class="text-cyan-300">Transmitiendo datos al comando central...</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 p-3 bg-dark bg-opacity-50 rounded border-l-4 border-yellow-500">
+                        <p class="text-yellow-300 text-sm mb-2">
+                            <strong>⚠️ PROTOCOLO DE TRANSMISIÓN:</strong>
+                        </p>
+                        <ul class="text-gray-300 text-sm list-disc list-inside space-y-1 mb-0">
+                            <li>Solo se enviarán ejercicios con respuestas completadas</li>
+                            <li>Puedes enviar múltiples veces para actualizar tus soluciones</li>
+                            <li>El instructor recibirá notificación en tiempo real</li>
+                            <li>Incluye timestamp y estadísticas de progreso</li>
                         </ul>
                     </div>
                 </div>
@@ -930,6 +1208,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             initCodeCopyButtons();
             initCardAnimations();
+            loadSavedResponses();
             
             // Mensaje de bienvenida en consola
             console.log(`
@@ -937,6 +1216,7 @@
 ════════════════════════════════════
 📖 Arsenal de comandos disponible
 🎯 ${document.querySelectorAll('.exercise-container').length} ejercicios cargados
+💾 ${document.querySelectorAll('.response-area').length} campos de respuesta disponibles
 💻 Sistema operativo detectado: ${navigator.platform}
 ⚡ ¡Comienza tu entrenamiento!
             `);
@@ -1004,6 +1284,393 @@
                 }
             });
         }
+
+        // Funciones para manejo de campos de respuesta
+        function toggleResponse(responseId) {
+            const responseArea = document.getElementById(responseId);
+            const button = document.querySelector(`[onclick="toggleResponse('${responseId}')"]`);
+            
+            if (responseArea.style.display === 'none' || responseArea.style.display === '') {
+                responseArea.style.display = 'block';
+                responseArea.style.animation = 'slideDown 0.3s ease-out';
+                button.innerHTML = '📝 Ocultar Respuesta';
+                button.style.backgroundColor = '#ff79c6';
+                
+                // Auto-focus en el textarea
+                const textarea = responseArea.querySelector('textarea');
+                setTimeout(() => textarea.focus(), 100);
+            } else {
+                responseArea.style.display = 'none';
+                button.innerHTML = '📝 Respuesta';
+                button.style.backgroundColor = '#bd93f9';
+            }
+        }
+
+        function clearResponse(responseId) {
+            const textarea = document.querySelector(`#${responseId} textarea`);
+            if (confirm('¿Estás seguro de que quieres limpiar tu respuesta?')) {
+                textarea.value = '';
+                textarea.focus();
+                
+                // Efecto visual de limpieza
+                textarea.style.borderColor = '#ff5555';
+                setTimeout(() => {
+                    textarea.style.borderColor = '#bd93f9';
+                }, 500);
+            }
+        }
+
+        function saveResponse(responseId) {
+            const textarea = document.querySelector(`#${responseId} textarea`);
+            const content = textarea.value.trim();
+            
+            if (content === '') {
+                alert('❌ No hay contenido para guardar');
+                return;
+            }
+            
+            // Guardar en localStorage
+            const storageKey = `powershell-exercise-${responseId}`;
+            localStorage.setItem(storageKey, content);
+            
+            // Efecto visual de guardado
+            textarea.style.borderColor = '#50fa7b';
+            const saveButton = document.querySelector(`[onclick="saveResponse('${responseId}')"]`);
+            const originalText = saveButton.innerHTML;
+            saveButton.innerHTML = '✅ Guardado';
+            saveButton.style.backgroundColor = '#50fa7b';
+            
+            setTimeout(() => {
+                textarea.style.borderColor = '#bd93f9';
+                saveButton.innerHTML = originalText;
+                saveButton.style.backgroundColor = '#50fa7b';
+            }, 2000);
+            
+            // Mostrar notificación
+            showNotification('💾 Respuesta guardada localmente', 'success');
+        }
+
+        function loadSavedResponses() {
+            // Cargar respuestas guardadas al cargar la página
+            const responseAreas = document.querySelectorAll('.response-area');
+            responseAreas.forEach(area => {
+                const responseId = area.id;
+                const storageKey = `powershell-exercise-${responseId}`;
+                const savedContent = localStorage.getItem(storageKey);
+                
+                if (savedContent) {
+                    const textarea = area.querySelector('textarea');
+                    textarea.value = savedContent;
+                    
+                    // Indicador visual de contenido guardado
+                    textarea.style.borderColor = '#f1fa8c';
+                    setTimeout(() => {
+                        textarea.style.borderColor = '#bd93f9';
+                    }, 1000);
+                }
+            });
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `position-fixed top-0 end-0 m-3 p-3 rounded shadow-lg`;
+            notification.style.zIndex = '9999';
+            notification.style.minWidth = '300px';
+            
+            switch(type) {
+                case 'success':
+                    notification.style.backgroundColor = '#50fa7b';
+                    notification.style.color = '#282a36';
+                    break;
+                case 'error':
+                    notification.style.backgroundColor = '#ff5555';
+                    notification.style.color = '#f8f8f2';
+                    break;
+                default:
+                    notification.style.backgroundColor = '#bd93f9';
+                    notification.style.color = '#282a36';
+            }
+            
+            notification.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">${message}</span>
+                    <button class="btn-close btn-close-white ms-2" onclick="this.parentElement.parentElement.remove()"></button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto-eliminar después de 4 segundos
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 4000);
+        }
+
+        // Agregar animación CSS para slideDown
+        const additionalStyles = document.createElement('style');
+        additionalStyles.textContent = `
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    max-height: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    max-height: 500px;
+                    transform: translateY(0);
+                }
+            }
+            
+            .response-btn:hover {
+                background-color: #ff79c6 !important;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(189, 147, 249, 0.3);
+            }
+            
+            .response-textarea:focus {
+                border-color: #50fa7b !important;
+                box-shadow: 0 0 15px rgba(80, 250, 123, 0.3);
+                outline: none;
+            }
+            
+            .response-area {
+                border-left: 3px solid #bd93f9;
+                padding-left: 1rem;
+                margin-left: 0.5rem;
+            }
+        `;
+        document.head.appendChild(additionalStyles);
+
+        // ==================== FUNCIONALIDAD DE ENVÍO DE RESPUESTAS ====================
+        
+        // Inicializar Socket.IO
+        let socket;
+        
+        function initializeSocket() {
+            try {
+                socket = io();
+                console.log('🔗 Socket.IO conectado para envío de respuestas');
+                
+                socket.on('connect', () => {
+                    console.log('✅ Conexión socket establecida');
+                });
+                
+                socket.on('disconnect', () => {
+                    console.log('❌ Conexión socket perdida');
+                });
+                
+            } catch (error) {
+                console.warn('⚠️ Socket.IO no disponible:', error);
+            }
+        }
+        
+        function collectAllResponses() {
+            const responses = {};
+            const responseAreas = document.querySelectorAll('.response-area');
+            let completedResponses = 0;
+            
+            responseAreas.forEach(area => {
+                const responseId = area.id;
+                const textarea = area.querySelector('textarea');
+                const content = textarea.value.trim();
+                
+                if (content) {
+                    // Determinar tipo de ejercicio basado en el ID
+                    let exerciseInfo = getExerciseInfo(responseId);
+                    
+                    responses[responseId] = {
+                        content: content,
+                        exerciseType: exerciseInfo.type,
+                        exerciseTitle: exerciseInfo.title,
+                        exerciseLevel: exerciseInfo.level,
+                        timestamp: new Date().toISOString(),
+                        characterCount: content.length,
+                        lineCount: content.split('\n').length
+                    };
+                    completedResponses++;
+                }
+            });
+            
+            return {
+                responses: responses,
+                totalExercises: responseAreas.length,
+                completedResponses: completedResponses,
+                completionPercentage: Math.round((completedResponses / responseAreas.length) * 100)
+            };
+        }
+        
+        function getExerciseInfo(responseId) {
+            const exerciseMap = {
+                'response-1': { type: 'Procesos', title: 'Cazador de Recursos', level: 'Fácil' },
+                'response-2': { type: 'Procesos', title: 'Terminador Selectivo', level: 'Medio' },
+                'response-3': { type: 'Procesos', title: 'Monitor en Tiempo Real', level: 'Difícil' },
+                'response-4': { type: 'Servicios', title: 'Auditor de Servicios', level: 'Fácil' },
+                'response-5': { type: 'Servicios', title: 'Gestor de Servicios Automático', level: 'Medio' },
+                'response-6': { type: 'Servicios', title: 'Detector de Servicios Maliciosos', level: 'Experto' },
+                'response-7': { type: 'Red', title: 'Scanner de Puertos Básico', level: 'Medio' },
+                'response-8': { type: 'Red', title: 'Detective de Conexiones', level: 'Difícil' },
+                'response-9': { type: 'Seguridad', title: 'Forense de Archivos', level: 'Medio' },
+                'response-10': { type: 'Seguridad', title: 'Centro de Respuesta a Incidentes', level: 'Experto' },
+                'response-caso1': { type: 'Caso Real', title: 'Administración de Servidores', level: 'Profesional' },
+                'response-caso2': { type: 'Caso Real', title: 'SOC (Security Operations Center)', level: 'Profesional' },
+                'response-caso3': { type: 'Caso Real', title: 'Soporte Técnico Automatizado', level: 'Profesional' },
+                'response-proyecto1': { type: 'Proyecto Final', title: 'Mini-SIEM', level: 'Experto' },
+                'response-proyecto2': { type: 'Proyecto Final', title: 'Asistente de Administración IA', level: 'Experto' }
+            };
+            
+            return exerciseMap[responseId] || { type: 'Ejercicio', title: 'Ejercicio Personalizado', level: 'Medio' };
+        }
+        
+        function submitResponses() {
+            const studentName = document.getElementById('studentName').value.trim();
+            
+            if (!studentName) {
+                showNotification('❌ Debes ingresar tu nombre para enviar las respuestas', 'error');
+                document.getElementById('studentName').focus();
+                return;
+            }
+            
+            const responseData = collectAllResponses();
+            
+            if (responseData.completedResponses === 0) {
+                showNotification('❌ No hay respuestas completadas para enviar', 'error');
+                return;
+            }
+            
+            // Mostrar estado de envío
+            document.getElementById('submitStatus').style.display = 'block';
+            document.getElementById('submitResponses').disabled = true;
+            
+            const submissionData = {
+                student: studentName,
+                lesson: 'PowerShell Prácticas Avanzadas',
+                lessonType: 'practicas',
+                responses: responseData.responses,
+                statistics: {
+                    totalExercises: responseData.totalExercises,
+                    completedResponses: responseData.completedResponses,
+                    completionPercentage: responseData.completionPercentage,
+                    submissionTime: new Date().toISOString(),
+                    totalCharacters: Object.values(responseData.responses).reduce((sum, r) => sum + r.characterCount, 0),
+                    averageResponseLength: Math.round(Object.values(responseData.responses).reduce((sum, r) => sum + r.characterCount, 0) / responseData.completedResponses)
+                },
+                timestamp: new Date().toISOString()
+            };
+            
+            console.log('📤 Enviando respuestas:', submissionData);
+            
+            // Emitir evento a través de Socket.IO
+            if (socket && socket.connected) {
+                socket.emit('lesson:exercises:submitted', submissionData);
+                
+                setTimeout(() => {
+                    document.getElementById('submitStatus').style.display = 'none';
+                    document.getElementById('submitResponses').disabled = false;
+                    
+                    showNotification(`✅ Respuestas enviadas exitosamente! (${responseData.completedResponses}/${responseData.totalExercises} ejercicios)`, 'success');
+                    
+                    // Guardar timestamp del último envío
+                    localStorage.setItem('last-submission', JSON.stringify({
+                        studentName: studentName,
+                        timestamp: new Date().toISOString(),
+                        exerciseCount: responseData.completedResponses
+                    }));
+                    
+                }, 1500);
+            } else {
+                document.getElementById('submitStatus').style.display = 'none';
+                document.getElementById('submitResponses').disabled = false;
+                showNotification('❌ Error de conexión. Verifica tu conexión a internet.', 'error');
+            }
+        }
+        
+        function loadLastSubmission() {
+            const lastSubmission = localStorage.getItem('last-submission');
+            if (lastSubmission) {
+                try {
+                    const data = JSON.parse(lastSubmission);
+                    document.getElementById('studentName').value = data.studentName;
+                    
+                    const lastDate = new Date(data.timestamp).toLocaleString();
+                    showNotification(`💾 Última transmisión: ${lastDate} (${data.exerciseCount} ejercicios)`, 'info');
+                } catch (error) {
+                    console.warn('Error loading last submission:', error);
+                }
+            }
+        }
+        
+        // Agregar estilos adicionales para el envío
+        const submitStyles = document.createElement('style');
+        submitStyles.textContent = `
+            #submitResponses:hover {
+                background: linear-gradient(45deg, #8be9fd, #50fa7b) !important;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(80, 250, 123, 0.4);
+            }
+            
+            #submitResponses:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none !important;
+                box-shadow: none !important;
+            }
+            
+            #studentName:focus {
+                border-color: #50fa7b !important;
+                box-shadow: 0 0 15px rgba(80, 250, 123, 0.3);
+                outline: none;
+            }
+            
+            .submission-summary {
+                background: linear-gradient(135deg, rgba(139, 233, 253, 0.1), rgba(80, 250, 123, 0.1));
+                border: 1px solid #8be9fd;
+                border-radius: 8px;
+                padding: 1rem;
+                margin-top: 1rem;
+            }
+        `;
+        document.head.appendChild(submitStyles);
+    </script>
+    
+    <!-- Script para Socket.IO -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+        // Event listeners para la funcionalidad de envío
+        document.addEventListener('DOMContentLoaded', () => {
+            // Inicializar socket después de que se carga la página
+            setTimeout(() => {
+                initializeSocket();
+                loadLastSubmission();
+            }, 1000);
+            
+            // Event listener para el botón de envío
+            document.getElementById('submitResponses').addEventListener('click', submitResponses);
+            
+            // Enter en el campo de nombre para enviar
+            document.getElementById('studentName').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    submitResponses();
+                }
+            });
+            
+            // Actualizar mensaje de consola
+            const originalLog = console.log;
+            console.log = function(...args) {
+                originalLog.apply(console, args);
+                if (args[0] && args[0].includes('LABORATORIO PS-PRÁCTICAS INICIADO')) {
+                    originalLog(`
+📡 SISTEMA DE TRANSMISIÓN ACTIVADO
+═══════════════════════════════════
+🔗 Socket.IO habilitado para envío de respuestas
+👤 Ingresa tu nombre para identificarte
+📤 Envía tus soluciones al comando central
+                    `);
+                }
+            };
+        });
     </script>
 </body>
 </html> 

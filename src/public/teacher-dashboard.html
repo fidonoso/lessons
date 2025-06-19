@@ -184,6 +184,56 @@
             border: none;
             border-radius: 10px;
         }
+        
+        .exercise-submission {
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--warning-color) !important;
+        }
+        
+        .exercise-submission:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .exercise-response-content {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 0.85rem;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .exercise-details {
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                max-height: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                max-height: 1000px;
+                transform: translateY(0);
+            }
+        }
+        
+        .badge-sm {
+            font-size: 0.7rem;
+            padding: 2px 6px;
+        }
+        
+        .exercise-summary {
+            border-top: 1px solid #e9ecef;
+            padding-top: 8px;
+        }
     </style>
 </head>
 <body>
@@ -289,6 +339,22 @@
                         <div class="card-body" style="height: 400px; overflow-y: auto;">
                             <div id="realTimeActivity">
                                 <p class="text-muted text-center">Esperando actividad...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sección de Respuestas de Ejercicios -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header bg-warning text-dark">
+                            <h5><i class="fas fa-code"></i> Respuestas de Ejercicios Prácticos</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="exerciseSubmissions">
+                                <p class="text-muted text-center">No hay respuestas de ejercicios enviadas aún...</p>
                             </div>
                         </div>
                     </div>
@@ -424,6 +490,12 @@
                     const color = data.passed ? 'text-success' : 'text-warning';
                     this.addActivity(`${icon} [${data.lessonType}] ${data.student} completó "${data.lesson}" con ${data.score}% (${data.correctAnswers}/${data.totalQuestions})`, color);
                 });
+
+                // Evento de respuestas de ejercicios prácticos
+                this.socket.on('lesson:student:exercises:submitted', (data) => {
+                    this.addActivity(`📝 [${data.lessonType}] ${data.student} envió ${data.statistics.completedResponses}/${data.statistics.totalExercises} ejercicios (${data.statistics.completionPercentage}%)`, 'text-warning');
+                    this.addExerciseSubmission(data);
+                });
                 
                 this.socket.on('realtime:stats', (data) => {
                     document.getElementById('activeAttempts').textContent = data.activeAttempts;
@@ -504,6 +576,138 @@
 
             async viewAnalysis(quizId) {
                 alert(`Análisis detallado para quiz: ${quizId}\n\nEsta función mostrará estadísticas completas, respuesta por respuesta de cada estudiante.`);
+            }
+
+            addExerciseSubmission(data) {
+                const container = document.getElementById('exerciseSubmissions');
+                
+                // Remover mensaje de "no hay respuestas" si existe
+                const noResponsesMsg = container.querySelector('.text-muted.text-center');
+                if (noResponsesMsg) {
+                    noResponsesMsg.remove();
+                }
+
+                const submissionTime = new Date(data.timestamp).toLocaleString();
+                const submissionId = data.submissionId;
+                
+                // Verificar si ya existe una submisión de este estudiante y actualizarla
+                const existingSubmission = container.querySelector(`[data-student="${data.student.replace(/\s+/g, '_')}"]`);
+                if (existingSubmission) {
+                    existingSubmission.remove();
+                }
+
+                const submissionDiv = document.createElement('div');
+                submissionDiv.className = 'border rounded p-3 mb-3 exercise-submission';
+                submissionDiv.setAttribute('data-student', data.student.replace(/\s+/g, '_'));
+                submissionDiv.setAttribute('data-submission-id', submissionId);
+                
+                submissionDiv.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h6 class="mb-1">
+                                <i class="fas fa-user text-primary"></i> 
+                                ${data.student}
+                            </h6>
+                            <small class="text-muted">
+                                ${data.lesson} • ${submissionTime}
+                            </small>
+                        </div>
+                        <div>
+                            <span class="badge bg-success me-2">
+                                ${data.statistics.completedResponses}/${data.statistics.totalExercises} ejercicios
+                            </span>
+                            <span class="badge bg-info me-2">
+                                ${data.statistics.completionPercentage}%
+                            </span>
+                            <button class="btn btn-sm btn-outline-primary" 
+                                    onclick="dashboard.toggleExerciseDetails('${submissionId}')">
+                                <i class="fas fa-eye"></i> Ver Respuestas
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-summary mb-2">
+                        <small class="text-muted">
+                            <i class="fas fa-chart-bar"></i> 
+                            ${data.statistics.totalCharacters} caracteres • 
+                            Promedio: ${data.statistics.averageResponseLength} caracteres/ejercicio
+                        </small>
+                    </div>
+                    
+                    <div id="details-${submissionId}" class="exercise-details" style="display: none;">
+                        <hr>
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-code"></i> Respuestas Detalladas:
+                        </h6>
+                        ${this.renderExerciseResponses(data.responses)}
+                    </div>
+                `;
+                
+                // Insertar al principio del contenedor
+                container.insertBefore(submissionDiv, container.firstChild);
+                
+                // Mantener solo las últimas 10 submisiones
+                while (container.children.length > 10) {
+                    container.removeChild(container.lastChild);
+                }
+            }
+
+            renderExerciseResponses(responses) {
+                return Object.entries(responses).map(([exerciseId, response]) => `
+                    <div class="card mb-2">
+                        <div class="card-header py-2 bg-light">
+                            <small class="fw-bold">
+                                ${response.exerciseType}: ${response.exerciseTitle}
+                                <span class="badge badge-sm ms-2 ${this.getLevelBadgeClass(response.exerciseLevel)}">
+                                    ${response.exerciseLevel}
+                                </span>
+                            </small>
+                        </div>
+                        <div class="card-body py-2">
+                            <pre class="exercise-response-content mb-1">${this.escapeHtml(response.content)}</pre>
+                            <small class="text-muted">
+                                <i class="fas fa-clock"></i> ${new Date(response.timestamp).toLocaleTimeString()} • 
+                                ${response.characterCount} caracteres • 
+                                ${response.lineCount} líneas
+                            </small>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            getLevelBadgeClass(level) {
+                const levelClasses = {
+                    'Fácil': 'bg-success',
+                    'Medio': 'bg-warning',
+                    'Difícil': 'bg-danger',
+                    'Experto': 'bg-primary',
+                    'Profesional': 'bg-dark'
+                };
+                return levelClasses[level] || 'bg-secondary';
+            }
+
+            escapeHtml(unsafe) {
+                return unsafe
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            toggleExerciseDetails(submissionId) {
+                const detailsDiv = document.getElementById(`details-${submissionId}`);
+                const button = document.querySelector(`[onclick="dashboard.toggleExerciseDetails('${submissionId}')"]`);
+                
+                if (detailsDiv.style.display === 'none') {
+                    detailsDiv.style.display = 'block';
+                    button.innerHTML = '<i class="fas fa-eye-slash"></i> Ocultar Respuestas';
+                    button.className = 'btn btn-sm btn-outline-secondary';
+                } else {
+                    detailsDiv.style.display = 'none';
+                    button.innerHTML = '<i class="fas fa-eye"></i> Ver Respuestas';
+                    button.className = 'btn btn-sm btn-outline-primary';
+                }
             }
 
             showError(message) {
