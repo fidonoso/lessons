@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerShell: Laboratorio de Prácticas Avanzadas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Fira Code', monospace;
+            background-color: #0d0221;
+            color: #00f0ff;
+            text-shadow: 0 0 5px #00f0ff, 0 0 10px #00f0ff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 2rem;
+        }
+        .header-glitch {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #f0f;
+            text-shadow: 0 0 5px #f0f, 0 0 10px #f0f, 0 0 15px #f0f,
+                         -2px 2px 2px #00f0ff, 2px -2px 2px #ff0;
+            animation: glitch 1.5s infinite;
+        }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 500;
+            color: #50fa7b;
+            text-shadow: 0 0 5px #50fa7b;
+            border-bottom: 2px solid #50fa7b;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .card {
+            background-color: rgba(16, 1, 41, 0.8);
+            border: 1px solid #ff00ff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+        }
+        code {
+            background-color: #282a36;
+            color: #f8f8f2;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        pre {
+            background-color: #282a36;
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #ff79c6;
+            overflow-x: auto;
+            text-shadow: none;
+        }
+        .comment { color: #6272a4; }
+        .command { color: #8be9fd; }
+        .parameter { color: #ffb86c; }
+        .string { color: #f1fa8c; }
+        .keyword { color: #ff79c6; }
+        .variable { color: #8be9fd; }
+        .property { color: #ffb86c; }
+        .operator { color: #ff79c6; }
+        
+        .exercise-container {
+            border: 2px dashed #f1fa8c;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-radius: 8px;
+            background-color: rgba(40, 42, 54, 0.5);
+        }
+        .exercise-title {
+            font-size: 1.5rem;
+            color: #f1fa8c;
+            text-shadow: 0 0 5px #f1fa8c;
+            margin-bottom: 1rem;
+        }
+        .challenge-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-shadow: none;
+        }
+        .badge-easy { background-color: #50fa7b; color: #282a36; }
+        .badge-medium { background-color: #ffb86c; color: #282a36; }
+        .badge-hard { background-color: #ff5555; color: #f8f8f2; }
+        .badge-expert { background-color: #bd93f9; color: #282a36; }
+        
+        button {
+            background-color: #bd93f9;
+            color: #282a36;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-shadow: none;
+        }
+        button:hover {
+            background-color: #ff79c6;
+        }
+        
+        .offcanvas {
+            background-color: #0d0221;
+            border-left: 3px solid #ff00ff;
+        }
+        .offcanvas-header {
+            border-bottom: 1px solid #ff00ff;
+        }
+        .offcanvas-title {
+            color: #f0f;
+            text-shadow: 0 0 5px #f0f;
+        }
+        .offcanvas-body {
+            color: #00f0ff;
+        }
+        .cmd-item {
+            background-color: rgba(40, 42, 54, 0.8);
+            border: 1px solid #bd93f9;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .cmd-name {
+            color: #50fa7b;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .cmd-syntax {
+            color: #8be9fd;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+        .cmd-description {
+            color: #f8f8f2;
+            font-size: 0.85rem;
+        }
+        
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Offcanvas - Referencia de Comandos -->
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="commandsReference">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">🚀 Arsenal de Comandos</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <!-- Buscador rápido -->
+            <div class="mb-4">
+                <h6 class="text-cyan-400 font-bold mb-2">🔍 Búsqueda Rápida:</h6>
+                <div class="input-group">
+                    <input type="text" id="command-search" class="form-control bg-dark text-light border-purple" 
+                           placeholder="Buscar cmdlet..." onkeyup="searchCommands()" style="background-color: #282a36 !important; border-color: #bd93f9;">
+                    <button class="btn btn-outline-purple" type="button" onclick="document.getElementById('command-search').value=''; searchCommands();">
+                        ❌
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navegación por categorías -->
+            <div class="mb-4">
+                <h6 class="text-purple-400 font-bold mb-2">📋 Categorías:</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <button class="btn btn-sm btn-outline-light" onclick="scrollToCategory('processes')">Procesos</button>
+                    <button class="btn btn-sm btn-outline-light" onclick="scrollToCategory('services')">Servicios</button>
+                    <button class="btn btn-sm btn-outline-light" onclick="scrollToCategory('network')">Red</button>
+                    <button class="btn btn-sm btn-outline-light" onclick="scrollToCategory('system')">Sistema</button>
+                    <button class="btn btn-sm btn-outline-light" onclick="scrollToCategory('files')">Archivos</button>
+                    <button class="btn btn-sm btn-outline-light" onclick="scrollToCategory('security')">Seguridad</button>
+                    <button class="btn btn-sm btn-outline-light" onclick="scrollToCategory('registry')">Registro</button>
+                    <button class="btn btn-sm btn-outline-light" onclick="scrollToCategory('utilities')">Utilidades</button>
+                </div>
+            </div>
+
+            <!-- PROCESOS -->
+            <div id="processes" class="category-section">
+                <h6 class="text-green-400 font-bold mb-3">🔄 GESTIÓN DE PROCESOS</h6>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-Process</div>
+                    <div class="cmd-syntax">Get-Process [-Name] &lt;string&gt; [-ComputerName] &lt;string&gt;</div>
+                    <div class="cmd-description">Lista procesos en ejecución. Usa -Name para filtrar, -ComputerName para equipos remotos.</div>
+                </div>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Stop-Process</div>
+                    <div class="cmd-syntax">Stop-Process -Name &lt;string&gt; | -Id &lt;int&gt; [-Force]</div>
+                    <div class="cmd-description">Termina procesos por nombre o ID. -Force para terminación forzada.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Start-Process</div>
+                    <div class="cmd-syntax">Start-Process -FilePath &lt;string&gt; [-ArgumentList] &lt;string[]&gt;</div>
+                    <div class="cmd-description">Inicia un nuevo proceso. -ArgumentList para pasar parámetros.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Wait-Process</div>
+                    <div class="cmd-syntax">Wait-Process -Name &lt;string&gt; [-Timeout] &lt;int&gt;</div>
+                    <div class="cmd-description">Espera a que termine un proceso. -Timeout en segundos.</div>
+                </div>
+            </div>
+
+            <!-- SERVICIOS -->
+            <div id="services" class="category-section">
+                <h6 class="text-blue-400 font-bold mb-3 mt-4">⚙️ GESTIÓN DE SERVICIOS</h6>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-Service</div>
+                    <div class="cmd-syntax">Get-Service [-Name] &lt;string&gt; [-Status] &lt;string&gt;</div>
+                    <div class="cmd-description">Lista servicios del sistema. -Status: Running, Stopped, StartPending.</div>
+                </div>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Start-Service / Stop-Service</div>
+                    <div class="cmd-syntax">Start-Service -Name &lt;string&gt; [-PassThru]</div>
+                    <div class="cmd-description">Inicia/detiene servicios. -PassThru devuelve objeto de servicio.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Restart-Service</div>
+                    <div class="cmd-syntax">Restart-Service -Name &lt;string&gt; [-Force]</div>
+                    <div class="cmd-description">Reinicia un servicio. -Force para forzar el reinicio.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Set-Service</div>
+                    <div class="cmd-syntax">Set-Service -Name &lt;string&gt; -StartupType &lt;string&gt;</div>
+                    <div class="cmd-description">Modifica servicios. StartupType: Automatic, Manual, Disabled.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">New-Service</div>
+                    <div class="cmd-syntax">New-Service -Name &lt;string&gt; -BinaryPathName &lt;string&gt;</div>
+                    <div class="cmd-description">Crea un nuevo servicio del sistema.</div>
+                </div>
+            </div>
+
+            <!-- RED -->
+            <div id="network" class="category-section">
+                <h6 class="text-cyan-400 font-bold mb-3 mt-4">🌐 ANÁLISIS DE RED</h6>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-NetTCPConnection</div>
+                    <div class="cmd-syntax">Get-NetTCPConnection [-State] &lt;string&gt; [-RemotePort] &lt;int&gt;</div>
+                    <div class="cmd-description">Conexiones TCP activas. Estados: Listen, Established, CloseWait, TimeWait.</div>
+                </div>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Test-NetConnection</div>
+                    <div class="cmd-syntax">Test-NetConnection -ComputerName &lt;string&gt; -Port &lt;int&gt;</div>
+                    <div class="cmd-description">Prueba conectividad y puertos específicos, equivalente a ping + telnet.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-NetAdapter</div>
+                    <div class="cmd-syntax">Get-NetAdapter [-Name] &lt;string&gt; [-Physical]</div>
+                    <div class="cmd-description">Lista adaptadores de red y su estado. -Physical solo físicos.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-NetIPConfiguration</div>
+                    <div class="cmd-syntax">Get-NetIPConfiguration [-InterfaceAlias] &lt;string&gt;</div>
+                    <div class="cmd-description">Configuración IP de interfaces de red activas.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Resolve-DnsName</div>
+                    <div class="cmd-syntax">Resolve-DnsName -Name &lt;string&gt; [-Type] &lt;string&gt;</div>
+                    <div class="cmd-description">Resolución DNS. Types: A, AAAA, MX, TXT, PTR, CNAME.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Test-Connection</div>
+                    <div class="cmd-syntax">Test-Connection -ComputerName &lt;string&gt; [-Count] &lt;int&gt;</div>
+                    <div class="cmd-description">Ping mejorado con estadísticas detalladas.</div>
+                </div>
+            </div>
+
+            <!-- SISTEMA -->
+            <div id="system" class="category-section">
+                <h6 class="text-yellow-400 font-bold mb-3 mt-4">💻 INFORMACIÓN DEL SISTEMA</h6>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-WinEvent</div>
+                    <div class="cmd-syntax">Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4624}</div>
+                    <div class="cmd-description">Logs de eventos. LogNames: System, Security, Application, Setup.</div>
+                </div>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-CimInstance</div>
+                    <div class="cmd-syntax">Get-CimInstance -ClassName Win32_OperatingSystem</div>
+                    <div class="cmd-description">Información WMI. Classes: Win32_Process, Win32_Service, Win32_LogicalDisk.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-ComputerInfo</div>
+                    <div class="cmd-syntax">Get-ComputerInfo [-Property] &lt;string[]&gt;</div>
+                    <div class="cmd-description">Información completa del sistema: OS, hardware, memoria, etc.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-EventLog</div>
+                    <div class="cmd-syntax">Get-EventLog -LogName &lt;string&gt; [-Newest] &lt;int&gt;</div>
+                    <div class="cmd-description">Logs clásicos de Windows. LogNames: System, Application, Security.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-HotFix</div>
+                    <div class="cmd-syntax">Get-HotFix [-Id] &lt;string&gt; [-Description] &lt;string&gt;</div>
+                    <div class="cmd-description">Parches y actualizaciones instaladas en el sistema.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-LocalUser / Get-LocalGroup</div>
+                    <div class="cmd-syntax">Get-LocalUser [-Name] &lt;string&gt;</div>
+                    <div class="cmd-description">Usuarios y grupos locales del sistema.</div>
+                </div>
+            </div>
+
+            <!-- ARCHIVOS -->
+            <div id="files" class="category-section">
+                <h6 class="text-orange-400 font-bold mb-3 mt-4">📁 GESTIÓN DE ARCHIVOS</h6>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-ChildItem</div>
+                    <div class="cmd-syntax">Get-ChildItem -Path &lt;string&gt; -Recurse -Filter &lt;string&gt;</div>
+                    <div class="cmd-description">Lista archivos y carpetas. -Recurse busca en subdirectorios.</div>
+                </div>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-FileHash</div>
+                    <div class="cmd-syntax">Get-FileHash -Path &lt;string&gt; -Algorithm SHA256</div>
+                    <div class="cmd-description">Hash de archivos. Algoritmos: MD5, SHA1, SHA256, SHA384, SHA512.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-Content / Set-Content</div>
+                    <div class="cmd-syntax">Get-Content -Path &lt;string&gt; [-Tail] &lt;int&gt;</div>
+                    <div class="cmd-description">Lee/escribe contenido de archivos. -Tail para últimas líneas.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Copy-Item / Move-Item</div>
+                    <div class="cmd-syntax">Copy-Item -Path &lt;string&gt; -Destination &lt;string&gt; [-Recurse]</div>
+                    <div class="cmd-description">Copia/mueve archivos y carpetas. -Recurse para subdirectorios.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Remove-Item</div>
+                    <div class="cmd-syntax">Remove-Item -Path &lt;string&gt; [-Recurse] [-Force]</div>
+                    <div class="cmd-description">Elimina archivos y carpetas. -Force para elementos protegidos.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Test-Path</div>
+                    <div class="cmd-syntax">Test-Path -Path &lt;string&gt; [-PathType] &lt;string&gt;</div>
+                    <div class="cmd-description">Verifica existencia. PathType: Leaf (archivo), Container (carpeta).</div>
+                </div>
+            </div>
+
+            <!-- SEGURIDAD -->
+            <div id="security" class="category-section">
+                <h6 class="text-red-400 font-bold mb-3 mt-4">🛡️ COMANDOS DE SEGURIDAD</h6>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-ExecutionPolicy</div>
+                    <div class="cmd-syntax">Get-ExecutionPolicy [-Scope] &lt;string&gt; [-List]</div>
+                    <div class="cmd-description">Política de ejecución actual. Scopes: Process, CurrentUser, LocalMachine.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Set-ExecutionPolicy</div>
+                    <div class="cmd-syntax">Set-ExecutionPolicy &lt;string&gt; -Scope &lt;string&gt;</div>
+                    <div class="cmd-description">Cambia política. Valores: Restricted, RemoteSigned, Unrestricted.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-Acl / Set-Acl</div>
+                    <div class="cmd-syntax">Get-Acl -Path &lt;string&gt;</div>
+                    <div class="cmd-description">Permisos de archivos y carpetas (Access Control List).</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">ConvertTo-SecureString</div>
+                    <div class="cmd-syntax">ConvertTo-SecureString -String &lt;string&gt; -AsPlainText</div>
+                    <div class="cmd-description">Convierte strings a SecureString para passwords seguros.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-AuthenticodeSignature</div>
+                    <div class="cmd-syntax">Get-AuthenticodeSignature -FilePath &lt;string&gt;</div>
+                    <div class="cmd-description">Verifica firmas digitales de archivos ejecutables.</div>
+                </div>
+            </div>
+
+            <!-- REGISTRO -->
+            <div id="registry" class="category-section">
+                <h6 class="text-purple-400 font-bold mb-3 mt-4">📋 REGISTRO DE WINDOWS</h6>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Get-ItemProperty</div>
+                    <div class="cmd-syntax">Get-ItemProperty -Path &lt;string&gt; [-Name] &lt;string&gt;</div>
+                    <div class="cmd-description">Lee valores del registro. Paths: HKLM:\, HKCU:\, HKCR:\</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Set-ItemProperty</div>
+                    <div class="cmd-syntax">Set-ItemProperty -Path &lt;string&gt; -Name &lt;string&gt; -Value &lt;object&gt;</div>
+                    <div class="cmd-description">Modifica valores del registro de Windows.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">New-Item / Remove-Item</div>
+                    <div class="cmd-syntax">New-Item -Path &lt;string&gt; -ItemType Directory</div>
+                    <div class="cmd-description">Crea/elimina claves del registro. ItemType: Directory para claves.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Test-Path</div>
+                    <div class="cmd-syntax">Test-Path -Path "HKLM:\SOFTWARE\Microsoft"</div>
+                    <div class="cmd-description">Verifica existencia de claves del registro.</div>
+                </div>
+            </div>
+
+            <!-- UTILIDADES -->
+            <div id="utilities" class="category-section">
+                <h6 class="text-pink-400 font-bold mb-3 mt-4">🔧 UTILIDADES ESENCIALES</h6>
+                
+                <div class="cmd-item">
+                    <div class="cmd-name">Where-Object</div>
+                    <div class="cmd-syntax">... | Where-Object { $_.Property -eq "Value" }</div>
+                    <div class="cmd-description">Filtra objetos. Operadores: -eq, -ne, -gt, -lt, -like, -match.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Select-Object</div>
+                    <div class="cmd-syntax">... | Select-Object Property1, Property2 [-First] &lt;int&gt;</div>
+                    <div class="cmd-description">Selecciona propiedades específicas. -First/-Last para límites.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Sort-Object</div>
+                    <div class="cmd-syntax">... | Sort-Object Property [-Descending] [-Unique]</div>
+                    <div class="cmd-description">Ordena objetos por propiedades. -Unique elimina duplicados.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Group-Object</div>
+                    <div class="cmd-syntax">... | Group-Object Property [-NoElement]</div>
+                    <div class="cmd-description">Agrupa objetos por propiedades comunes.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Measure-Object</div>
+                    <div class="cmd-syntax">... | Measure-Object [-Property] &lt;string&gt; [-Sum] [-Average]</div>
+                    <div class="cmd-description">Calcula estadísticas: Count, Sum, Average, Min, Max.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">ForEach-Object</div>
+                    <div class="cmd-syntax">... | ForEach-Object { $_.Property }</div>
+                    <div class="cmd-description">Ejecuta operaciones en cada objeto del pipeline.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Out-File / Out-GridView</div>
+                    <div class="cmd-syntax">... | Out-File -FilePath &lt;string&gt; [-Append]</div>
+                    <div class="cmd-description">Exporta a archivo o ventana gráfica interactiva.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Export-Csv / Import-Csv</div>
+                    <div class="cmd-syntax">... | Export-Csv -Path &lt;string&gt; [-NoTypeInformation]</div>
+                    <div class="cmd-description">Exporta/importa datos en formato CSV.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">ConvertTo-Json / ConvertFrom-Json</div>
+                    <div class="cmd-syntax">... | ConvertTo-Json [-Depth] &lt;int&gt;</div>
+                    <div class="cmd-description">Convierte objetos a/desde formato JSON.</div>
+                </div>
+
+                <div class="cmd-item">
+                    <div class="cmd-name">Invoke-Expression</div>
+                    <div class="cmd-syntax">Invoke-Expression -Command &lt;string&gt;</div>
+                    <div class="cmd-description">Ejecuta strings como comandos PowerShell. ¡Usar con precaución!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Encabezado -->
+        <header class="text-center my-12">
+            <h1 class="header-glitch">LABORATORIO PS-PRÁCTICAS</h1>
+            <p class="text-xl mt-4">Ejercicios Tácticos de PowerShell - Campo de Entrenamiento</p>
+            <button class="mt-4 bg-purple-600 hover:bg-purple-700" data-bs-toggle="offcanvas" data-bs-target="#commandsReference">
+                📖 Abrir Arsenal de Comandos
+            </button>
+        </header>
+
+        <!-- Ejercicios de Procesos -->
+        <section id="process-exercises" class="mb-12">
+            <h2 class="section-title">> Módulo 1: Operaciones de Procesos</h2>
+            
+            <div class="card">
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🎯 Ejercicio 1: Cazador de Recursos <span class="challenge-badge badge-easy">FÁCIL</span></h3>
+                    <p><strong>Misión:</strong> Encuentra todos los procesos que consuman más de 100 MB de memoria RAM.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Pasos:</h4>
+                        <ol class="list-decimal list-inside text-gray-300 space-y-2">
+                            <li>Lista todos los procesos en ejecución</li>
+                            <li>Filtra los que tengan WorkingSet mayor a 100MB (104857600 bytes)</li>
+                            <li>Ordena por consumo de memoria descendente</li>
+                            <li>Muestra solo Nombre, ID y WorkingSet</li>
+                        </ol>
+                        <div class="mt-4 p-3 bg-yellow-900 bg-opacity-30 border-l-4 border-yellow-500 rounded">
+                            <p class="text-yellow-300 text-sm"><strong>💡 Pista:</strong> Usa Where-Object con la propiedad WorkingSet y Sort-Object</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🔫 Ejercicio 2: Terminador Selectivo <span class="challenge-badge badge-medium">MEDIO</span></h3>
+                    <p><strong>Misión:</strong> Crear un script que termine todos los procesos de Notepad, pero solo si hay más de 3 instancias.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Requisitos:</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Antes de terminar, mostrar cuántas instancias hay</li>
+                            <li>Confirmar con el usuario antes de terminar</li>
+                            <li>Mostrar mensaje de éxito o fracaso</li>
+                            <li>Manejar errores si no hay permisos</li>
+                        </ul>
+                        <pre class="mt-4"><span class="comment"># Ejemplo de estructura</span>
+<span class="variable">$notepads</span> = <span class="command">Get-Process</span> <span class="parameter">-Name</span> <span class="string">"notepad"</span> <span class="parameter">-ErrorAction</span> <span class="string">SilentlyContinue</span>
+<span class="keyword">if</span> (<span class="variable">$notepads</span>.<span class="property">Count</span> <span class="operator">-gt</span> 3) {
+    <span class="comment"># Tu código aquí</span>
+}</pre>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3 class="exercise-title">👁️ Ejercicio 3: Monitor en Tiempo Real <span class="challenge-badge badge-hard">DIFÍCIL</span></h3>
+                    <p><strong>Misión:</strong> Script de monitoreo que detecte procesos sospechosos ejecutándose desde ubicaciones no estándar.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Especificaciones:</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Monitorear cada 10 segundos</li>
+                            <li>Alertar sobre procesos en: Temp, Downloads, Desktop</li>
+                            <li>Mostrar: Nombre, PID, Ruta, Tiempo de inicio</li>
+                            <li>Guardar alertas en archivo de log</li>
+                            <li>Continuar hasta presionar Ctrl+C</li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-red-900 bg-opacity-30 border-l-4 border-red-500 rounded">
+                            <p class="text-red-300 text-sm"><strong>⚠️ Nota:</strong> Usa While loop y Start-Sleep para el monitoreo continuo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejercicios de Servicios -->
+        <section id="service-exercises" class="mb-12">
+            <h2 class="section-title">> Módulo 2: Control de Servicios</h2>
+            
+            <div class="card">
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🔧 Ejercicio 4: Auditor de Servicios <span class="challenge-badge badge-easy">FÁCIL</span></h3>
+                    <p><strong>Misión:</strong> Crear reporte de servicios críticos del sistema.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Lista de servicios críticos:</h4>
+                        <pre><span class="variable">$serviciosCriticos</span> = @(
+    <span class="string">"BITS"</span>, <span class="string">"Spooler"</span>, <span class="string">"Themes"</span>, <span class="string">"AudioSrv"</span>, 
+    <span class="string">"Dhcp"</span>, <span class="string">"Dnscache"</span>, <span class="string">"EventLog"</span>, <span class="string">"Winmgmt"</span>
+)</pre>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2 mt-4">
+                            <li>Para cada servicio, mostrar: Nombre, Estado, Tipo de inicio</li>
+                            <li>Identificar servicios detenidos que deberían estar corriendo</li>
+                            <li>Exportar reporte a CSV en C:\Temp\ServiciosReporte.csv</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🚀 Ejercicio 5: Gestor de Servicios Automático <span class="challenge-badge badge-medium">MEDIO</span></h3>
+                    <p><strong>Misión:</strong> Script que reinicie automáticamente servicios caídos importantes.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Funcionalidades:</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Verificar lista de servicios cada 30 segundos</li>
+                            <li>Intentar reiniciar servicios detenidos automáticamente</li>
+                            <li>Llevar log de todas las acciones con timestamps</li>
+                            <li>Enviar alerta si un servicio falla 3 veces consecutivas</li>
+                            <li>Opción de ejecutar como tarea programada</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🛡️ Ejercicio 6: Detector de Servicios Maliciosos <span class="challenge-badge badge-expert">EXPERTO</span></h3>
+                    <p><strong>Misión:</strong> Identificar servicios potencialmente maliciosos en el sistema.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Criterios de detección:</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Servicios sin descripción o con descripciones genéricas</li>
+                            <li>Servicios ejecutándose desde ubicaciones sospechosas</li>
+                            <li>Servicios con nombres similares a servicios legítimos</li>
+                            <li>Servicios instalados recientemente (última semana)</li>
+                            <li>Servicios no firmados digitalmente</li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-purple-900 bg-opacity-30 border-l-4 border-purple-500 rounded">
+                            <p class="text-purple-300 text-sm"><strong>🎯 Challenge:</strong> Implementa sistema de scoring para ranking de amenazas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejercicios de Red -->
+        <section id="network-exercises" class="mb-12">
+            <h2 class="section-title">> Módulo 3: Análisis de Red</h2>
+            
+            <div class="card">
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🌐 Ejercicio 7: Scanner de Puertos Básico <span class="challenge-badge badge-medium">MEDIO</span></h3>
+                    <p><strong>Misión:</strong> Crear scanner de puertos usando Test-NetConnection.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Especificaciones:</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Escanear puertos comunes: 21, 22, 23, 25, 53, 80, 110, 143, 443, 993, 995</li>
+                            <li>Permitir especificar IP o hostname objetivo</li>
+                            <li>Mostrar estado: Abierto/Cerrado/Filtrado</li>
+                            <li>Medir tiempo de respuesta</li>
+                            <li>Exportar resultados a archivo</li>
+                        </ul>
+                        <pre class="mt-4"><span class="comment"># Estructura base</span>
+<span class="variable">$target</span> = <span class="string">"google.com"</span>
+<span class="variable">$ports</span> = @(80, 443, 22, 21)
+<span class="keyword">foreach</span> (<span class="variable">$port</span> <span class="keyword">in</span> <span class="variable">$ports</span>) {
+    <span class="comment"># Implementar escaneo</span>
+}</pre>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🕵️ Ejercicio 8: Detective de Conexiones <span class="challenge-badge badge-hard">DIFÍCIL</span></h3>
+                    <p><strong>Misión:</strong> Analizar conexiones de red activas y detectar actividad sospechosa.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Tareas:</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Listar conexiones establecidas a IPs externas</li>
+                            <li>Identificar el proceso responsable de cada conexión</li>
+                            <li>Detectar conexiones a países de alto riesgo</li>
+                            <li>Alertar sobre puertos no estándar en uso</li>
+                            <li>Generar mapa visual de conexiones</li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-blue-900 bg-opacity-30 border-l-4 border-blue-500 rounded">
+                            <p class="text-blue-300 text-sm"><strong>💡 Tip:</strong> Usa APIs de geolocalización para determinar países</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Ejercicios de Seguridad -->
+        <section id="security-exercises" class="mb-12">
+            <h2 class="section-title">> Módulo 4: Ciberseguridad Avanzada</h2>
+            
+            <div class="card">
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🔍 Ejercicio 9: Forense de Archivos <span class="challenge-badge badge-medium">MEDIO</span></h3>
+                    <p><strong>Misión:</strong> Investigar archivos modificados recientemente en el sistema.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Investigación:</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Buscar archivos modificados en las últimas 24 horas</li>
+                            <li>Enfocar en: Documents, Downloads, Desktop, Temp</li>
+                            <li>Calcular hash SHA256 de archivos ejecutables</li>
+                            <li>Detectar archivos con extensiones dobles (.txt.exe)</li>
+                            <li>Crear timeline de actividad</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🚨 Ejercicio 10: Centro de Respuesta a Incidentes <span class="challenge-badge badge-expert">EXPERTO</span></h3>
+                    <p><strong>Misión:</strong> Sistema completo de respuesta automática a incidentes de seguridad.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Módulos del sistema:</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li><strong>Detector:</strong> Monitorear eventos 4625, 4624, 7045 en tiempo real</li>
+                            <li><strong>Analizador:</strong> Correlacionar eventos sospechosos</li>
+                            <li><strong>Respondedor:</strong> Acciones automáticas (bloqueo, aislamiento)</li>
+                            <li><strong>Reportero:</strong> Alertas por email y logs detallados</li>
+                            <li><strong>Dashboard:</strong> Vista en tiempo real del estado de seguridad</li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-red-900 bg-opacity-30 border-l-4 border-red-500 rounded">
+                            <p class="text-red-300 text-sm"><strong>⚡ Mega Challenge:</strong> Implementa machine learning básico para detección de anomalías</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Casos de Uso del Mundo Real -->
+        <section id="real-world-cases" class="mb-12">
+            <h2 class="section-title">> Módulo 5: Casos de Uso Reales</h2>
+            
+            <div class="card">
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🏢 Caso 1: Administración de Servidores</h3>
+                    <p><strong>Escenario:</strong> Eres administrador de una empresa con 50 servidores Windows.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Desafíos diarios:</h4>
+                        <ol class="list-decimal list-inside text-gray-300 space-y-2">
+                            <li>Verificar estado de servicios críticos en todos los servidores</li>
+                            <li>Recopilar uso de CPU/RAM de cada servidor</li>
+                            <li>Detectar servidores con poco espacio en disco</li>
+                            <li>Generar reporte semanal para gerencia</li>
+                            <li>Automatizar reinicio de servicios problemáticos</li>
+                        </ol>
+                        <div class="mt-4 p-3 bg-green-900 bg-opacity-30 border-l-4 border-green-500 rounded">
+                            <p class="text-green-300 text-sm"><strong>🎯 Meta:</strong> Crear script master que haga todo esto con un solo comando</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🛡️ Caso 2: SOC (Security Operations Center)</h3>
+                    <p><strong>Escenario:</strong> Analista de seguridad detectando amenazas 24/7.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Responsabilidades:</h4>
+                        <ol class="list-decimal list-inside text-gray-300 space-y-2">
+                            <li>Monitorear logs de seguridad en tiempo real</li>
+                            <li>Detectar patrones de ataques de fuerza bruta</li>
+                            <li>Identificar comunicaciones con C&C servers</li>
+                            <li>Responder automáticamente a incidentes nivel 1</li>
+                            <li>Generar IOCs (Indicators of Compromise)</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🔧 Caso 3: Soporte Técnico Automatizado</h3>
+                    <p><strong>Escenario:</strong> Técnico de soporte creando herramientas de autodiagnóstico.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Herramientas necesarias:</h4>
+                        <ol class="list-decimal list-inside text-gray-300 space-y-2">
+                            <li>Diagnóstico automático de problemas de red</li>
+                            <li>Limpieza de archivos temporales y caché</li>
+                            <li>Verificación de integridad del sistema</li>
+                            <li>Reparación automática de servicios Windows</li>
+                            <li>Reporte detallado para el usuario final</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Proyectos Finales -->
+        <section id="final-projects" class="mb-12">
+            <h2 class="section-title">> Módulo 6: Proyectos Capstone</h2>
+            
+            <div class="card">
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🏆 Proyecto Final 1: Mini-SIEM <span class="challenge-badge badge-expert">EXPERTO</span></h3>
+                    <p><strong>Objetivo:</strong> Crear un sistema básico de SIEM (Security Information and Event Management).</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Componentes requeridos:</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Collector: Recopilar logs de múltiples fuentes</li>
+                            <li>Parser: Normalizar formatos de logs diferentes</li>
+                            <li>Correlator: Detectar patrones de ataque</li>
+                            <li>Alerter: Sistema de notificaciones</li>
+                            <li>Dashboard: Interfaz web básica para visualización</li>
+                        </ul>
+                        <div class="mt-4 p-3 bg-purple-900 bg-opacity-30 border-l-4 border-purple-500 rounded">
+                            <p class="text-purple-300 text-sm"><strong>🚀 Extra:</strong> Integra con APIs de threat intelligence</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise-container">
+                    <h3 class="exercise-title">🤖 Proyecto Final 2: Asistente de Administración IA <span class="challenge-badge badge-expert">EXPERTO</span></h3>
+                    <p><strong>Objetivo:</strong> Chatbot inteligente para administración de sistemas.</p>
+                    <div class="mt-4">
+                        <h4 class="text-lg font-bold text-cyan-400 mb-2">Funcionalidades:</h4>
+                        <ul class="list-disc list-inside text-gray-300 space-y-2">
+                            <li>Procesamiento de lenguaje natural para comandos</li>
+                            <li>Ejecución segura de tareas administrativas</li>
+                            <li>Aprendizaje de patrones de uso</li>
+                            <li>Sugerencias proactivas de mantenimiento</li>
+                            <li>Integración con sistemas de ticketing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="text-center mt-12 mb-6">
+            <p class="text-sm text-gray-500">LABORATORIO PS-PRÁCTICAS COMPLETADO. OPERADOR CERTIFICADO.</p>
+            <button class="mt-4 bg-green-600 hover:bg-green-700" data-bs-toggle="offcanvas" data-bs-target="#commandsReference">
+                📖 Consultar Arsenal de Comandos
+            </button>
+        </footer>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Función para copiar código al portapapeles
+        function initCodeCopyButtons() {
+            const pres = document.querySelectorAll('pre');
+            pres.forEach(pre => {
+                const button = document.createElement('button');
+                button.innerText = 'Copiar';
+                button.className = 'absolute top-2 right-2 text-xs';
+                button.style.fontSize = '0.75rem';
+                pre.style.position = 'relative';
+                pre.appendChild(button);
+
+                button.addEventListener('click', () => {
+                    const code = pre.cloneNode(true);
+                    const buttonElement = code.querySelector('button');
+                    if (buttonElement) {
+                        code.removeChild(buttonElement);
+                    }
+                    const text = code.innerText || code.textContent;
+                    
+                    navigator.clipboard.writeText(text).then(() => {
+                        button.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            button.innerText = 'Copiar';
+                        }, 2000);
+                    }).catch(() => {
+                        const el = document.createElement('textarea');
+                        el.value = text;
+                        document.body.appendChild(el);
+                        el.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(el);
+
+                        button.innerText = '¡Copiado!';
+                        setTimeout(() => {
+                            button.innerText = 'Copiar';
+                        }, 2000);
+                    });
+                });
+            });
+        }
+
+        // Función para agregar números de línea a bloques de código
+        function addLineNumbers() {
+            const pres = document.querySelectorAll('pre');
+            pres.forEach(pre => {
+                const lines = pre.innerHTML.split('\n');
+                if (lines.length > 3) {
+                    const numberedLines = lines.map((line, index) => {
+                        if (index === 0) return line;
+                        return `<span class="line-number" style="color: #6272a4; margin-right: 1rem; user-select: none;">${index.toString().padStart(2, '0')}</span>${line}`;
+                    });
+                    pre.innerHTML = numberedLines.join('\n');
+                }
+            });
+        }
+
+        // Efectos de animación para las cards
+        function initCardAnimations() {
+            const cards = document.querySelectorAll('.card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animation = 'slideInUp 0.6s ease-out';
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach(card => {
+                observer.observe(card);
+            });
+        }
+
+        // Agregar animación CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Inicializar funciones cuando carga la página
+        document.addEventListener('DOMContentLoaded', () => {
+            initCodeCopyButtons();
+            initCardAnimations();
+            
+            // Mensaje de bienvenida en consola
+            console.log(`
+🚀 LABORATORIO PS-PRÁCTICAS INICIADO
+════════════════════════════════════
+📖 Arsenal de comandos disponible
+🎯 ${document.querySelectorAll('.exercise-container').length} ejercicios cargados
+💻 Sistema operativo detectado: ${navigator.platform}
+⚡ ¡Comienza tu entrenamiento!
+            `);
+        });
+
+        // Función para navegación por categorías en el offcanvas
+        function scrollToCategory(categoryId) {
+            const category = document.getElementById(categoryId);
+            if (category) {
+                category.scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+                
+                // Efecto visual de highlight
+                category.style.background = 'rgba(189, 147, 249, 0.2)';
+                category.style.transition = 'background 0.5s ease';
+                
+                setTimeout(() => {
+                    category.style.background = 'transparent';
+                }, 1500);
+            }
+        }
+
+        // Función para tracking de progreso (opcional)
+        function trackProgress(exerciseId) {
+            const completed = JSON.parse(localStorage.getItem('ps-exercises-completed') || '[]');
+            if (!completed.includes(exerciseId)) {
+                completed.push(exerciseId);
+                localStorage.setItem('ps-exercises-completed', JSON.stringify(completed));
+                
+                // Mostrar notificación de progreso
+                const toast = document.createElement('div');
+                toast.className = 'position-fixed top-0 end-0 m-3 p-3 bg-success text-white rounded';
+                toast.style.zIndex = '9999';
+                toast.innerHTML = `✅ Ejercicio ${exerciseId} completado!`;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+        }
+
+        // Función de búsqueda rápida en el arsenal
+        function searchCommands() {
+            const searchTerm = document.getElementById('command-search').value.toLowerCase();
+            const cmdItems = document.querySelectorAll('.cmd-item');
+            
+            cmdItems.forEach(item => {
+                const name = item.querySelector('.cmd-name').textContent.toLowerCase();
+                const description = item.querySelector('.cmd-description').textContent.toLowerCase();
+                const syntax = item.querySelector('.cmd-syntax').textContent.toLowerCase();
+                
+                if (name.includes(searchTerm) || description.includes(searchTerm) || syntax.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    if (searchTerm) {
+                        item.style.border = '2px solid #50fa7b';
+                    } else {
+                        item.style.border = '1px solid #bd93f9';
+                    }
+                } else {
+                    item.style.display = searchTerm ? 'none' : 'block';
+                    item.style.border = '1px solid #bd93f9';
+                }
+            });
+        }
+    </script>
+</body>
+</html> 

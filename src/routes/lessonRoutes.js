@@ -16,6 +16,8 @@ router.get('/lessons/cyberhack', (req, res) => {
     res.sendFile(path.join(__dirname, '../', 'public', 'lessons', 'cyberhack.html'));
 });
 
-
+router.get('/lessons/practicas', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'public', 'lessons', 'practicas_powershell.html'));
+});
 
 export default router;
