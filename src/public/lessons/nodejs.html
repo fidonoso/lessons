@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Node.js + Express: Flujo de Requests y Middlewares</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #68d391;
+            --secondary: #4299e1;
+            --accent: #ed8936;
+            --success: #38b2ac;
+            --warning: #ecc94b;
+            --danger: #f56565;
+            --dark: #2d3748;
+            --light: #f7fafc;
+            --bg-gradient: linear-gradient(135deg, #68d391 0%, #4299e1 100%);
+            --card-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background: var(--light);
+        }
+
+        .header {
+            background: var(--bg-gradient);
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '🚀⚡🔧🌐';
+            position: absolute;
+            top: 50%;
+            left: -100px;
+            font-size: 3rem;
+            opacity: 0.1;
+            animation: float 15s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(100vw + 200px)); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: var(--card-shadow);
+            border-left: 5px solid var(--primary);
+        }
+
+        .card h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .card h3 {
+            color: var(--secondary);
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3rem;
+        }
+
+        .flow-diagram {
+            background: linear-gradient(135deg, #f0fff4, #e6fffa);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 5px solid var(--success);
+        }
+
+        .flow-step {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--accent);
+            transition: transform 0.3s ease;
+        }
+
+        .flow-step:hover {
+            transform: translateX(10px);
+        }
+
+        .step-number {
+            background: var(--accent);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 1rem;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 0;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid #3e3e3e;
+            font-family: 'Fira Code', 'Consolas', 'Monaco', 'Courier New', monospace;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .code-header {
+            background: #2d2d30;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #3e3e3e;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .code-lang {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red { background: #ff5f56; }
+        .code-dot.yellow { background: #ffbd2e; }
+        .code-dot.green { background: #27ca3f; }
+
+        .code-content {
+            padding: 1.5rem;
+            overflow-x: auto;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .code-content pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #569cd6; }
+        .string { color: #ce9178; }
+        .comment { color: #6a9955; font-style: italic; }
+        .function { color: #dcdcaa; }
+        .variable { color: #9cdcfe; }
+        .operator { color: #d4d4d4; }
+        .number { color: #b5cea8; }
+        .property { color: #92c5f7; }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--warning), #ffd93d);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 5px solid #f39c12;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #bee3f8, #90cdf4);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+            border-left: 5px solid var(--secondary);
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, var(--success), #38b2ac);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .danger-box {
+            background: linear-gradient(135deg, #fc8181, #f56565);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1rem 0;
+        }
+
+        .middleware-chain {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .middleware-item {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .middleware-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .middleware-icon {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .arrow-down {
+            text-align: center;
+            font-size: 2rem;
+            color: var(--accent);
+            margin: 0.5rem 0;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 2rem 0;
+            box-shadow: var(--card-shadow);
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .comparison-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .emoji {
+            font-size: 1.2em;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .header p { font-size: 1.1rem; }
+            .container { padding: 1rem; }
+            .card { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>🚀 Node.js + Express</h1>
+            <p>Comprende el flujo completo de requests y middlewares</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Introducción -->
+        <div class="card">
+            <h2>🎯 ¿Qué son los Middlewares?</h2>
+            
+            <div class="info-box">
+                <h3>💡 Definición</h3>
+                <p>Los <strong>middlewares</strong> son funciones que se ejecutan durante el ciclo de vida de una petición HTTP. Tienen acceso a:</p>
+                <ul>
+                    <li><strong>req</strong> (request): Objeto de petición</li>
+                    <li><strong>res</strong> (response): Objeto de respuesta</li>
+                    <li><strong>next</strong>: Función para pasar al siguiente middleware</li>
+                </ul>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <div class="code-lang">JavaScript</div>
+                </div>
+                <div class="code-content">
+                    <pre><span class="comment">// Structure básica de un middleware</span>
+<span class="keyword">const</span> <span class="function">miMiddleware</span> <span class="operator">=</span> <span class="operator">(</span><span class="variable">req</span><span class="operator">,</span> <span class="variable">res</span><span class="operator">,</span> <span class="variable">next</span><span class="operator">)</span> <span class="operator">=></span> <span class="operator">{</span>
+    <span class="comment">// Procesar la petición</span>
+    <span class="variable">console</span><span class="operator">.</span><span class="function">log</span><span class="operator">(</span><span class="string">'Middleware ejecutado!'</span><span class="operator">);</span>
+    
+    <span class="comment">// Pasar al siguiente middleware</span>
+    <span class="function">next</span><span class="operator">();</span>
+<span class="operator">};</span></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flujo de Request -->
+        <div class="card">
+            <h2>🔄 Flujo Completo de una Petición</h2>
+            
+            <div class="flow-diagram">
+                <h3>📋 Ejemplo: POST /auth/register_form</h3>
+                
+                <div class="flow-step">
+                    <span class="step-number">1</span>
+                    <div>
+                        <strong>Cliente envía petición</strong><br>
+                        <code>POST /auth/register_form</code><br>
+                        <small>Content-Type: application/x-www-form-urlencoded</small>
+                    </div>
+                </div>
+                
+                <div class="arrow-down">⬇️</div>
+                
+                <div class="flow-step">
+                    <span class="step-number">2</span>
+                    <div>
+                        <strong>Express crea objetos req y res</strong><br>
+                        <code>req.body = undefined</code> (aún no parseado)
+                    </div>
+                </div>
+                
+                <div class="arrow-down">⬇️</div>
+                
+                <div class="middleware-chain">
+                    <div class="middleware-item">
+                        <div class="middleware-icon">🌐</div>
+                        <div>
+                            <strong>cors()</strong><br>
+                            <small>Configura headers CORS para peticiones cross-origin</small>
+                        </div>
+                    </div>
+                    
+                    <div class="middleware-item">
+                        <div class="middleware-icon">📝</div>
+                        <div>
+                            <strong>express.json()</strong><br>
+                            <small>Parsea JSON (Content-Type: application/json)</small>
+                        </div>
+                    </div>
+                    
+                    <div class="middleware-item">
+                        <div class="middleware-icon">📋</div>
+                        <div>
+                            <strong>express.urlencoded()</strong><br>
+                            <small>⚡ PARSEA FORMULARIOS HTML ⚡</small>
+                        </div>
+                    </div>
+                    
+                    <div class="middleware-item">
+                        <div class="middleware-icon">📊</div>
+                        <div>
+                            <strong>morgan('dev')</strong><br>
+                            <small>Registra logs de peticiones HTTP</small>
+                        </div>
+                    </div>
+                    
+                    <div class="middleware-item">
+                        <div class="middleware-icon">📁</div>
+                        <div>
+                            <strong>express.static('public')</strong><br>
+                            <small>Sirve archivos estáticos (HTML, CSS, JS)</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="arrow-down">⬇️</div>
+                
+                <div class="flow-step">
+                    <span class="step-number">3</span>
+                    <div>
+                        <strong>Router Matching</strong><br>
+                        Express busca una ruta que coincida con <code>/auth/register_form</code>
+                    </div>
+                </div>
+                
+                <div class="arrow-down">⬇️</div>
+                
+                <div class="flow-step">
+                    <span class="step-number">4</span>
+                    <div>
+                        <strong>Middleware de Ruta: stopRequest()</strong><br>
+                        <code>req.body = { name: 'Juan', email: 'juan@email.com' }</code>
+                    </div>
+                </div>
+                
+                <div class="arrow-down">⬇️</div>
+                
+                <div class="flow-step">
+                    <span class="step-number">5</span>
+                    <div>
+                        <strong>Respuesta al Cliente</strong><br>
+                        <code>res.status(404).json({ message: 'Recurso no encontrado' })</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Código del Servidor -->
+        <div class="card">
+            <h2>⚙️ Tu Código de Servidor (app.js)</h2>
+            
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <div class="code-lang">JavaScript</div>
+                </div>
+                <div class="code-content">
+                    <pre><span class="keyword">import</span> <span class="variable">express</span> <span class="keyword">from</span> <span class="string">"express"</span><span class="operator">;</span>
+<span class="keyword">import</span> <span class="variable">cors</span> <span class="keyword">from</span> <span class="string">"cors"</span><span class="operator">;</span>
+<span class="keyword">import</span> <span class="variable">morgan</span> <span class="keyword">from</span> <span class="string">"morgan"</span><span class="operator">;</span>
+
+<span class="keyword">const</span> <span class="variable">app</span> <span class="operator">=</span> <span class="function">express</span><span class="operator">();</span>
+
+<span class="comment">// 🌐 Middlewares Globales (se ejecutan en TODAS las peticiones)</span>
+<span class="variable">app</span><span class="operator">.</span><span class="function">use</span><span class="operator">(</span><span class="function">cors</span><span class="operator">());</span>                              <span class="comment">// 1️⃣ CORS</span>
+<span class="variable">app</span><span class="operator">.</span><span class="function">use</span><span class="operator">(</span><span class="variable">express</span><span class="operator">.</span><span class="function">json</span><span class="operator">());</span>                      <span class="comment">// 2️⃣ Parsea JSON</span>
+<span class="variable">app</span><span class="operator">.</span><span class="function">use</span><span class="operator">(</span><span class="variable">express</span><span class="operator">.</span><span class="function">urlencoded</span><span class="operator">({</span> <span class="property">extended</span><span class="operator">:</span> <span class="keyword">true</span> <span class="operator">}));</span> <span class="comment">// 3️⃣ Parsea formularios</span>
+<span class="variable">app</span><span class="operator">.</span><span class="function">use</span><span class="operator">(</span><span class="function">morgan</span><span class="operator">(</span><span class="string">"dev"</span><span class="operator">));</span>                       <span class="comment">// 4️⃣ Logs</span>
+<span class="variable">app</span><span class="operator">.</span><span class="function">use</span><span class="operator">(</span><span class="variable">express</span><span class="operator">.</span><span class="function">static</span><span class="operator">(</span><span class="string">"public"</span><span class="operator">));</span>            <span class="comment">// 5️⃣ Archivos estáticos</span>
+
+<span class="comment">// 🛣️ Rutas</span>
+<span class="variable">app</span><span class="operator">.</span><span class="function">use</span><span class="operator">(</span><span class="string">'/auth'</span><span class="operator">,</span> <span class="variable">authRoutes</span><span class="operator">);</span>                 <span class="comment">// 6️⃣ Router</span></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tipos de Middlewares -->
+        <div class="card">
+            <h2>🔧 Tipos de Middlewares</h2>
+            
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>🏷️ Tipo</th>
+                            <th>📍 Alcance</th>
+                            <th>🎯 Propósito</th>
+                            <th>📝 Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Aplicación</strong></td>
+                            <td>Todas las rutas</td>
+                            <td>Configuración global</td>
+                            <td><code>app.use(cors())</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Router</strong></td>
+                            <td>Grupo de rutas</td>
+                            <td>Lógica específica de módulo</td>
+                            <td><code>app.use('/auth', authRoutes)</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ruta</strong></td>
+                            <td>Ruta específica</td>
+                            <td>Validación, autenticación</td>
+                            <td><code>router.post('/login', middleware, controller)</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Error</strong></td>
+                            <td>Manejo de errores</td>
+                            <td>Capturar y procesar errores</td>
+                            <td><code>app.use((err, req, res, next) => {})</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Parsing de Datos -->
+        <div class="card">
+            <h2>📊 Parsing de Datos de Entrada</h2>
+            
+            <div class="highlight-box">
+                <h3>⚡ ¡Clave para entender req.body!</h3>
+                <p>Los middlewares de parsing son esenciales para procesar datos de entrada</p>
+            </div>
+
+            <h3>📝 express.json()</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <div class="code-lang">JavaScript</div>
+                </div>
+                <div class="code-content">
+                    <pre><span class="comment">// Petición con JSON</span>
+<span class="variable">Content-Type</span><span class="operator">:</span> <span class="string">application/json</span>
+<span class="variable">Body</span><span class="operator">:</span> <span class="string">{"name": "Juan", "email": "juan@email.com"}</span>
+
+<span class="comment">// Después de express.json()</span>
+<span class="variable">req</span><span class="operator">.</span><span class="property">body</span> <span class="operator">=</span> <span class="operator">{</span> <span class="property">name</span><span class="operator">:</span> <span class="string">"Juan"</span><span class="operator">,</span> <span class="property">email</span><span class="operator">:</span> <span class="string">"juan@email.com"</span> <span class="operator">}</span></pre>
+                </div>
+            </div>
+
+            <h3>📋 express.urlencoded()</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <div class="code-lang">JavaScript</div>
+                </div>
+                <div class="code-content">
+                    <pre><span class="comment">// Petición con formulario HTML</span>
+<span class="variable">Content-Type</span><span class="operator">:</span> <span class="string">application/x-www-form-urlencoded</span>
+<span class="variable">Body</span><span class="operator">:</span> <span class="string">name=Juan&email=juan@email.com&password=123</span>
+
+<span class="comment">// Después de express.urlencoded()</span>
+<span class="variable">req</span><span class="operator">.</span><span class="property">body</span> <span class="operator">=</span> <span class="operator">{</span> <span class="property">name</span><span class="operator">:</span> <span class="string">"Juan"</span><span class="operator">,</span> <span class="property">email</span><span class="operator">:</span> <span class="string">"juan@email.com"</span><span class="operator">,</span> <span class="property">password</span><span class="operator">:</span> <span class="string">"123"</span> <span class="operator">}</span></pre>
+                </div>
+            </div>
+
+            <div class="danger-box">
+                <h3>🚨 Problema Común</h3>
+                <p><strong>Sin el middleware correcto:</strong></p>
+                <p><code>req.body = undefined</code> o <code>req.body = {}</code></p>
+                <p><strong>¡Por eso no veías los datos de tu formulario!</strong></p>
+            </div>
+        </div>
+
+        <!-- Función next() -->
+        <div class="card">
+            <h2>🔄 La Función next() - Control de Flujo</h2>
+            
+            <div class="info-box">
+                <h3>💡 ¿Qué hace next()?</h3>
+                <p>La función <code>next()</code> controla si la petición continúa al siguiente middleware o se detiene.</p>
+            </div>
+
+            <h3>✅ Middleware que Continúa</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <div class="code-lang">JavaScript</div>
+                </div>
+                <div class="code-content">
+                    <pre><span class="keyword">const</span> <span class="function">middlewareContinua</span> <span class="operator">=</span> <span class="operator">(</span><span class="variable">req</span><span class="operator">,</span> <span class="variable">res</span><span class="operator">,</span> <span class="variable">next</span><span class="operator">)</span> <span class="operator">=></span> <span class="operator">{</span>
+    <span class="variable">console</span><span class="operator">.</span><span class="function">log</span><span class="operator">(</span><span class="string">'Procesando petición...'</span><span class="operator">);</span>
+    
+    <span class="comment">// Continúa al siguiente middleware</span>
+    <span class="function">next</span><span class="operator">();</span>
+<span class="operator">};</span></pre>
+                </div>
+            </div>
+
+            <h3>❌ Middleware que Termina (como tu stopRequest)</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <div class="code-lang">JavaScript</div>
+                </div>
+                <div class="code-content">
+                    <pre><span class="keyword">export</span> <span class="keyword">const</span> <span class="function">stopRequest</span> <span class="operator">=</span> <span class="operator">(</span><span class="variable">req</span><span class="operator">,</span> <span class="variable">res</span><span class="operator">,</span> <span class="variable">next</span><span class="operator">)</span> <span class="operator">=></span> <span class="operator">{</span>
+    <span class="variable">console</span><span class="operator">.</span><span class="function">log</span><span class="operator">(</span><span class="string">'ruta StopRequest'</span><span class="operator">);</span>
+    <span class="variable">console</span><span class="operator">.</span><span class="function">log</span><span class="operator">(</span><span class="string">'req.body ==>'</span><span class="operator">,</span> <span class="variable">req</span><span class="operator">.</span><span class="property">body</span><span class="operator">);</span>
+    
+    <span class="comment">// Envía respuesta y TERMINA aquí</span>
+    <span class="variable">res</span><span class="operator">.</span><span class="function">status</span><span class="operator">(</span><span class="number">404</span><span class="operator">).</span><span class="function">json</span><span class="operator">({</span> <span class="property">message</span><span class="operator">:</span> <span class="string">'Recurso no encontrado'</span> <span class="operator">});</span>
+    <span class="comment">// NO llama next() - El controlador register() NUNCA se ejecuta</span>
+<span class="operator">};</span></pre>
+                </div>
+            </div>
+
+            <h3>🔧 Middleware de Manejo de Errores</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <div class="code-lang">JavaScript</div>
+                </div>
+                <div class="code-content">
+                    <pre><span class="keyword">const</span> <span class="function">middlewareConError</span> <span class="operator">=</span> <span class="operator">(</span><span class="variable">req</span><span class="operator">,</span> <span class="variable">res</span><span class="operator">,</span> <span class="variable">next</span><span class="operator">)</span> <span class="operator">=></span> <span class="operator">{</span>
+    <span class="keyword">try</span> <span class="operator">{</span>
+        <span class="comment">// Código que puede fallar</span>
+        <span class="keyword">const</span> <span class="variable">data</span> <span class="operator">=</span> <span class="variable">JSON</span><span class="operator">.</span><span class="function">parse</span><span class="operator">(</span><span class="variable">invalidJson</span><span class="operator">);</span>
+        <span class="function">next</span><span class="operator">();</span>
+    <span class="operator">}</span> <span class="keyword">catch</span> <span class="operator">(</span><span class="variable">error</span><span class="operator">)</span> <span class="operator">{</span>
+        <span class="comment">// Pasa el error al middleware de manejo de errores</span>
+        <span class="function">next</span><span class="operator">(</span><span class="variable">error</span><span class="operator">);</span>
+    <span class="operator">}</span>
+<span class="operator">};</span></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ejemplo Práctico -->
+        <div class="card">
+            <h2>🎯 Ejemplo Práctico: Tu Caso</h2>
+            
+            <div class="success-box">
+                <h3>🎉 Problema Resuelto</h3>
+                <p>Agregaste <code>express.urlencoded({ extended: true })</code> y ahora puedes ver <code>req.body</code> en tu middleware <code>stopRequest</code></p>
+            </div>
+
+            <h3>📋 Formulario HTML (login_form.html)</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <div class="code-lang">HTML</div>
+                </div>
+                <div class="code-content">
+                    <pre><span class="operator">&lt;</span><span class="keyword">form</span> <span class="property">action</span><span class="operator">=</span><span class="string">"/auth/register_form"</span> <span class="property">method</span><span class="operator">=</span><span class="string">"POST"</span><span class="operator">&gt;</span>
+  <span class="operator">&lt;</span><span class="keyword">input</span> <span class="property">type</span><span class="operator">=</span><span class="string">"text"</span> <span class="property">name</span><span class="operator">=</span><span class="string">"name"</span> <span class="property">required</span> <span class="operator">/&gt;</span>
+  <span class="operator">&lt;</span><span class="keyword">input</span> <span class="property">type</span><span class="operator">=</span><span class="string">"email"</span> <span class="property">name</span><span class="operator">=</span><span class="string">"email"</span> <span class="property">required</span> <span class="operator">/&gt;</span>
+  <span class="operator">&lt;</span><span class="keyword">input</span> <span class="property">type</span><span class="operator">=</span><span class="string">"password"</span> <span class="property">name</span><span class="operator">=</span><span class="string">"password"</span> <span class="property">required</span> <span class="operator">/&gt;</span>
+  <span class="operator">&lt;</span><span class="keyword">button</span> <span class="property">type</span><span class="operator">=</span><span class="string">"submit"</span><span class="operator">&gt;</span>Registrarse<span class="operator">&lt;/</span><span class="keyword">button</span><span class="operator">&gt;</span>
+<span class="operator">&lt;/</span><span class="keyword">form</span><span class="operator">&gt;</span></pre>
+                </div>
+            </div>
+
+            <h3>🛣️ Ruta (auth.routes.js)</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <div class="code-lang">JavaScript</div>
+                </div>
+                <div class="code-content">
+                    <pre><span class="variable">router</span><span class="operator">.</span><span class="function">post</span><span class="operator">(</span><span class="string">'/register_form'</span><span class="operator">,</span> <span class="variable">stopRequest</span><span class="operator">,</span> <span class="variable">register</span><span class="operator">);</span>
+<span class="comment">//                            ⬆️           ⬆️</span>
+<span class="comment">//                     Middleware    Controlador</span>
+<span class="comment">//                    (se ejecuta)  (NO se ejecuta)</span></pre>
+                </div>
+            </div>
+
+            <h3>📊 Resultado en Consola</h3>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <div class="code-lang">Console</div>
+                </div>
+                <div class="code-content">
+                    <pre><span class="string">ruta StopRequest</span>
+<span class="string">req.body ==> { name: 'Juan', email: 'juan@email.com', password: '123456' }</span>
+<span class="string">url ==> /register_form</span></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mejores Prácticas -->
+        <div class="card">
+            <h2>🏆 Mejores Prácticas</h2>
+            
+            <div class="highlight-box">
+                <h3>✅ Hacer</h3>
+                <ul>
+                    <li>Usar middlewares específicos para cada tarea</li>
+                    <li>Llamar <code>next()</code> para continuar la cadena</li>
+                    <li>Manejar errores con <code>next(error)</code></li>
+                    <li>Documentar el propósito de cada middleware</li>
+                </ul>
+            </div>
+
+            <div class="danger-box">
+                <h3>❌ Evitar</h3>
+                <ul>
+                    <li>Middlewares que hacen demasiadas cosas</li>
+                    <li>Olvidar llamar <code>next()</code> cuando corresponde</li>
+                    <li>Enviar múltiples respuestas desde diferentes middlewares</li>
+                    <li>No manejar errores apropiadamente</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
