@@ -20,4 +20,8 @@ router.get('/lessons/practicas', (req, res) => {
     res.sendFile(path.join(__dirname, '../', 'public', 'lessons', 'practicas_powershell.html'));
 });
 
+router.get('/lessons/powershell/pw_anatomia', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'public', 'lessons', 'powershell', 'pw_anatomia.html'));
+});
+
 export default router;

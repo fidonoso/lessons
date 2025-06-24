@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esquema Visual de PowerShell (Modo Oscuro)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .code-block {
+            background-color: #0F172A; /* slate-900 */
+            color: #E2E8F0; /* slate-200 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid #334155; /* slate-700 */
+        }
+        .card {
+            background-color: #1E293B; /* slate-800 */
+            border-radius: 0.75rem;
+            border: 1px solid #334155; /* slate-700 */
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+        }
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+        .verb-tag {
+            background-color: #1E3A8A; /* blue-900 */
+            color: #93C5FD; /* blue-300 */
+            border-color: #2563EB; /* blue-600 */
+        }
+        .noun-tag {
+            background-color: #064E3B; /* green-900 */
+            color: #A7F3D0; /* green-300 */
+            border-color: #059669; /* green-600 */
+        }
+        .param-tag {
+            background-color: #78350F; /* amber-900 */
+            color: #FDE68A; /* amber-300 */
+            border-color: #D97706; /* amber-600 */
+        }
+        .pipe-symbol {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #A855F7; /* purple-500 */
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-300 p-4 sm:p-6 md:p-8">
+
+    <div class="max-w-5xl mx-auto">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-blue-400">Esquema Visual de PowerShell</h1>
+            <p class="mt-2 text-lg text-slate-400">Una guía para entender la estructura de comandos y scripts en Windows.</p>
+        </header>
+        <nav class="flex flex-wrap justify-center gap-6 mt-8 mb-8 p-6 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg backdrop-blur-sm">
+            <a href="/" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-500/25">
+                🏠 PORTAL
+            </a>
+            <a href="/lessons/powershell/pw_anatomia" target="_blank" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-purple-500/25">
+                📋 Anatomía de PowerShell
+            </a>
+            <a href="/powershell" class="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-green-500/25" target="_blank">
+                💻 Introducción a PowerShell
+            </a>
+            <a href="/lessons/practicas" class="px-4 py-2 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-orange-500/25" target="_blank">
+                ⚡ Laboratorio de Prácticas
+            </a>
+        </nav>
+
+        <!-- Sección 1: El Cmdlet -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 border-l-4 border-blue-500 pl-3">1. El Corazón de PowerShell: El Cmdlet</h2>
+            <div class="card">
+                <p class="mb-4">Todo en PowerShell se basa en comandos llamados "Cmdlets". Siguen una estructura simple y predecible de <strong class="text-blue-400">Verbo-Sustantivo</strong> que los hace fáciles de entender y recordar.</p>
+                <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-8 bg-slate-900 p-6 rounded-lg">
+                    <div class="text-center">
+                        <span class="tag verb-tag">Verbo</span>
+                        <p class="mt-2 text-slate-400">La acción a realizar (Get, Set, Start, Stop, New, etc.)</p>
+                    </div>
+                    <span class="text-2xl font-bold text-slate-500">-</span>
+                    <div class="text-center">
+                        <span class="tag noun-tag">Sustantivo</span>
+                        <p class="mt-2 text-slate-400">El objeto sobre el que se actúa (Process, Service, Item, Content)</p>
+                    </div>
+                </div>
+                <h4 class="font-semibold mt-6 mb-2 text-slate-200">Ejemplo:</h4>
+                <div class="code-block">
+                    <span style="color: #93C5FD;">Get</span><span>-Service</span>
+                </div>
+                <p class="mt-2 text-sm text-slate-400">Este comando <strong class="text-blue-400">obtiene (Get)</strong> una lista de todos los <strong class="text-green-400">servicios (Service)</strong> que se ejecutan en el sistema.</p>
+            </div>
+        </div>
+
+        <!-- Sección 2: Anatomía de un Comando Completo -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 border-l-4 border-green-500 pl-3">2. Anatomía de un Comando: Parámetros</h2>
+            <div class="card">
+                <p class="mb-4">Los parámetros modifican la acción del cmdlet. Se indican con un guión (<code class="text-amber-400">-</code>) y te permiten filtrar, especificar o dirigir la salida.</p>
+                <h4 class="font-semibold mb-2 text-slate-200">Ejemplo Desglosado:</h4>
+                <div class="code-block">
+                    <span style="color: #93C5FD;">Get-Process</span> <span style="color: #FCD34D;">-Name</span> "chrome"
+                </div>
+                <div class="mt-4 space-y-2">
+                    <p><span class="tag verb-tag">Get-Process</span>: El cmdlet base.</p>
+                    <p><span class="tag param-tag">-Name</span>: El parámetro. Le dice al cmdlet que filtre por nombre.</p>
+                    <p><code class="bg-slate-700 text-slate-300 px-2 py-1 rounded">"chrome"</code>: El argumento o valor para el parámetro <code class="text-amber-400">-Name</code>.</p>
+                </div>
+                <hr class="border-slate-600 my-6">
+                <h4 class="font-semibold mb-2 text-slate-200">Parámetros Comunes (Muy Útiles)</h4>
+                <ul class="list-disc list-inside space-y-2 text-slate-400">
+                    <li><code class="text-amber-400">-Verbose</code>: Muestra información detallada sobre las operaciones que realiza el comando. Ideal para depurar.</li>
+                    <li><code class="text-amber-400">-Debug</code>: Proporciona información de depuración aún más profunda.</li>
+                    <li><code class="text-amber-400">-ErrorAction</code>: Especifica qué hacer si un comando falla. Opciones: <code class="text-red-400">SilentlyContinue</code>, <code class="text-red-400">Stop</code>, <code class="text-red-400">Continue</code>.</li>
+                     <li><code class="text-amber-400">-WhatIf</code>: Muestra lo que el comando haría, pero sin ejecutarlo realmente. Perfecto para comandos destructivos.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Sección 3: El Pipeline -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 border-l-4 border-purple-500 pl-3">3. La Tubería (Pipeline): Conectando Comandos</h2>
+            <div class="card">
+                <p class="mb-4 text-slate-300">
+                    El Pipeline (<code class="text-purple-400 font-bold">|</code>) es la característica más potente de PowerShell. Imagínalo como una <strong class="text-purple-300">línea de ensamblaje</strong> para tus datos. Un comando produce objetos y el pipeline los transporta al siguiente comando para que trabaje con ellos.
+                </p>
+                <p class="mb-4 text-slate-400">
+                    A diferencia de otras consolas que solo pasan texto, PowerShell pasa <strong class="text-teal-300">objetos completos y estructurados</strong>, con todas sus propiedades y métodos. Esto te permite crear flujos de trabajo complejos de forma muy elegante.
+                </p>
+
+                <h4 class="font-semibold mt-6 mb-2 text-slate-200">Ejemplo de Flujo de Datos en el Pipeline:</h4>
+                <div class="code-block mb-4">
+                    Get-Service | Where-Object {$_.Status -eq 'Running'} | Sort-Object -Property DisplayName
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Paso 1 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-purple-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold flex-shrink-0">1</div>
+                        <div>
+                            <h5 class="font-semibold text-purple-300">INICIO: <code class="text-purple-300">Get-Service</code></h5>
+                            <p class="text-slate-400">El primer comando se ejecuta. Produce una <strong class="text-white">colección de objetos</strong> de tipo `ServiceController`. Cada objeto contiene toda la información de un servicio (nombre, estado, descripción, etc.).</p>
+                        </div>
+                    </div>
+
+                    <!-- Pipeline Symbol -->
+                    <div class="flex justify-center">
+                        <div class="pipe-symbol transform -translate-y-4">|</div>
+                    </div>
+
+                    <!-- Paso 2 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-purple-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold flex-shrink-0">2</div>
+                        <div>
+                            <h5 class="font-semibold text-purple-300">FILTRADO: <code class="text-purple-300">Where-Object {...}</code></h5>
+                            <p class="text-slate-400">El pipeline toma cada objeto de servicio, <strong class="text-white">uno por uno</strong>, y se lo entrega a `Where-Object`. Dentro del bloque de script `{...}`, la variable especial <code class="bg-slate-700 p-1 rounded">$_</code> (o `$PSItem`) representa el objeto actual.</p>
+                            <p class="text-slate-400 mt-2">La condición <code class="text-amber-300">$_.Status -eq 'Running'</code> se evalúa: "Para este objeto de servicio, ¿es su propiedad 'Status' igual a 'Running'?".</p>
+                            <p class="text-slate-400 mt-2">Solo los objetos que cumplen esta condición (<strong class="text-green-400">devuelven `true`</strong>) pasan a la siguiente etapa.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Pipeline Symbol -->
+                    <div class="flex justify-center">
+                        <div class="pipe-symbol transform -translate-y-4">|</div>
+                    </div>
+                    
+                    <!-- Paso 3 -->
+                    <div class="flex items-start space-x-4">
+                        <div class="bg-purple-500 text-white rounded-full h-8 w-8 flex items-center justify-center font-bold flex-shrink-0">3</div>
+                        <div>
+                            <h5 class="font-semibold text-purple-300">ORDENAMIENTO: <code class="text-purple-300">Sort-Object ...</code></h5>
+                            <p class="text-slate-400">Los objetos que sobrevivieron al filtro llegan a `Sort-Object`. Este cmdlet los reordena basándose en el valor de su propiedad `DisplayName`.</p>
+                            <p class="text-slate-400 mt-2">El resultado final que ves en la pantalla es la lista de servicios en ejecución, ya filtrada y ordenada.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 4: Todo es un Objeto -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 border-l-4 border-teal-500 pl-3">4. El Secreto: ¡Todo es un Objeto!</h2>
+            <div class="card">
+                <p class="mb-4">A diferencia de las shells tradicionales que manejan texto, PowerShell maneja <strong class="text-teal-400">objetos</strong>. Cada salida de un comando es un objeto con <strong class="font-semibold">propiedades</strong> (datos) y <strong class="font-semibold">métodos</strong> (acciones). Para descubrir qué propiedades y métodos tiene un objeto, usamos el cmdlet <code class="text-teal-400">Get-Member</code>.</p>
+                <h4 class="font-semibold mt-6 mb-2 text-slate-200">Ejemplo: Inspeccionando un Proceso</h4>
+                <div class="code-block">
+                    <span style="color: #93C5FD;">Get-Process</span> -Name "powershell" | <span style="color: #5EEAD4;">Get-Member</span>
+                </div>
+                <p class="mt-4">Esto revelará todas las propiedades como <code class="bg-slate-700 p-1 rounded">.CPU</code>, <code class="bg-slate-700 p-1 rounded">.Id</code>, <code class="bg-slate-700 p-1 rounded">.ProcessName</code> y métodos como <code class="bg-slate-700 p-1 rounded">.Kill()</code> o <code class="bg-slate-700 p-1 rounded">.WaitForExit()</code>.</p>
+                 <h4 class="font-semibold mt-6 mb-2 text-slate-200">Accediendo a Propiedades:</h4>
+                 <div class="code-block">
+# Obtener el uso de CPU de un proceso específico
+(<span style="color: #93C5FD;">Get-Process</span> -Name "powershell").CPU
+                 </div>
+            </div>
+        </div>
+
+        <!-- Sección 5: Scripting -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 border-l-4 border-red-500 pl-3">5. Scripting: Automatizando Tareas</h2>
+            <div class="card">
+                <p class="mb-4">Cuando combinas múltiples comandos, lógica y variables en un archivo <code class="bg-slate-700 text-slate-300 px-2 py-1 rounded">.ps1</code>, estás creando un script. Esto te permite automatizar tareas complejas.</p>
+                 <h4 class="font-semibold mb-2 text-slate-200">Ejemplo de Script Práctico: Encontrar Archivos Grandes</h4>
+                 <div class="code-block text-sm">
+<span style="color: #818CF8;"># Define la carpeta a escanear y el tamaño mínimo en MB</span>
+<span style="color: #F87171;">$targetFolder</span> = "C:\Windows"
+<span style="color: #F87171;">$minimumSizeMB</span> = 100
+
+<span style="color: #818CF8;"># Convierte MB a Bytes para la comparación</span>
+<span style="color: #F87171;">$minimumSizeBytes</span> = <span style="color: #F87171;">$minimumSizeMB</span> * 1MB
+
+<span style="color: #818CF8;"># Muestra un mensaje al usuario</span>
+Write-Host "Buscando archivos mayores a <span style="color: #F87171;">$minimumSizeMB</span> MB en <span style="color: #F87171;">$targetFolder</span>..." -ForegroundColor Yellow
+
+<span style="color: #818CF8;"># Obtiene los archivos, filtra por tamaño y ordena</span>
+Get-ChildItem -Path <span style="color: #F87171;">$targetFolder</span> -Recurse -File -ErrorAction SilentlyContinue | `
+    Where-Object { $_.Length -gt <span style="color: #F87171;">$minimumSizeBytes</span> } | `
+    Sort-Object -Property Length -Descending | `
+    Select-Object Name, DirectoryName, @{Name="Size (MB)";Expression={[math]::Round($_.Length / 1MB, 2)}}
+
+<span style="color: #818CF8;"># Fin del script</span>
+Write-Host "Búsqueda completada." -ForegroundColor Green
+                 </div>
+            </div>
+        </div>
+        
+        <!-- Sección 6: Alias -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 border-l-4 border-amber-500 pl-3">6. Atajos Rápidos: Alias</h2>
+            <div class="card">
+                <p class="mb-4">Los alias son apodos o nombres cortos para los cmdlets. Son excelentes para el trabajo interactivo en la consola, pero <strong class="text-amber-400">deben evitarse en los scripts</strong> para mantener la claridad y la legibilidad.</p>
+                 <h4 class="font-semibold mt-6 mb-2 text-slate-200">Ejemplos de Alias Comunes:</h4>
+                 <ul class="list-disc list-inside space-y-2 text-slate-400">
+                    <li><code class="text-green-400">gci</code> es alias de <code class="text-sky-400">Get-ChildItem</code> (similar a `ls` o `dir`)</li>
+                    <li><code class="text-green-400">gps</code> es alias de <code class="text-sky-400">Get-Process</code></li>
+                    <li><code class="text-green-400">sl</code> es alias de <code class="text-sky-400">Set-Location</code> (similar a `cd`)</li>
+                    <li><code class="text-green-400">cat</code> es alias de <code class="text-sky-400">Get-Content</code></li>
+                 </ul>
+                 <p class="mt-4 text-sm text-slate-500">Puedes obtener una lista completa de alias con el comando <code class="text-sky-400">Get-Alias</code>.</p>
+            </div>
+        </div>
+
+        <!-- Sección 7: Alias Personalizados -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 border-l-4 border-cyan-500 pl-3">7. Creando tus Propios Atajos: Alias Personalizados</h2>
+            <div class="card">
+                <p class="mb-4">Si usas un comando largo con frecuencia, puedes crear tu propio alias para ahorrar tiempo. Es una forma excelente de personalizar tu entorno de trabajo.</p>
+                
+                <h4 class="font-semibold mt-6 mb-2 text-slate-200">Crear un Alias Temporal</h4>
+                <p class="text-slate-400 mb-2">Usa el cmdlet <code class="text-cyan-400">New-Alias</code>. Este alias solo existirá durante tu sesión actual de PowerShell.</p>
+                <div class="code-block">
+<span style="color: #22D3EE;">New-Alias</span> -Name "log" -Value "Get-EventLog -LogName System -Newest 5"
+                </div>
+                <p class="mt-2 text-sm text-slate-400">Ahora, simplemente escribiendo <code class="bg-slate-700 p-1 rounded">log</code> en la consola se ejecutarán los 5 eventos más nuevos del registro del sistema.</p>
+
+                <hr class="border-slate-600 my-6">
+
+                <h4 class="font-semibold mt-6 mb-2 text-slate-200">Hacer un Alias Permanente (¡Importante!)</h4>
+                <p class="text-slate-400 mb-2">Para que tus alias estén disponibles cada vez que abres PowerShell, debes agregarlos a tu archivo de perfil. Este es un script que se ejecuta automáticamente al iniciar una sesión.</p>
+                <ol class="list-decimal list-inside space-y-3 text-slate-400">
+                    <li>
+                        <strong>Abre tu archivo de perfil en el bloc de notas:</strong>
+                        <div class="code-block mt-1">notepad $PROFILE</div>
+                        <p class="text-xs text-slate-500 mt-1">Si el archivo no existe, PowerShell te preguntará si quieres crearlo. Di que sí.</p>
+                    </li>
+                    <li>
+                        <strong>Agrega el comando de creación de alias al archivo:</strong><br>
+                        Dentro del archivo de texto que se abrió, simplemente escribe o pega la misma línea que usaste antes:
+                        <div class="code-block mt-1"><span style="color: #22D3EE;">New-Alias</span> -Name "log" -Value "Get-EventLog -LogName System -Newest 5"</div>
+                    </li>
+                    <li><strong>Guarda el archivo y reinicia PowerShell.</strong> ¡Tu alias ahora es permanente!</li>
+                </ol>
+                
+                <hr class="border-slate-600 my-6">
+
+                <h4 class="font-semibold mt-6 mb-2 text-slate-200">Eliminar un Alias</h4>
+                <p class="text-slate-400 mb-2">Puedes eliminar un alias de tu sesión actual con <code class="text-cyan-400">Remove-Alias</code>.</p>
+                <div class="code-block">
+<span style="color: #22D3EE;">Remove-Alias</span> -Name "log"
+                </div>
+                 <p class="mt-2 text-sm text-slate-400">Si el alias es permanente, también deberás eliminar la línea correspondiente de tu archivo <code class="bg-slate-700 p-1 rounded">$PROFILE</code>.</p>
+            </div>
+        </div>
+
+        <!-- Sección 8: Cmdlets Esenciales por Categoría -->
+        <div class="mb-12">
+            <h2 class="text-2xl font-semibold mb-4 border-l-4 border-pink-500 pl-3">8. Cmdlets Esenciales por Categoría</h2>
+            <div class="card">
+                <p class="mb-4">Aquí tienes una lista de cmdlets fundamentales que usarás a diario, agrupados por su función principal.</p>
+
+                <!-- Categoría: Gestión de Archivos y Sistema -->
+                <div class="mb-8">
+                    <h4 class="text-xl font-semibold text-pink-400 mb-3">Gestión de Archivos y Sistema</h4>
+                    <div class="space-y-4">
+                        <p><strong class="font-medium text-slate-200">Get-ChildItem</strong>: Lista archivos y carpetas (alias: gci, ls, dir).</p>
+                        <div class="code-block">Get-ChildItem -Path C:\Users -Recurse -Filter "*.pdf"</div>
+                        <p><strong class="font-medium text-slate-200">Get-Content</strong>: Muestra el contenido de un archivo (alias: gc, cat).</p>
+                        <div class="code-block">Get-Content -Path C:\Windows\System32\drivers\etc\hosts -TotalCount 10</div>
+                        <p><strong class="font-medium text-slate-200">Copy-Item</strong>: Copia archivos o carpetas (alias: cp, copy).</p>
+                        <div class="code-block">Copy-Item -Path "C:\source\file.txt" -Destination "D:\backup\"</div>
+                        <p><strong class="font-medium text-slate-200">Remove-Item</strong>: Elimina archivos o carpetas (alias: rm, del).</p>
+                        <div class="code-block">Remove-Item -Path "C:\temp\oldfile.log" -Force</div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Mantenimiento y Diagnóstico -->
+                <div class="mb-8">
+                    <h4 class="text-xl font-semibold text-pink-400 mb-3">Mantenimiento y Diagnóstico del Sistema</h4>
+                    <div class="space-y-4">
+                        <p><strong class="font-medium text-slate-200">Get-Process</strong>: Lista los procesos en ejecución (alias: gps, ps).</p>
+                        <div class="code-block">Get-Process | Sort-Object -Property CPU -Descending | Select-Object -First 10</div>
+                        <p><strong class="font-medium text-slate-200">Stop-Process</strong>: Detiene uno o más procesos en ejecución.</p>
+                        <div class="code-block">Stop-Process -Name "notepad" -WhatIf</div>
+                        <p><strong class="font-medium text-slate-200">Get-Service</strong>: Obtiene la lista de servicios del sistema.</p>
+                        <div class="code-block">Get-Service -DisplayName "*Windows Update*" | Restart-Service -Verbose</div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Gestión de Redes -->
+                <div class="mb-8">
+                    <h4 class="text-xl font-semibold text-pink-400 mb-3">Gestión de Redes</h4>
+                    <div class="space-y-4">
+                        <p><strong class="font-medium text-slate-200">Test-Connection</strong>: Envía pings ICMP a uno o más equipos (alias: ping).</p>
+                        <div class="code-block">Test-Connection -ComputerName "google.com" -Count 2</div>
+                        <p><strong class="font-medium text-slate-200">Get-NetIPAddress</strong>: Obtiene información de la configuración IP.</p>
+                        <div class="code-block">Get-NetIPAddress -AddressFamily IPv4 | Select-Object IPAddress, InterfaceAlias</div>
+                        <p><strong class="font-medium text-slate-200">Invoke-WebRequest</strong>: Envía peticiones HTTP/HTTPS (alias: iwr, curl, wget).</p>
+                        <div class="code-block">(Invoke-WebRequest -Uri "https://api.ipify.org").Content</div>
+                    </div>
+                </div>
+
+                <!-- Categoría: Auditoría y Reportes -->
+                <div>
+                    <h4 class="text-xl font-semibold text-pink-400 mb-3">Auditoría y Reportes</h4>
+                    <div class="space-y-4">
+                        <p><strong class="font-medium text-slate-200">Get-EventLog</strong>: Obtiene eventos de los registros de eventos clásicos.</p>
+                        <div class="code-block">Get-EventLog -LogName Security -Newest 100 | Where-Object {$_.EventID -eq 4624}</div>
+                        <p><strong class="font-medium text-slate-200">Get-Acl</strong>: Obtiene la lista de control de acceso (permisos) de un archivo o carpeta.</p>
+                        <div class="code-block">(Get-Acl C:\Windows\System32\cmd.exe).Access | Select-Object IdentityReference, FileSystemRights</div>
+                        <p><strong class="font-medium text-slate-200">ConvertTo-Html</strong>: Convierte objetos de .NET en HTML.</p>
+                        <div class="code-block">Get-Process | ConvertTo-Html -Property Name, CPU, WorkingSet -Title "Reporte de Procesos" | Out-File -FilePath "./reporte.html"</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="text-center mt-12 text-slate-500 text-sm">
+            <p>Este esquema proporciona una visión general. El poder de PowerShell reside en entender que manejas objetos y en combinar estos elementos para administrar y automatizar sistemas de manera eficiente.</p>
+        </footer>
+
+    </div>
+
+</body>
+</html>

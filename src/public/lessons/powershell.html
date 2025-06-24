@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PowerShell para Ciberseguridad - Clase Magistral</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -73,18 +77,38 @@
             color: #d4d4d4;
             padding: 20px;
             border-radius: 8px;
-            font-family: 'Consolas', 'Monaco', monospace;
+            font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
             overflow-x: auto;
             margin: 15px 0;
             border: 1px solid #333;
+            line-height: 1.6;
+            white-space: pre;
+            tab-size: 4;
         }
         
         .command {
             color: #569cd6;
+            font-weight: 500;
         }
         
         .parameter {
             color: #9cdcfe;
+        }
+        
+        .code-block span {
+            font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+        }
+        
+        /* Comentarios en el código */
+        .code-block span[class^="command"] + span {
+            color: #6A9955;
+            margin-left: 8px;
+        }
+        
+        /* Mejorar el espaciado de los bloques de código */
+        .code-block > span {
+            display: inline-block;
+            margin: 2px 0;
         }
         
         .warning {
@@ -187,7 +211,18 @@
             <h1>🛡️ PowerShell para Ciberseguridad</h1>
             <div class="subtitle">Clase Magistral - Diagnóstico del Sistema y Seguridad Informática</div>
         </div>
-
+        <nav class="flex flex-wrap justify-center gap-6 mt-8 mb-8 p-6 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg backdrop-blur-sm">
+            <a href="/" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-500/25">
+                🏠 PORTAL
+            </a>
+            <a href="/lessons/powershell/pw_anatomia" target="_blank" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-purple-500/25">
+                📋 Anatomía de PowerShell
+            </a>
+            
+            <a href="/lessons/practicas" class="px-4 py-2 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-orange-500/25" target="_blank">
+                ⚡ Laboratorio de Prácticas
+            </a>
+        </nav>
         <nav class="nav-menu">
             <ul>
                 <li><a href="#introduccion">Introducción</a></li>
@@ -198,6 +233,7 @@
                 <li><a href="#ejercicios">Ejercicios</a></li>
             </ul>
         </nav>
+       
 
         <section id="introduccion" class="section">
             <h2>📚 Introducción a PowerShell</h2>
@@ -220,10 +256,10 @@
             
             <h3>Sintaxis Básica</h3>
             <div class="code-block">
-<span class="command">Get-Command</span>                    # Lista todos los comandos disponibles
-<span class="command">Get-Help</span> <span class="parameter">Get-Process</span>          # Obtiene ayuda sobre un comando específico
-<span class="command">Get-Member</span>                     # Muestra propiedades y métodos de un objeto
-<span class="command">Get-History</span>                    # Historial de comandos ejecutados
+<span class="command">Get-Command</span>                         # Lista todos los comandos disponibles
+<span class="command">Get-Help</span> <span class="parameter">Get-Process</span>     # Obtiene ayuda sobre un comando específico
+<span class="command">Get-Member</span>                          # Muestra propiedades y métodos de un objeto
+<span class="command">Get-History</span>                         # Historial de comandos ejecutados
             </div>
 
             <h3>Cmdlets Esenciales para Ciberseguridad</h3>
@@ -272,24 +308,40 @@
             
             <h3>Información del Sistema</h3>
             <div class="code-block">
-<span class="command">Get-ComputerInfo</span>               # Información completa del sistema
-<span class="command">Get-WmiObject</span> -Class Win32_OperatingSystem  # Detalles del SO
-<span class="command">systeminfo</span>                     # Información detallada del sistema
-<span class="command">Get-HotFix</span>                     # Actualizaciones instaladas
+<span class="command">Get-ComputerInfo</span>                    # Información completa del sistema
+<span class="command">Get-WmiObject</span> -Class Win32_OperatingSystem    # Detalles del SO
+<span class="command">systeminfo</span>                          # Información detallada del sistema
+<span class="command">Get-HotFix</span>                          # Actualizaciones instaladas
             </div>
 
             <h3>Monitoreo de Rendimiento</h3>
             <div class="code-block">
-<span class="command">Get-Process</span> | <span class="command">Sort-Object</span> <span class="parameter">CPU</span> -Descending | <span class="command">Select-Object</span> -First 10
+# Top 10 procesos por uso de CPU
+<span class="command">Get-Process</span> | 
+    <span class="command">Sort-Object</span> <span class="parameter">CPU</span> -Descending | 
+    <span class="command">Select-Object</span> -First 10
+
+# Monitoreo de uso de CPU
 <span class="command">Get-Counter</span> <span class="parameter">"\Processor(_Total)\% Processor Time"</span>
-<span class="command">Get-WmiObject</span> -Class Win32_LogicalDisk | <span class="command">Select-Object</span> Size,FreeSpace,DeviceID
+
+# Información de discos lógicos
+<span class="command">Get-WmiObject</span> -Class Win32_LogicalDisk | 
+    <span class="command">Select-Object</span> Size,FreeSpace,DeviceID
             </div>
 
             <h3>Análisis de Servicios</h3>
             <div class="code-block">
-<span class="command">Get-Service</span> | <span class="command">Where-Object</span> {$_.Status -eq "Running"}
-<span class="command">Get-Service</span> | <span class="command">Where-Object</span> {$_.StartType -eq "Automatic" -and $_.Status -eq "Stopped"}
-<span class="command">Get-WmiObject</span> -Class Win32_Service | <span class="command">Select-Object</span> Name,State,StartMode,PathName
+# Servicios en ejecución
+<span class="command">Get-Service</span> | 
+    <span class="command">Where-Object</span> {$_.Status -eq "Running"}
+
+# Servicios automáticos detenidos
+<span class="command">Get-Service</span> | 
+    <span class="command">Where-Object</span> {$_.StartType -eq "Automatic" -and $_.Status -eq "Stopped"}
+
+# Información detallada de servicios
+<span class="command">Get-WmiObject</span> -Class Win32_Service | 
+    <span class="command">Select-Object</span> Name,State,StartMode,PathName
             </div>
 
             <div class="warning">
@@ -303,49 +355,75 @@
             <h3>Detección de Procesos Sospechosos</h3>
             <div class="code-block">
 # Procesos con uso elevado de CPU
-<span class="command">Get-Process</span> | <span class="command">Where-Object</span> {$_.CPU -gt 100} | <span class="command">Select-Object</span> Name,CPU,Id,Path
+<span class="command">Get-Process</span> | 
+    <span class="command">Where-Object</span> {$_.CPU -gt 100} | 
+    <span class="command">Select-Object</span> Name,CPU,Id,Path
 
-# Procesos ejecutándose desde ubicaciones inusuales
-<span class="command">Get-Process</span> | <span class="command">Where-Object</span> {$_.Path -like "*temp*" -or $_.Path -like "*appdata*"}
+# Procesos en ubicaciones inusuales
+<span class="command">Get-Process</span> | 
+    <span class="command">Where-Object</span> {
+        $_.Path -like "*temp*" -or 
+        $_.Path -like "*appdata*"
+    }
 
 # Procesos sin firma digital
-<span class="command">Get-Process</span> | <span class="command">Where-Object</span> {$_.Company -eq $null} | <span class="command">Select-Object</span> Name,Path,Company
+<span class="command">Get-Process</span> | 
+    <span class="command">Where-Object</span> {$_.Company -eq $null} | 
+    <span class="command">Select-Object</span> Name,Path,Company
             </div>
 
             <h3>Análisis de Conexiones de Red</h3>
             <div class="code-block">
 # Conexiones TCP activas
-<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> {$_.State -eq "Established"} | <span class="command">Select-Object</span> LocalAddress,LocalPort,RemoteAddress,RemotePort
+<span class="command">Get-NetTCPConnection</span> | 
+    <span class="command">Where-Object</span> {$_.State -eq "Established"} | 
+    <span class="command">Select-Object</span> LocalAddress,LocalPort,RemoteAddress,RemotePort
 
 # Conexiones hacia IPs externas sospechosas
-<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> {$_.RemoteAddress -notlike "192.168.*" -and $_.RemoteAddress -notlike "10.*" -and $_.RemoteAddress -ne "127.0.0.1"}
+<span class="command">Get-NetTCPConnection</span> | 
+    <span class="command">Where-Object</span> {
+        $_.RemoteAddress -notlike "192.168.*" -and 
+        $_.RemoteAddress -notlike "10.*" -and 
+        $_.RemoteAddress -ne "127.0.0.1"
+    }
 
 # Puertos en escucha
-<span class="command">Get-NetTCPConnection</span> | <span class="command">Where-Object</span> {$_.State -eq "Listen"} | <span class="command">Select-Object</span> LocalAddress,LocalPort
+<span class="command">Get-NetTCPConnection</span> | 
+    <span class="command">Where-Object</span> {$_.State -eq "Listen"} | 
+    <span class="command">Select-Object</span> LocalAddress,LocalPort
             </div>
 
             <h3>Monitoreo de Archivos y Directorios</h3>
             <div class="code-block">
-# Archivos modificados recientemente
-<span class="command">Get-ChildItem</span> -Path C:\ -Recurse -File | <span class="command">Where-Object</span> {$_.LastWriteTime -gt (Get-Date).AddDays(-1)}
+# Archivos modificados en las últimas 24 horas
+<span class="command">Get-ChildItem</span> -Path C:\ -Recurse -File | 
+    <span class="command">Where-Object</span> {
+        $_.LastWriteTime -gt (Get-Date).AddDays(-1)
+    }
 
 # Archivos ejecutables en directorios de usuario
-<span class="command">Get-ChildItem</span> -Path "$env:USERPROFILE" -Recurse -Include "*.exe","*.bat","*.ps1" | <span class="command">Select-Object</span> Name,FullName,LastWriteTime
+<span class="command">Get-ChildItem</span> -Path "$env:USERPROFILE" -Recurse -Include "*.exe","*.bat","*.ps1" | 
+    <span class="command">Select-Object</span> Name,FullName,LastWriteTime
 
-# Verificar integridad de archivos del sistema
+# Verificar hash de archivos del sistema
 <span class="command">Get-FileHash</span> -Path "C:\Windows\System32\cmd.exe" -Algorithm SHA256
             </div>
 
             <h3>Análisis de Usuarios y Sesiones</h3>
             <div class="code-block">
 # Usuarios locales y sus propiedades
-<span class="command">Get-LocalUser</span> | <span class="command">Select-Object</span> Name,Enabled,LastLogon,PasswordLastSet
+<span class="command">Get-LocalUser</span> | 
+    <span class="command">Select-Object</span> Name,Enabled,LastLogon,PasswordLastSet
 
 # Sesiones activas
-<span class="command">Get-WmiObject</span> -Class Win32_LogonSession | <span class="command">Select-Object</span> LogonId,LogonType,StartTime
+<span class="command">Get-WmiObject</span> -Class Win32_LogonSession | 
+    <span class="command">Select-Object</span> LogonId,LogonType,StartTime
 
 # Intentos de inicio de sesión fallidos
-<span class="command">Get-WinEvent</span> -FilterHashtable @{LogName='Security'; ID=4625} -MaxEvents 10
+<span class="command">Get-WinEvent</span> -FilterHashtable @{
+    LogName='Security'
+    ID=4625
+} -MaxEvents 10
             </div>
 
             <div class="security-tip">
@@ -359,16 +437,28 @@
             <h3>Análisis de Logs del Sistema</h3>
             <div class="code-block">
 # Eventos de seguridad críticos
-<span class="command">Get-WinEvent</span> -FilterHashtable @{LogName='Security'; Level=2} -MaxEvents 50
+<span class="command">Get-WinEvent</span> -FilterHashtable @{
+    LogName='Security'
+    Level=2
+} -MaxEvents 50
 
 # Inicios de sesión exitosos
-<span class="command">Get-WinEvent</span> -FilterHashtable @{LogName='Security'; ID=4624} | <span class="command">Select-Object</span> TimeCreated,Id,LevelDisplayName,Message
+<span class="command">Get-WinEvent</span> -FilterHashtable @{
+    LogName='Security'
+    ID=4624
+} | <span class="command">Select-Object</span> TimeCreated,Id,LevelDisplayName,Message
 
 # Instalación de software
-<span class="command">Get-WinEvent</span> -FilterHashtable @{LogName='Application'; ID=1033,1034} | <span class="command">Select-Object</span> TimeCreated,Message
+<span class="command">Get-WinEvent</span> -FilterHashtable @{
+    LogName='Application'
+    ID=1033,1034
+} | <span class="command">Select-Object</span> TimeCreated,Message
 
 # Errores del sistema
-<span class="command">Get-WinEvent</span> -FilterHashtable @{LogName='System'; Level=2,3} -MaxEvents 20
+<span class="command">Get-WinEvent</span> -FilterHashtable @{
+    LogName='System'
+    Level=2,3
+} -MaxEvents 20
             </div>
 
             <h3>Análisis de Registro de Windows</h3>
@@ -378,24 +468,30 @@
 <span class="command">Get-ItemProperty</span> -Path "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"
 
 # Servicios registrados
-<span class="command">Get-ChildItem</span> -Path "HKLM:\SYSTEM\CurrentControlSet\Services" | <span class="command">Select-Object</span> Name
+<span class="command">Get-ChildItem</span> -Path "HKLM:\SYSTEM\CurrentControlSet\Services" | 
+    <span class="command">Select-Object</span> Name
 
 # Verificar modificaciones recientes en el registro
-<span class="command">Get-ChildItem</span> -Path "HKLM:\SOFTWARE" -Recurse | <span class="command">Where-Object</span> {$_.LastWriteTime -gt (Get-Date).AddDays(-7)}
+<span class="command">Get-ChildItem</span> -Path "HKLM:\SOFTWARE" -Recurse | 
+    <span class="command">Where-Object</span> {
+        $_.LastWriteTime -gt (Get-Date).AddDays(-7)
+    }
             </div>
 
             <h3>Recopilación de Evidencia</h3>
             <div class="code-block">
 # Crear un reporte completo del sistema
-$report = @{
-    ComputerInfo = Get-ComputerInfo
-    Processes = Get-Process | Select-Object Name,Id,CPU,Path
-    Services = Get-Service | Select-Object Name,Status,StartType
-    NetworkConnections = Get-NetTCPConnection
-    RecentFiles = Get-ChildItem -Path C:\ -Recurse -File | Where-Object {$_.LastWriteTime -gt (Get-Date).AddDays(-1)}
+<span class="command">$report</span> = @{
+    ComputerInfo       = <span class="command">Get-ComputerInfo</span>
+    Processes         = <span class="command">Get-Process</span> | <span class="command">Select-Object</span> Name,Id,CPU,Path
+    Services         = <span class="command">Get-Service</span> | <span class="command">Select-Object</span> Name,Status,StartType
+    NetworkConnections = <span class="command">Get-NetTCPConnection</span>
+    RecentFiles      = <span class="command">Get-ChildItem</span> -Path C:\ -Recurse -File | 
+                      <span class="command">Where-Object</span> {$_.LastWriteTime -gt (<span class="command">Get-Date</span>).AddDays(-1)}
 }
 
-$report | ConvertTo-Json -Depth 3 | Out-File -FilePath "C:\ForensicReport_$(Get-Date -Format 'yyyyMMdd_HHmmss').json"
+<span class="command">$report</span> | <span class="command">ConvertTo-Json</span> -Depth 3 | 
+    <span class="command">Out-File</span> -FilePath "C:\ForensicReport_$(<span class="command">Get-Date</span> -Format 'yyyyMMdd_HHmmss').json"
             </div>
 
             <div class="warning">
