@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección: Electricidad y Electrónica para Mantenimiento de PC</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Estilos personalizados */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Gris oscuro */
+            color: #E5E7EB; /* Gris claro */
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #34d399, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .card {
+            background-color: #1F2937; /* Gris un poco más claro */
+            border: 1px solid #374151;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.25);
+        }
+        .code-block {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            border: 1px solid #30363d;
+        }
+        .warning-box {
+            background-color: #4A1D1D;
+            border: 1px solid #F87171;
+            color: #FEE2E2;
+            padding: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .info-box {
+            background-color: #1E3A8A;
+            border: 1px solid #60A5FA;
+            color: #DBEAFE;
+            padding: 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="bg-gray-900 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-6 py-4">
+            <h1 class="text-3xl font-bold gradient-text">Electricidad y Electrónica para el Técnico Informático</h1>
+            <p class="text-blue-300">Una guía práctica para el mantenimiento computacional.</p>
+        </div>
+    </header>
+    <!-- nvabar a otros recursos -->
+    <nav class="flex flex-wrap justify-center gap-6 mt-8 mb-8 p-6 bg-gray-900 bg-opacity-50 border border-purple-500 rounded-lg backdrop-blur-sm">
+        <a href="/" class="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-blue-500/25">
+            🏠 PORTAL
+        </a>
+        <a href="/lessons/powershell/pw_anatomia" target="_blank" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-purple-500/25">
+            📋 Anatomía de PowerShell
+        </a>
+        <a href="/powershell" class="px-4 py-2 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-green-500/25" target="_blank">
+            💻 Introducción a PowerShell
+        </a>
+        <a href="/lessons/practicas" class="px-4 py-2 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg hover:from-orange-700 hover:to-orange-800 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-orange-500/25" target="_blank">
+            ⚡ Laboratorio de Prácticas
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+
+        <!-- Introducción -->
+        <section id="introduccion" class="card">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">¡Bienvenido, futuro técnico!</h2>
+            <p class="text-lg">La electricidad es la sangre que corre por las venas de cada computador. Sin un entendimiento sólido de sus principios, el diagnóstico y la reparación de hardware son prácticamente imposibles. Esta lección te dará las bases teóricas y, más importante aún, las habilidades prácticas para trabajar de forma segura y eficiente.</p>
+        </section>
+
+        <!-- Fundamentos de Electricidad -->
+        <section id="fundamentos" class="card">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">1. Fundamentos Clave de la Electricidad</h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Voltaje -->
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-400">Voltaje (V)</h3>
+                    <p>Imagina una manguera de agua. El voltaje es la <span class="font-bold text-blue-300">presión</span> del agua. En electricidad, es la "fuerza" que empuja a los electrones. Se mide en <span class="font-bold">Voltios (V)</span>.</p>
+                </div>
+                <!-- Corriente -->
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-400">Corriente (I)</h3>
+                    <p>Siguiendo la analogía, la corriente es el <span class="font-bold text-blue-300">caudal</span> de agua que fluye. Es la cantidad de electrones que pasan por un punto en un segundo. Se mide en <span class="font-bold">Amperios (A)</span>.</p>
+                </div>
+                <!-- Resistencia -->
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-400">Resistencia (R)</h3>
+                    <p>La resistencia sería un <span class="font-bold text-blue-300">estrechamiento</span> en la manguera. Se opone al flujo de la corriente. Todo componente electrónico tiene resistencia. Se mide en <span class="font-bold">Ohmios (Ω)</span>.</p>
+                </div>
+                <!-- Potencia -->
+                <div class="bg-gray-800 p-4 rounded-lg border-2 border-yellow-600">
+                    <h3 class="text-xl font-semibold text-yellow-400">Potencia (P)</h3>
+                    <p>La potencia es el <span class="font-bold text-yellow-300">"trabajo"</span> que realiza la electricidad. Es cuánta energía consume un componente por segundo. Se mide en <span class="font-bold">Watts (W)</span>. <span class="text-yellow-200">¡Es lo más importante en PCs!</span></p>
+                </div>
+            </div>
+
+            <!-- Fórmulas y Potencia -->
+            <div class="mt-6 grid md:grid-cols-2 gap-6">
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h3 class="text-xl font-semibold text-blue-400 mb-2">Ley de Ohm: La Fórmula Mágica</h3>
+                    <p class="mb-2">La relación entre voltaje, corriente y resistencia: <code class="code-block inline-block">V = I × R</code></p>
+                    <p class="text-gray-300 text-sm mb-3">Con esta fórmula puedes calcular cualquier valor si conoces los otros dos.</p>
+                    <img src="/img/ley_de_ohm.jpeg" alt="Diagrama de la Ley de Ohm mostrando la relación entre Voltaje, Corriente y Resistencia" class="rounded-lg w-full border border-blue-600">
+                </div>
+                <div class="bg-yellow-900 p-4 rounded-lg border border-yellow-600">
+                    <h3 class="text-xl font-semibold text-yellow-400 mb-2">Fórmula de Potencia: La Clave del Dimensionamiento</h3>
+                    <p class="mb-2">La potencia se calcula como: <code class="code-block inline-block">P = V × I</code></p>
+                    <p class="text-yellow-200 text-sm">¡Esta fórmula te ayuda a dimensionar fuentes de poder y entender el consumo!</p>
+                    <img src="/img/potencia.png" alt="Diagrama de la Fórmula de Potencia mostrando la relación entre Voltaje, Corriente y Potencia" class="rounded-lg w-full border border-yellow-600">
+                </div>
+            </div>
+
+            <!-- Ejemplos Prácticos de Potencia en PCs -->
+            <div class="mt-6">
+                <h3 class="text-xl font-semibold text-yellow-400 mb-4">💡 Potencia en Acción: Ejemplos de PC</h3>
+                <div class="grid md:grid-cols-3 gap-4 mb-4">
+                    <div class="bg-green-900 p-3 rounded-lg border border-green-600">
+                        <h4 class="font-bold text-green-300">CPU Intel i5</h4>
+                        <p class="text-sm">Consume ~65W en funcionamiento normal</p>
+                        <p class="text-xs text-green-200">12V × 5.4A = 65W</p>
+                    </div>
+                    <div class="bg-red-900 p-3 rounded-lg border border-red-600">
+                        <h4 class="font-bold text-red-300">GPU RTX 4060</h4>
+                        <p class="text-sm">Consume ~115W bajo carga</p>
+                        <p class="text-xs text-red-200">12V × 9.6A = 115W</p>
+                    </div>
+                    <div class="bg-blue-900 p-3 rounded-lg border border-blue-600">
+                        <h4 class="font-bold text-blue-300">Disco SSD</h4>
+                        <p class="text-sm">Consume ~3W en funcionamiento</p>
+                        <p class="text-xs text-blue-200">5V × 0.6A = 3W</p>
+                    </div>
+                </div>
+                <div class="info-box">
+                    <svg class="w-12 h-12 mr-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                    <div>
+                        <h4 class="font-bold text-lg">¿Por qué es Crucial Entender la Potencia?</h4>
+                        <ul class="list-disc list-inside space-y-1 text-sm">
+                            <li><strong>Dimensionamiento de PSU:</strong> Si tu PC consume 300W total, necesitas una fuente de al menos 400-450W (margen de seguridad).</li>
+                            <li><strong>Diagnóstico de problemas:</strong> Un PC que se apaga solo puede tener una fuente insuficiente para la carga.</li>
+                            <li><strong>Eficiencia energética:</strong> Componentes más potentes generan más calor y consumen más electricidad.</li>
+                            <li><strong>Compatibilidad:</strong> Una GPU de 300W no funcionará con una fuente de 350W si ya hay otros componentes.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 grid md:grid-cols-2 gap-6">
+                 <div>
+                    <h3 class="text-xl font-semibold text-blue-400 mb-2">Corriente Alterna (AC) vs. Corriente Continua (DC)</h3>
+                    <p><strong class="text-yellow-300">AC (Alternating Current):</strong> Es la electricidad que llega a nuestros enchufes. Los electrones cambian de dirección constantemente (oscilan). Es eficiente para transportar energía a largas distancias.</p>
+                    <p class="mt-2"><strong class="text-green-300">DC (Direct Current):</strong> Los electrones fluyen en una sola dirección. Es la que usan TODOS los componentes de tu PC. Baterías, pilas y las fuentes de poder entregan DC.</p>
+                </div>
+                <div class="info-box">
+                    <svg class="w-12 h-12 mr-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div>
+                        <h4 class="font-bold">Estándar Eléctrico en Chile</h4>
+                        <p>En Chile, el estándar para la corriente alterna (AC) domiciliaria es de <strong class="text-xl">220V</strong> a una frecuencia de <strong class="text-xl">50Hz</strong>. ¡Ten esto siempre presente al seleccionar fuentes de poder o conectar equipos!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- La Fuente de Poder -->
+        <section id="psu" class="card">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">2. La Fuente de Poder (PSU): El Corazón del PC</h2>
+            <p class="mb-4">La Power Supply Unit (PSU) es un <strong class="text-yellow-300">transformador/convertidor</strong>. Toma los 220V AC del enchufe y los convierte en varios voltajes de DC de baja tensión que los componentes del PC necesitan para vivir.</p>
+            <h3 class="text-xl font-semibold text-blue-400 mb-2">Los voltajes que entrega una PSU:</h3>
+            <div class="grid md:grid-cols-2 gap-4 mb-6">
+                <div class="space-y-3">
+                    <div class="bg-yellow-900 p-3 rounded-lg border border-yellow-600">
+                        <h4 class="font-bold text-yellow-400">+12V DC (Cable AMARILLO)</h4>
+                        <p class="text-sm text-yellow-200 mb-2"><strong>El más crítico y potente</strong></p>
+                        <ul class="text-xs space-y-1 text-yellow-100">
+                            <li>• <strong>Procesador (CPU):</strong> A través de las fases VRM de la placa madre</li>
+                            <li>• <strong>Tarjeta gráfica (GPU):</strong> Componente de mayor consumo</li>
+                            <li>• <strong>Ventiladores:</strong> Todos los del sistema</li>
+                            <li>• <strong>Discos duros (HDD):</strong> Motores y mecánica</li>
+                            <li>• <strong>Tarjetas PCIe:</strong> De alta potencia</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-red-900 p-3 rounded-lg border border-red-600">
+                        <h4 class="font-bold text-red-400">+5V DC (Cable ROJO)</h4>
+                        <p class="text-sm text-red-200 mb-2"><strong>Para periféricos y conectividad</strong></p>
+                        <ul class="text-xs space-y-1 text-red-100">
+                            <li>• <strong>Puertos USB:</strong> TODOS operan a 5V (USB 2.0, 3.0, 3.1)</li>
+                            <li>• <strong>Discos HDD/SSD SATA:</strong> Circuitos lógicos y controladores</li>
+                            <li>• <strong>Unidades ópticas:</strong> CD/DVD/Blu-ray</li>
+                            <li>• <strong>Tarjetas PCIe básicas:</strong> Sonido, red, etc.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="bg-orange-900 p-3 rounded-lg border border-orange-600">
+                        <h4 class="font-bold text-orange-400">+3.3V DC (Cable NARANJA)</h4>
+                        <p class="text-sm text-orange-200 mb-2"><strong>Para componentes de baja potencia</strong></p>
+                        <ul class="text-xs space-y-1 text-orange-100">
+                            <li>• <strong>Memoria RAM:</strong> DDR4, DDR5</li>
+                            <li>• <strong>SSD M.2:</strong> Unidades NVMe modernas</li>
+                            <li>• <strong>Chips de placa madre:</strong> Controladores, BIOS</li>
+                            <li>• <strong>Slots PCIe:</strong> Alimentación auxiliar (poco usado)</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gray-800 p-3 rounded-lg border border-gray-600">
+                        <h4 class="font-bold text-gray-400">Voltajes Auxiliares</h4>
+                        <div class="text-xs space-y-2 text-gray-300">
+                            <div>
+                                <p><strong class="text-blue-400">-12V DC (Cable AZUL):</strong></p>
+                                <p>Voltaje legado para puertos seriales antiguos. <span class="text-yellow-300">Muy bajo amperaje (&lt;1A)</span></p>
+                            </div>
+                            <div>
+                                <p><strong class="text-purple-400">+5V VSB (Cable MORADO):</strong></p>
+                                <p>Siempre activo. Permite Wake-on-LAN, encendido remoto y funciones de "standby"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="info-box mb-4">
+                <svg class="w-8 h-8 mr-3 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <div>
+                    <h4 class="font-bold">💡 Datos Técnicos Importantes</h4>
+                    <ul class="text-sm space-y-1">
+                        <li>• El <strong>+12V</strong> maneja la mayor parte de la potencia total de la PSU (hasta 80-90%)</li>
+                        <li>• Los voltajes <strong>-12V y +5VSB</strong> juntos consumen menos de 20W en total</li>
+                        <li>• Los procesadores modernos pueden requerir hasta <strong>100A a 12V</strong> bajo máxima carga</li>
+                        <li>• La placa madre convierte el +12V a voltajes más bajos (1.2V, 1.8V) mediante <strong>reguladores VRM</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="text-xl font-semibold text-blue-400 mb-2">Práctica: El Test del Clip (Paperclip Test)</h3>
+            <div class="warning-box mb-4">
+                <svg class="w-16 h-16 mr-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <div>
+                    <h4 class="font-bold text-xl">¡ADVERTENCIA MÁXIMA!</h4>
+                    <p>Este test sirve para saber si una fuente de poder "arranca" fuera del PC. <strong class="underline">NUNCA</strong> lo hagas con la fuente conectada a algún componente del PC. Realízalo bajo tu propio riesgo y con la máxima precaución.</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row gap-6 items-center">
+                <div class="md:w-1/2">
+                    <h4 class="font-semibold text-lg mb-2">Pasos:</h4>
+                    <ol class="list-decimal list-inside space-y-2">
+                        <li><strong class="text-red-500">DESCONECTA LA FUENTE</strong> del toma corriente.</li>
+                        <li>Desconecta TODOS los cables de la fuente de los componentes del PC.</li>
+                        <li>Busca el conector ATX de 24 pines (el más grande).</li>
+                        <li>Toma un clip metálico y ábrelo en forma de "U".</li>
+                        <li>Inserta un extremo del clip en el pin del <strong class="text-green-400">cable VERDE (PS_ON)</strong>.</li>
+                        <li>Inserta el otro extremo en cualquier pin de un <strong class="text-gray-300">cable NEGRO (Tierra/GND)</strong>.</li>
+                        <li>Con el clip firmemente en su lugar y sin tocar nada metálico, conecta la fuente al toma corriente y enciéndela desde su interruptor trasero (si lo tiene).</li>
+                    </ol>
+                    <p class="mt-4"><strong class="text-emerald-400">Resultado esperado:</strong> El ventilador de la fuente debería empezar a girar. Esto indica que la fuente "arranca", pero <strong class="underline">NO GARANTIZA</strong> que los voltajes sean correctos. Es solo una prueba de encendido básica.</p>
+                </div>
+                <div class="md:w-1/2">
+                    <!-- Imagen real del conector ATX -->
+                    <div class="bg-gray-800 p-4 rounded-lg border-2 border-gray-600">
+                        <p class="text-center font-bold mb-3">Conector ATX 24-pin</p>
+                        <img src="/img/conector-atx-24.jpg" alt="Esquema del conector ATX de 24 pines mostrando la distribución de cables y voltajes" class="rounded-lg w-full border border-blue-600 mb-3">
+                        <div class="font-mono text-xs text-center bg-black rounded p-2">
+                            <p>Pin 15: <span class="text-gray-300">NEGRO (GND)</span> ← Conectar clip aquí</p>
+                            <p>Pin 16: <span class="text-green-400 font-bold">VERDE (PS_ON)</span> ← Conectar clip aquí</p>
+                            <p>Pin 17: <span class="text-gray-300">NEGRO (GND)</span> ← O aquí también</p>
+                        </div>
+                        <p class="text-center mt-2 text-sm text-blue-300">💡 El pin verde "le dice" a la fuente que se encienda. Al puentearlo a tierra (negro), la forzamos a encender.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Uso del Multímetro -->
+        <section id="multimetro" class="card">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">3. El Multímetro: Tu Mejor Amigo</h2>
+            <p class="mb-4">También llamado "tester", es la herramienta de diagnóstico más importante. Permite medir voltaje, corriente y resistencia. ¡Aprende a usarlo y resolverás el 80% de los problemas eléctricos!</p>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-blue-400 mb-2">Cómo medir Voltaje DC (el más común)</h3>
+                    <p class="mb-4">Usaremos como ejemplo un conector Molex de 4 pines de una fuente ya encendida (con el test del clip o instalada en un PC funcionando).</p>
+                    <!-- <img src="/img/conector_molex.jpg" width="300px" alt="Diagrama de un conector Molex" class="rounded-lg mb-4"> -->
+                    <img src="/img/medicion1.png" width="300px" alt="Diagrama de un conector Molex" class="rounded-lg mb-4">
+                    <ol class="list-decimal list-inside space-y-2">
+                        <li>Gira el selector de tu multímetro a la sección de <strong class="text-green-300">Voltaje DC (V⎓)</strong>. Elige un rango superior al que esperas medir (ej: 20V para medir 12V y 5V).</li>
+                        <li>Conecta la <strong class="text-gray-300">punta negra (COM)</strong> a un pin de cable <strong class="text-gray-300">NEGRO (GND)</strong> del Molex.</li>
+                        <li>Conecta la <strong class="text-red-500">punta roja (VΩmA)</strong> al pin de cable <strong class="text-red-500">ROJO (+5V)</strong>. La pantalla debería mostrar ~5V.</li>
+                        <li>Mueve la punta roja al pin de cable <strong class="text-yellow-400">AMARILLO (+12V)</strong>. La pantalla debería mostrar ~12V.</li>
+                    </ol>
+                    <div class="info-box mt-4">
+                        <svg class="w-8 h-8 mr-3 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div>
+                            <h4 class="font-bold">Tolerancia Aceptable</h4>
+                            <p>Los voltajes no son perfectos. Se acepta una tolerancia de ±5%.<br>
+                            <strong>+12V:</strong> entre 11.4V y 12.6V está OK.<br>
+                            <strong>+5V:</strong> entre 4.75V y 5.25V está OK.</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="text-xl font-semibold text-blue-400 mb-2">Otras mediciones útiles</h3>
+                    <div class="space-y-4">
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-semibold text-lg">Test de Continuidad</h4>
+                            <p>El modo con el <strong class="text-yellow-300">símbolo de sonido/diodo ()))</strong>. El multímetro pita si hay un camino cerrado entre las puntas. <strong class="text-emerald-400">¡Ideal para probar si un cable USB o un fusible están cortados por dentro!</strong> Se hace SIN energía.</p>
+                        </div>
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h4 class="font-semibold text-lg">Medir Resistencia (Ω)</h4>
+                            <p>Sirve para verificar el valor de una resistencia o para ver si hay un cortocircuito (lectura de 0Ω o muy baja). También se usa <strong class="underline">sin energía</strong> en el circuito.</p>
+                        </div>
+                         <div class="warning-box">
+                            <svg class="w-8 h-8 mr-3 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <div>
+                                <h4 class="font-bold">Medir Corriente (Amperios)</h4>
+                                <p>Medir corriente es <strong class="text-red-300">complejo y riesgoso</strong>. Requiere ABRIR el circuito e insertar el multímetro en serie. Un error puede quemar el fusible del multímetro o dañar el componente. <strong class="underline">No lo haremos en esta etapa inicial.</strong></p>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Casos Prácticos y Seguridad -->
+        <section id="casos" class="card">
+             <h2 class="text-2xl font-bold text-emerald-400 mb-4">4. Casos Prácticos y ¡Seguridad Primero!</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold text-blue-400 mb-2">Diagnósticos Comunes</h3>
+                     <ul class="list-disc list-inside space-y-3">
+                        <li>
+                            <strong>PC muerto, no enciende nada:</strong>
+                            <ol class="list-decimal list-inside ml-4 text-gray-400">
+                                <li>Verificar cable de poder y enchufe.</li>
+                                <li>Realizar test del clip a la fuente. Si no arranca, la fuente es la culpable.</li>
+                                <li>Si arranca, medir voltajes con multímetro. Si están mal, fuente culpable.</li>
+                                <li>Si todo bien, el problema puede ser la placa madre o el botón de encendido.</li>
+                            </ol>
+                        </li>
+                        <li>
+                            <strong>PC se reinicia o se apaga solo:</strong>
+                             <ol class="list-decimal list-inside ml-4 text-gray-400">
+                                <li>Puede ser sobrecalentamiento, pero también una falla eléctrica.</li>
+                                <li>Medir la línea de +12V con el PC bajo carga (ej. corriendo un juego). Si el voltaje cae mucho (ej. bajo 11.4V), la fuente no puede entregar la potencia necesaria.</li>
+                             </ol>
+                        </li>
+                         <li>
+                            <strong>Revisión visual de la Placa Madre:</strong>
+                            <p class="text-gray-400">Busca <strong class="text-yellow-300">capacitores hinchados o reventados</strong>. Son pequeños cilindros. Si la parte superior no está plana o tienen una sustancia oscura, están malos y causan inestabilidad.</p>
+                            <img src="/img/capacitor_inflado.png" alt="Ejemplo de capacitores dañados" class="rounded-lg mt-2 w-full">
+                        </li>
+                    </ul>
+                </div>
+                <div class="warning-box flex-col items-start">
+                    <div class="flex items-center mb-3">
+                        <svg class="w-12 h-12 mr-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <h3 class="text-2xl font-bold text-red-300">REGLAS DE ORO DE SEGURIDAD</h3>
+                    </div>
+                    <ul class="list-disc list-inside space-y-2 text-red-200">
+                        <li><strong>SIEMPRE DESENCHUFA:</strong> Antes de tocar cualquier componente interno, desconecta físicamente el cable de poder.</li>
+                        <li><strong>PULSERA ANTIESTÁTICA:</strong> La electricidad estática de tu cuerpo puede quemar componentes sensibles. Úsala siempre, conectada a una parte metálica sin pintar del gabinete.</li>
+                        <li><strong class="text-xl">NUNCA ABRAS UNA FUENTE DE PODER:</strong> Los capacitores internos pueden guardar una carga letal por minutos u horas, incluso desconectada. Es el único componente que no se repara, se reemplaza.</li>
+                        <li><strong>TRABAJA CON UNA MANO:</strong> Cuando midas voltajes "en vivo", intenta mantener una mano en el bolsillo. Esto evita que la corriente pase a través de tu corazón si cometes un error.</li>
+                        <li><strong>SENTIDO COMÚN:</strong> No trabajes cansado, apurado o en un ambiente húmedo.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guía de Desarme Seguro -->
+        <section id="desarme" class="card">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">5. Guía de Desarme Seguro (Sin Pulsera Antiestática)</h2>
+            <div class="warning-box mb-6">
+                <svg class="w-16 h-16 mr-4 text-yellow-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <div>
+                    <h4 class="font-bold text-xl">¡Atención! Peligro de Descarga Electrostática (ESD)</h4>
+                    <p>La electricidad estática de tu cuerpo puede dañar permanentemente los componentes. Como no tenemos pulsera, usaremos un método alternativo: <strong class="underline">tocar periódicamente una parte metálica sin pintar del gabinete del PC</strong>. Esto iguala tu "carga" eléctrica con la del chasis, protegiendo los componentes.</p>
+                </div>
+            </div>
+            <h3 class="text-xl font-semibold text-blue-400 mb-2">Pasos para un Desarme Ordenado:</h3>
+            <ol class="list-decimal list-inside space-y-3">
+                <li><strong>Preparación:</strong> Reúne tus herramientas (destornilladores, etc.) en un área de trabajo limpia y despejada. Apaga el PC completamente desde el sistema operativo.</li>
+                <li><strong>Desconexión Total:</strong> Apaga el interruptor de la fuente de poder (si lo tiene) y <strong class="text-red-500">desenchufa el cable de poder de la pared</strong>. Luego, desconecta todos los periféricos (monitor, teclado, USBs, etc).</li>
+                <li><strong>Descarga Inicial:</strong> Antes de abrir, toca con tu mano una parte metálica y sin pintura del gabinete por 3-5 segundos.</li>
+                <li><strong>Abrir el Gabinete:</strong> Retira los tornillos del panel lateral (generalmente el izquierdo si miras el PC de frente) y desliza el panel para abrirlo.</li>
+                <li><strong>Contacto Constante:</strong> A partir de ahora, antes de tocar cualquier componente, y cada par de minutos, vuelve a tocar el metal del chasis para descargarte.</li>
+                <li><strong>Desconectar Tarjetas de Expansión:</strong> Comienza con la tarjeta de video (GPU). Desatorníllala del chasis, abre el clip de seguridad del puerto PCIe y retírala con cuidado.</li>
+                <li><strong>Desconectar Unidades y Cables:</strong> Desconecta los cables de datos (SATA) y de alimentación de los discos duros, SSDs y unidades ópticas. Luego, retira las unidades de sus bahías.</li>
+                <li><strong>Retirar la Memoria RAM:</strong> Abre los clips a los lados de cada módulo de RAM. El módulo se levantará ligeramente. Tómalo por los bordes (¡nunca por los chips!) y retíralo.</li>
+                <li><strong>Desconectar la Placa Madre:</strong> Este es el paso más complejo. Desconecta metódicamente todos los cables: el conector ATX de 24 pines, el de 4/8 pines del CPU, los cables de los ventiladores, los conectores del panel frontal (botones, LEDs, USB). Tómale una foto a esto último si es necesario.</li>
+                <li><strong>Retirar CPU y Disipador:</strong> Desatornilla y retira el disipador del CPU. Limpia la pasta térmica vieja del procesador y del disipador con alcohol isopropílico. Levanta la palanca de seguridad del zócalo del CPU y retíralo con extremo cuidado, tomándolo por los bordes.</li>
+                <li><strong>Finalizar:</strong> Por último, desatornilla la fuente de poder y la placa madre del gabinete.</li>
+            </ol>
+        </section>
+
+        <!-- Guía de Armado Seguro -->
+        <section id="armado" class="card">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">6. Guía de Armado Seguro (Reensamblaje)</h2>
+            <p class="mb-4">El armado es esencialmente el proceso inverso. La paciencia y el orden son claves. Recuerda la regla de oro: <strong class="text-yellow-300">¡Toca el chasis metálico constantemente!</strong></p>
+            <h3 class="text-xl font-semibold text-blue-400 mb-2">Pasos para el Reensamblaje:</h3>
+            <ol class="list-decimal list-inside space-y-3">
+                <li><strong>Preparar Gabinete y Placa Madre:</strong> Instala la placa madre sobre una superficie no conductora (como su caja antiestática). Instala primero el <strong class="text-cyan-400">CPU</strong> (alineando la flecha) y cierra la palanca. Luego, instala las <strong class="text-cyan-400">memorias RAM</strong> en las ranuras correctas (consulta el manual de tu placa) hasta que los clips hagan "clic".</li>
+                <li><strong>Instalar la Placa Madre en el Gabinete:</strong> Atornilla primero los "standoffs" (postes de montaje) en el gabinete, asegurándote de que coincidan con los agujeros de tu placa. Coloca la placa y atorníllala suavemente, sin apretar en exceso.</li>
+                <li><strong>Instalar Fuente de Poder y Unidades:</strong> Atornilla la PSU en su lugar. Monta los discos duros y SSDs en sus bahías.</li>
+                <li><strong>Aplicar Pasta Térmica e Instalar Disipador:</strong> Aplica una pequeña cantidad de pasta térmica nueva en el CPU (del tamaño de un grano de arroz). Luego, monta y asegura el disipador del CPU y conecta su ventilador al header "CPU_FAN" de la placa.</li>
+                <li><strong>Instalar Tarjeta de Video:</strong> Inserta la GPU en la ranura PCIe superior y asegúrala con su tornillo.</li>
+                <li><strong>Conexión de Cables (Gestión de Cables):</strong> La parte más tediosa. Conecta todo: ATX 24-pines, CPU 4/8-pines, energía para la GPU (si la necesita), cables de poder y datos para las unidades, y los conectores del panel frontal (¡usa tu foto o el manual!). Intenta pasar los cables por detrás para un flujo de aire limpio.</li>
+                <li><strong>Revisión Final:</strong> Echa un último vistazo para asegurarte de que todo está conectado y no hay tornillos sueltos.</li>
+                <li><strong>Cerrar y Probar:</strong> Coloca el panel lateral. Conecta el cable de poder, monitor y teclado/ratón. ¡Cruza los dedos y presiona el botón de encendido! Si todo va bien, deberías ver la pantalla de la BIOS/UEFI.</li>
+            </ol>
+        </section>
+
+        <!-- Video Educativo -->
+        <section id="video-tutorial" class="card">
+            <h2 class="text-2xl font-bold text-emerald-400 mb-4">🎥 Video Tutorial: Mediciones Eléctricas en Fuentes de Poder</h2>
+            <div class="mb-4">
+                <p class="text-lg text-gray-300 mb-2">
+                    Para complementar lo aprendido, te recomendamos este video práctico que demuestra paso a paso cómo realizar mediciones eléctricas en una fuente de poder usando un multímetro.
+                </p>
+                <div class="info-box mb-4">
+                    <svg class="w-8 h-8 mr-3 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    <div>
+                        <h4 class="font-bold">💡 Lo que aprenderás en este video:</h4>
+                        <ul class="text-sm space-y-1">
+                            <li>• Técnicas prácticas de medición con multímetro</li>
+                            <li>• Identificación de voltajes en conectores reales</li>
+                            <li>• Diagnóstico de problemas comunes en PSU</li>
+                            <li>• Consejos de seguridad durante las mediciones</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video Container Responsive -->
+            <div class="relative w-full" style="padding-bottom: 56.25%; /* 16:9 aspect ratio */">
+                <iframe 
+                    class="absolute top-0 left-0 w-full h-full rounded-lg border-2 border-blue-600 shadow-lg"
+                    src="https://www.youtube.com/embed/maMRW1XjJ4A" 
+                    title="Tutorial: Mediciones Eléctricas en Fuentes de Poder"
+                    frameborder="0" 
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <p class="text-sm text-gray-400">
+                    <strong>📺 Tip:</strong> Te recomendamos ver el video en pantalla completa para observar mejor los detalles de las mediciones.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 mt-12 py-6">
+        <div class="container mx-auto px-6 text-center text-gray-400">
+            <p>El conocimiento es poder, pero la seguridad es primordial.</p>
+            <p>&copy; 2024 - Guía de Formación Técnica. ¡Practica con cuidado y sigue aprendiendo!</p>
+        </div>
+    </footer>
+
+</body>
+</html>
