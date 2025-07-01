@@ -1230,7 +1230,17 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware de seguridad
-app.use(helmet());
+// Middleware de seguridad
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            scriptSrc: ["'self'", "'unsafe-inline'"], // Permite scripts inline
+            styleSrc: ["'self'", "'unsafe-inline'"],  // Permite CSS inline
+            imgSrc: ["'self'", "data:", "https:"],
+        },
+    },
+}));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -1399,8 +1409,8 @@ CREATE DATABASE auth_system;
         <p>Bienvenido al sistema de autenticación. Por favor, inicia sesión o regístrate para continuar.</p>
         
         <div id="auth-section">
-            <a href="login.html" class="btn btn-primary">Iniciar Sesión</a>
-            <a href="register.html" class="btn btn-secondary">Registrarse</a>
+            <a href="/views/login.html" class="btn btn-primary">Iniciar Sesión</a>
+            <a href="/views/register.html" class="btn btn-secondary">Registrarse</a>
         </div>
         
         <div id="user-section" style="display: none;">
@@ -1464,8 +1474,8 @@ CREATE DATABASE auth_system;
         &lt;p&gt;Bienvenido al sistema de autenticaci&oacute;n. Por favor, inicia sesi&oacute;n o reg&iacute;strate para continuar.&lt;/p&gt;
         
         &lt;div id=&quot;auth-section&quot;&gt;
-            &lt;a href=&quot;login.html&quot; class=&quot;btn btn-primary&quot;&gt;Iniciar Sesi&oacute;n&lt;/a&gt;
-            &lt;a href=&quot;register.html&quot; class=&quot;btn btn-secondary&quot;&gt;Registrarse&lt;/a&gt;
+            &lt;a href=&quot;/views/login.html&quot; class=&quot;btn btn-primary&quot;&gt;Iniciar Sesi&oacute;n&lt;/a&gt;
+            &lt;a href=&quot;/views/register.html&quot; class=&quot;btn btn-secondary&quot;&gt;Registrarse&lt;/a&gt;
         &lt;/div&gt;
         
         &lt;div id=&quot;user-section&quot; style=&quot;display: none;&quot;&gt;
