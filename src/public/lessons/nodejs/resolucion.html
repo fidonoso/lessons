@@ -1,0 +1,2806 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolución del Proyecto - Sistema de Autenticación con JWT</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Prism.js CSS - Tema que funciona con modo oscuro/claro -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css" rel="stylesheet">
+    
+    <!-- Configuración de Tailwind para modo oscuro -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            100: '#111827', // gray-900
+                            200: '#1F2937', // gray-800
+                            300: '#374151', // gray-700
+                            400: '#4B5563', // gray-600
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Estilos personalizados -->
+    <style>
+        .section-title {
+            @apply text-2xl font-bold mb-4 text-blue-600 dark:text-gray-100;
+        }
+        .subsection-title {
+            @apply text-xl font-semibold mb-3 text-blue-500 dark:text-gray-200;
+        }
+        .code-block {
+            @apply relative bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-600 rounded-xl shadow-lg my-4 overflow-hidden;
+        }
+        .code-block::before {
+            content: '';
+            @apply absolute top-0 left-0 right-0 h-10 bg-gradient-to-r from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 border-b border-gray-300 dark:border-gray-500 z-10;
+        }
+        .code-block::after {
+            content: '⚫ 🟡 🟢';
+            @apply absolute top-3 left-4 text-xs z-20;
+        }
+        .code-content {
+            @apply pt-16 overflow-x-auto;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+        .dark .code-content {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+        
+        /* Integración con Prism.js */
+        .code-block pre[class*="language-"] {
+            @apply m-0 rounded-none bg-transparent;
+            padding: 1.5rem 1.5rem 1.5rem 3rem !important;
+            margin-top: 0 !important;
+        }
+        
+        .code-block .line-numbers .line-numbers-rows {
+            @apply border-r border-gray-300 dark:border-gray-600;
+            padding-top: 1.5rem !important;
+        }
+        
+        .code-block.line-numbers pre[class*="language-"] {
+            padding-left: 3.8rem !important;
+        }
+        
+        /* Personalización del tema de Prism.js */
+        .dark pre[class*="language-"] {
+            background: transparent !important;
+            color: #e2e8f0 !important;
+        }
+        
+        .dark .token.comment,
+        .dark .token.prolog,
+        .dark .token.doctype,
+        .dark .token.cdata {
+            color: #64748b !important;
+        }
+        
+        .dark .token.keyword,
+        .dark .token.operator {
+            color: #a78bfa !important;
+        }
+        
+        .dark .token.string,
+        .dark .token.attr-value {
+            color: #34d399 !important;
+        }
+        
+        .dark .token.number {
+            color: #fb923c !important;
+        }
+        
+        .dark .token.function {
+            color: #60a5fa !important;
+        }
+        
+        /* Estilos para la toolbar de Prism.js */
+        .code-toolbar {
+            position: relative;
+        }
+        
+        .code-toolbar .toolbar {
+            @apply absolute top-3 right-3 z-30;
+        }
+        
+        .code-toolbar .toolbar .toolbar-item {
+            @apply inline-block;
+        }
+        
+        .code-toolbar .toolbar .toolbar-item .copy-button,
+        .code-toolbar .toolbar .toolbar-item button {
+            @apply px-3 py-1 text-xs font-medium bg-blue-500 hover:bg-blue-600 text-white rounded-md transition-all duration-200 cursor-pointer border-none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+        }
+        
+        .code-toolbar .toolbar .toolbar-item .copy-button:hover,
+        .code-toolbar .toolbar .toolbar-item button:hover {
+            @apply transform scale-105 shadow-lg;
+        }
+        
+        /* Mejoras para números de línea */
+        .line-numbers .line-numbers-rows {
+            @apply text-gray-400 dark:text-gray-500;
+            font-size: 0.85em;
+            line-height: 1.5;
+            user-select: none;
+        }
+        
+        .line-numbers .line-numbers-rows > span:before {
+            @apply text-gray-400 dark:text-gray-500;
+        }
+        
+        /* Ajustes para que el header no interfiera con la toolbar */
+        .code-block .code-header {
+            @apply absolute top-3 left-16 text-xs text-gray-500 dark:text-gray-400 font-medium z-20;
+        }
+        .code-header {
+            @apply absolute top-3 right-4 text-xs text-gray-500 dark:text-gray-400 font-medium;
+        }
+        .step-number {
+            @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold text-sm shadow-lg;
+        }
+        .language-tag {
+            @apply inline-block px-3 py-1 text-xs font-semibold bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 rounded-full mb-3;
+        }
+        .file-icon {
+            @apply inline-block w-4 h-4 mr-2 opacity-70;
+        }
+        .terminal-block {
+            @apply relative bg-gray-900 border border-gray-700 rounded-xl shadow-lg my-4 font-mono text-sm overflow-hidden;
+        }
+        .terminal-block::before {
+            content: '●●●';
+            @apply absolute top-3 left-4 text-red-500;
+        }
+        .terminal-content {
+            @apply p-6 pt-12 text-green-400 overflow-x-auto;
+        }
+        .sql-block {
+            @apply relative bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-indigo-900 dark:to-indigo-800 border border-indigo-200 dark:border-indigo-600 rounded-xl shadow-lg my-4 font-mono text-sm overflow-hidden;
+        }
+        .sql-content {
+            @apply p-6 text-indigo-800 dark:text-indigo-200 overflow-x-auto;
+        }
+        .json-block {
+            @apply relative bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900 dark:to-emerald-800 border border-emerald-200 dark:border-emerald-600 rounded-xl shadow-lg my-4 font-mono text-sm overflow-hidden;
+        }
+        .json-content {
+            @apply p-6 text-emerald-800 dark:text-emerald-200 overflow-x-auto;
+        }
+        .code-block:hover {
+            @apply shadow-xl transform scale-[1.01] transition-all duration-300;
+        }
+        .syntax-keyword {
+            @apply text-purple-600 dark:text-purple-400 font-semibold;
+        }
+        .syntax-string {
+            @apply text-green-600 dark:text-green-400;
+        }
+        .syntax-comment {
+            @apply text-gray-500 dark:text-gray-400 italic;
+        }
+        .syntax-number {
+            @apply text-orange-600 dark:text-orange-400;
+        }
+        
+        /* Efectos de scroll mejorados */
+        .code-content::-webkit-scrollbar,
+        .terminal-content::-webkit-scrollbar,
+        .sql-content::-webkit-scrollbar,
+        .json-content::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .code-content::-webkit-scrollbar-track,
+        .terminal-content::-webkit-scrollbar-track,
+        .sql-content::-webkit-scrollbar-track,
+        .json-content::-webkit-scrollbar-track {
+            @apply bg-gray-200 dark:bg-gray-700 rounded-full;
+        }
+        
+        .code-content::-webkit-scrollbar-thumb,
+        .terminal-content::-webkit-scrollbar-thumb,
+        .sql-content::-webkit-scrollbar-thumb,
+        .json-content::-webkit-scrollbar-thumb {
+            @apply bg-blue-400 dark:bg-blue-600 rounded-full hover:bg-blue-500 dark:hover:bg-blue-500;
+        }
+        
+        /* Animaciones suaves */
+        .code-block,
+        .terminal-block,
+        .sql-block,
+        .json-block {
+            transition: all 0.3s ease;
+        }
+        
+        .language-tag {
+            animation: fadeInDown 0.5s ease-out;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Mejoras de responsividad */
+        @media (max-width: 768px) {
+            .code-content,
+            .terminal-content,
+            .sql-content,
+            .json-content {
+                @apply p-4 pt-12 text-xs;
+            }
+            
+            .code-block::after {
+                @apply text-xs top-2 left-3;
+            }
+            
+            .terminal-block::before {
+                @apply text-xs top-2 left-3;
+            }
+        }
+        
+        /* Estilos para resaltar líneas importantes */
+        .highlight-line {
+            @apply bg-yellow-100 dark:bg-yellow-900/30 -mx-6 px-6;
+        }
+        
+        .error-line {
+            @apply bg-red-100 dark:bg-red-900/30 -mx-6 px-6;
+        }
+        
+        .success-line {
+            @apply bg-green-100 dark:bg-green-900/30 -mx-6 px-6;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-dark-100 dark:text-gray-300 transition-colors duration-200 ">
+    <nav id="navbar1" class="bg-gray-50 dark:bg-dark-200 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/lessons/nodejs/guia-jwt" class="text-xl font-bold text-gray-800 dark:text-gray-100">
+                    ← Volver a la Guía
+                </a>
+                <div class="flex items-center space-x-6">
+                    <span class="font-medium text-gray-700 dark:text-gray-300">Resolución del Proyecto</span>
+                    <button id="darkModeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-dark-300 hover:bg-gray-300 dark:hover:bg-dark-400 transition-colors duration-200">
+                        <svg class="w-6 h-6 text-gray-800 dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                        <svg class="w-6 h-6 hidden dark:block text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center text-blue-700 dark:text-gray-100 mb-8">
+            Guía Paso a Paso: Sistema de Autenticación con JWT
+        </h1>
+
+        <!-- Introducción -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="section-title">Introducción</h2>
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+                Esta guía te llevará paso a paso para crear un sistema completo de autenticación usando JWT (JSON Web Tokens) 
+                con Node.js, Express y PostgreSQL, siguiendo la arquitectura MVC.
+            </p>
+            <div class="bg-blue-50 dark:bg-dark-300 p-4 rounded-lg">
+                <h3 class="font-semibold text-blue-700 dark:text-blue-400 mb-2">¿Qué aprenderás?</h3>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                    <li>Configurar un proyecto Node.js con Express</li>
+                    <li>Implementar autenticación segura con JWT</li>
+                    <li>Crear y gestionar una base de datos PostgreSQL</li>
+                    <li>Desarrollar middleware de autorización</li>
+                    <li>Implementar roles de usuario</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Paso 1: Estructura del Proyecto -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">1</div>
+                <h2 class="section-title mb-0">Estructura del Proyecto</h2>
+            </div>
+            
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+                Primero, creemos la estructura de carpetas que seguirá el patrón MVC (Modelo-Vista-Controlador).
+            </p>
+
+            <h3 class="subsection-title">Estructura de Directorios</h3>
+            <div class="language-tag">📁 Estructura de Proyecto</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">auth-system/</div>
+                <div class="code-content">
+                    <pre><code class="language-text">auth-system/
+├── config/
+│   ├── database.js          # Configuración de la base de datos
+│   └── auth.js             # Configuración de JWT
+├── controllers/
+│   ├── authController.js    # Lógica de autenticación
+│   └── userController.js    # Lógica de usuarios
+├── middleware/
+│   ├── auth.js             # Middleware de autenticación
+│   └── roles.js            # Middleware de roles
+├── models/
+│   └── User.js             # Modelo de usuario
+├── routes/
+│   ├── auth.js             # Rutas de autenticación
+│   └── users.js            # Rutas de usuarios
+├── views/
+│   ├── index.html          # Página de inicio
+│   ├── login.html          # Página de login
+│   ├── register.html       # Página de registro
+│   ├── dashboard.html      # Dashboard de usuario
+│   └── admin.html          # Panel de administración
+├── public/
+│   ├── css/
+│   ├── js/
+│   └── images/
+├── .env                    # Variables de entorno
+├── .gitignore             # Archivos ignorados por Git
+├── package.json           # Dependencias del proyecto
+└── server.js              # Archivo principal del servidor</code></pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Comandos para crear la estructura</h3>
+            <div class="language-tag">🖥️ PowerShell</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">PowerShell Commands</div>
+                <div class="code-content">
+                    <pre><code class="language-powershell"># Crear las carpetas principales
+New-Item -Path config, controllers, middleware, models, routes, views, public -ItemType Directory
+
+New-Item -Path "public\css", "public\js", "public\images" -ItemType Directory
+
+# Crear archivos principales
+New-Item -Path server.js, .env, .gitignore -ItemType File
+
+New-Item -Path "config\database.js", "config\auth.js" -ItemType File
+
+New-Item -Path "controllers\authController.js", "controllers\userController.js" -ItemType File
+
+New-Item -Path "middleware\auth.js", "middleware\roles.js" -ItemType File
+
+New-Item -Path "models\User.js" -ItemType File
+
+New-Item -Path "routes\auth.js", "routes\users.js" -ItemType File
+
+New-Item -Path "views\index.html", "views\login.html", "views\register.html", "views\dashboard.html", "views\admin.html" -ItemType File</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-yellow-700 dark:text-yellow-400 mb-2">💡 Conceptos Clave</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                    <li><strong>MVC:</strong> Separa la lógica de negocio (Model), la presentación (View) y el control (Controller)</li>
+                    <li><strong>Middleware:</strong> Funciones que se ejecutan entre la petición y la respuesta</li>
+                    <li><strong>JWT:</strong> Tokens seguros para mantener sesiones sin estado</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Paso 2: Inicialización del Proyecto -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">2</div>
+                <h2 class="section-title mb-0">Inicialización del Proyecto</h2>
+            </div>
+
+            <h3 class="subsection-title">Inicializar npm y instalar dependencias</h3>
+            <div class="language-tag">🖥️ Terminal</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">Terminal Commands</div>
+                <div class="code-content">
+                    <pre><code class="language-bash"># Inicializar el proyecto con npm
+npm init -y
+
+# Instalar dependencias principales
+npm install express jsonwebtoken bcryptjs pg dotenv cors helmet uuid
+
+# Instalar dependencias de desarrollo
+npm install --save-dev nodemon</code></pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Configurar package.json</h3>
+            <p class="text-gray-700 dark:text-gray-300 mb-3">
+                Agregar los scripts necesarios en el archivo <code class="bg-gray-200 dark:bg-dark-400 px-2 py-1 rounded">package.json</code>:
+            </p>
+            <div class="language-tag">📄 package.json</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">package.json</div>
+                <div class="code-content">
+                    <pre><code class="language-json">{
+  "name": "auth-system",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Sistema de autenticación con JWT y roles",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "pg": "^8.11.3",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-green-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-green-700 dark:text-green-400 mb-2">📦 Dependencias Explicadas</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li><strong>express:</strong> Framework web para Node.js</li>
+                    <li><strong>jsonwebtoken:</strong> Para crear y verificar JWT</li>
+                    <li><strong>bcryptjs:</strong> Para hashear contraseñas</li>
+                    <li><strong>pg:</strong> Cliente PostgreSQL para Node.js</li>
+                    <li><strong>dotenv:</strong> Para cargar variables de entorno</li>
+                    <li><strong>cors:</strong> Para manejar solicitudes entre dominios</li>
+                    <li><strong>helmet:</strong> Para agregar headers de seguridad</li>
+                    <li><strong>nodemon:</strong> Reinicia automáticamente el servidor en desarrollo</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Paso 3: Configuración de Variables de Entorno -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">3</div>
+                <h2 class="section-title mb-0">Configuración de Variables de Entorno</h2>
+            </div>
+
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+                Las variables de entorno nos permiten mantener información sensible fuera del código fuente.
+            </p>
+            
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg mb-4">
+                <h4 class="font-semibold text-yellow-700 dark:text-yellow-400 mb-2">⚠️ Notas importantes:</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li>Asegúrate de haber creado la base de datos "auth_system" en PostgreSQL antes de proceder</li>
+                    <li>Verifica que el servidor de PostgreSQL esté corriendo y que sus parámetros sean correctos</li>
+                    <li>Reemplaza "tu_usuario" y "tu_contraseña" por las credenciales reales de tu base de datos</li>
+                    <li>El valor de JWT_SECRET debe ser una cadena larga y aleatoria para garantizar la seguridad</li>
+                    <li>NODE_ENV te permite establecer el entorno de ejecución (development, production, etc.)</li>
+                </ul>
+            </div>
+
+            <h3 class="subsection-title">Archivo .env</h3>
+            <div class="language-tag">📄 Variables de Entorno</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">.env</div>
+                <div class="code-content">
+                    <pre><code class="language-bash"># Puerto del servidor
+PORT=3000
+
+# Configuración de la base de datos:
+# DB_HOST: Dirección del servidor de la base de datos (usualmente 'localhost' en desarrollo)
+# DB_PORT: Puerto de conexión a PostgreSQL (por defecto es 5432)
+# DB_NAME: Nombre de la base de datos que has creado para el proyecto
+# DB_USER: Usuario con permisos para acceder a la base de datos
+# DB_PASSWORD: Contraseña asociada al usuario anterior
+DB_HOST=localhost
+DB_PORT=5432
+DB_NAME=auth_system
+DB_USER=tu_usuario
+DB_PASSWORD=tu_contraseña
+
+# Secreto para JWT:
+# Utiliza una clave segura y única para firmar los tokens de autenticación.
+JWT_SECRET=tu_jwt_secret_muy_seguro_aqui_123456789
+JWT_EXPIRE=24h
+
+# Configuración del entorno:
+# Define si el entorno es de desarrollo, producción, etc.
+NODE_ENV=development</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-red-700 dark:text-red-400 mb-2">🔒 Importante sobre Seguridad</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li>Nunca subas el archivo .env a control de versiones</li>
+                    <li>Usa una clave JWT compleja en producción (mínimo 32 caracteres)</li>
+                    <li>Cambia las credenciales por defecto de PostgreSQL</li>
+                    <li>Considera usar un servicio de gestión de secretos en producción</li>
+                </ul>
+            </div>
+            
+            <h3 class="subsection-title">Configurar .gitignore</h3>
+            <div class="language-tag">📄 Git Ignore</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">.gitignore</div>
+                <div class="code-content">
+                    <pre><code class="language-bash"># Dependencias
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Variables de entorno
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+
+# Base de datos
+*.sqlite
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Paso 4: Configuración de la Base de Datos -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">4</div>
+                <h2 class="section-title mb-0">Configuración de la Base de Datos</h2>
+            </div>
+
+            <h3 class="subsection-title">Instalación de PostgreSQL</h3>
+            <p class="text-gray-700 dark:text-gray-300 mb-3">
+                Si no tienes PostgreSQL instalado, puedes descargarlo desde 
+                <a href="https://www.postgresql.org/download/" class="text-blue-600 dark:text-blue-400 hover:underline">postgresql.org</a> 
+                o usar Docker:
+            </p>
+            <div class="language-tag">🐳 Docker / Sistema</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">PostgreSQL Installation</div>
+                <div class="code-content">
+                    <pre><code class="language-bash"># Con Docker
+docker run -d --name postgres-auth -e POSTGRES_PASSWORD=tu_contraseña -p 5432:5432 postgres
+
+# O instalar directamente en tu sistema operativo
+# Windows: Descargar desde postgresql.org
+# macOS: brew install postgresql
+# Ubuntu: sudo apt-get install postgresql postgresql-contrib</code></pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Crear la base de datos</h3>
+            
+            <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg mb-4">
+                <h4 class="font-semibold text-blue-700 dark:text-blue-400 mb-2">💻 Comandos según tu Sistema Operativo</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li><strong>Windows:</strong> Usa PowerShell o Command Prompt</li>
+                    <li><strong>Linux/macOS:</strong> Usa Terminal (Bash/Zsh)</li>
+                    <li><strong>Docker:</strong> Los comandos son iguales en todos los sistemas</li>
+                </ul>
+            </div>
+
+            <div class="language-tag">🖥️ PowerShell (Windows)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">PowerShell - Windows</div>
+                <div class="code-content">
+                    <pre><code class="language-powershell"># Conectar a PostgreSQL desde PowerShell
+psql -h localhost -U postgres -W
+
+# Si tienes postgres en otro puerto: para especificar el puerto (por defecto 5432)
+psql -h localhost -p 5433 -U postgres -W</code></pre>
+                </div>
+            </div>
+
+            <div class="language-tag">🐧 Bash (Linux/macOS)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">Bash - Linux/macOS</div>
+                <div class="code-content">
+                    <pre><code class="language-bash"># Conectar a PostgreSQL desde terminal
+psql -h localhost -U postgres -W
+
+# Si tienes postgres en otro puerto
+psql -h localhost -p 5433 -U postgres -W</code></pre>
+                </div>
+            </div>
+
+            <p class="text-gray-700 dark:text-gray-300 my-4">
+                Una vez conectado a tu instancia de PostgreSQL, debes crear la base de datos "auth_system":
+            </p>
+
+            <div class="language-tag">🗄️ SQL Commands</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">PostgreSQL Database Setup</div>
+                <div class="code-content">
+                    <pre><code class="language-sql">-- Crear la base de datos "auth_system"
+CREATE DATABASE auth_system;
+
+-- Opcional: Crear usuario 'auth_user'
+CREATE USER auth_user WITH PASSWORD 'tu_contraseña';
+GRANT ALL PRIVILEGES ON DATABASE auth_system TO auth_user;
+
+-- Conectar a la nueva base de datos
+\c auth_system;
+
+-- Crear tabla de usuarios utilizando UUID para el id (se generará en la aplicación con el paquete npm "uuid")
+CREATE TABLE users (
+    id VARCHAR(36) PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Crear índices para optimizar consultas
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_role ON users(role);</code></pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Configurar conexión (config/database.js)</h3>
+            <div class="language-tag">📄 JavaScript (ES6 Module)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">config/database.js</div>
+                <div class="code-content">
+                    <pre><code class="language-javascript">
+//config/database.js
+import pkg from 'pg';
+import dotenv from 'dotenv';
+
+const { Pool } = pkg;
+dotenv.config();
+
+const pool = new Pool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+});
+
+// Verificar conexión
+pool.on('connect', () => {
+    console.log('✅ Conectado a la base de datos PostgreSQL');
+});
+
+pool.on('error', (err) => {
+    console.error('❌ Error en la conexión a la base de datos:', err);
+});
+
+export const query = (text, params) => pool.query(text, params);
+export { pool };
+export default { query, pool };</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Paso 5: Configuración de Autenticación -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">5</div>
+                <h2 class="section-title mb-0">Configuración de Autenticación</h2>
+            </div>
+
+            <h3 class="subsection-title">Archivo config/auth.js</h3>
+            <div class="language-tag">📄 JavaScript (ES6)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">config/auth.js</div>
+                <div class="code-content">
+                    <pre><code class="language-javascript">
+//config/auth.js
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+export default {
+    jwtSecret: process.env.JWT_SECRET,
+    jwtExpire: process.env.JWT_EXPIRE || '24h',
+    
+    // Configuraciones adicionales de seguridad
+    bcryptRounds: 12,
+    maxLoginAttempts: 5,
+    lockoutTime: 15 * 60 * 1000, // 15 minutos
+};</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Paso 6: Modelo de Usuario -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">6</div>
+                <h2 class="section-title mb-0">Modelo de Usuario</h2>
+            </div>
+
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+                El modelo de usuario maneja toda la lógica relacionada con los datos del usuario, 
+                incluyendo creación, validación y consultas a la base de datos.
+            </p>
+
+            <h3 class="subsection-title">Archivo models/User.js</h3>
+            <div class="language-tag">📄 JavaScript (ES6 Module)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">models/User.js</div>
+                <div class="code-content">
+                    <pre><code class="language-javascript">
+//models/User.js
+import db from '../config/database.js';
+import bcrypt from 'bcryptjs';
+import { v4 as uuidv4 } from 'uuid';
+
+class User {
+    static async create(userData) {
+        const { email, password, role = 'user' } = userData;
+        const id = uuidv4(); // Generar UUID para el ID
+        
+        // Hash de la contraseña
+        const saltRounds = 12;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        
+        const query = `
+            INSERT INTO users (id, email, password, role) 
+            VALUES ($1, $2, $3, $4) 
+            RETURNING id, email, role, created_at
+        `;
+        
+        const result = await db.query(query, [id, email, hashedPassword, role]);
+        return result.rows[0];
+    }
+    
+    static async findByEmail(email) {
+        const query = 'SELECT * FROM users WHERE email = $1';
+        const result = await db.query(query, [email]);
+        return result.rows[0];
+    }
+    
+    static async findById(id) {
+        const query = 'SELECT id, email, role, created_at FROM users WHERE id = $1';
+        const result = await db.query(query, [id]);
+        return result.rows[0];
+    }
+    
+    static async validatePassword(plainPassword, hashedPassword) {
+        return await bcrypt.compare(plainPassword, hashedPassword);
+    }
+    
+    static async updateLastLogin(id) {
+        const query = 'UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE id = $1';
+        await db.query(query, [id]);
+    }
+}
+
+export default User;</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-yellow-700 dark:text-yellow-400 mb-2">📦 Importante sobre UUID</h4>
+                <p class="text-gray-700 dark:text-gray-300 text-sm mb-2">
+                    No olvides instalar el paquete uuid para generar IDs únicos:
+                </p>
+                <div class="bg-gray-900 rounded p-2">
+                    <code class="text-green-400 text-sm">npm install uuid</code>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-blue-700 dark:text-blue-400 mb-2">🔑 Conceptos de Seguridad</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li><strong>UUID:</strong> Identificadores únicos que no revelan información sobre los datos</li>
+                    <li><strong>Salt Rounds:</strong> 12 rondas proporcionan un balance entre seguridad y rendimiento</li>
+                    <li><strong>Hash:</strong> Las contraseñas nunca se almacenan en texto plano</li>
+                    <li><strong>Validación:</strong> Comparación segura de contraseñas usando bcrypt</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Paso 7: Controlador de Autenticación -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">7</div>
+                <h2 class="section-title mb-0">Controlador de Autenticación</h2>
+            </div>
+
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+                Los controladores manejan la lógica de negocio para registro, login y verificación de usuarios.
+            </p>
+
+            <h3 class="subsection-title">Archivo controllers/authController.js</h3>
+            <div class="language-tag">📄 JavaScript (ES6 Module)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">controllers/authController.js</div>
+                <div class="code-content">
+                    <pre><code class="language-javascript">
+//controllers/authController.js
+import jwt from 'jsonwebtoken';
+import User from '../models/User.js';
+import authConfig from '../config/auth.js';
+
+const authController = {
+    // Registro de usuario
+    async register(req, res) {
+        try {
+            const { email, password, confirmPassword } = req.body;
+            
+            // Validaciones
+            if (!email || !password || !confirmPassword) {
+                return res.status(400).json({ 
+                    message: 'Todos los campos son obligatorios' 
+                });
+            }
+            
+            if (password !== confirmPassword) {
+                return res.status(400).json({ 
+                    message: 'Las contraseñas no coinciden' 
+                });
+            }
+            
+            if (password.length < 8) {
+                return res.status(400).json({ 
+                    message: 'La contraseña debe tener al menos 8 caracteres' 
+                });
+            }
+            
+            // Verificar si el usuario ya existe
+            const existingUser = await User.findByEmail(email);
+            if (existingUser) {
+                return res.status(409).json({ 
+                    message: 'El usuario ya existe' 
+                });
+            }
+            
+            // Crear nuevo usuario
+            const newUser = await User.create({ email, password });
+            
+            // Generar JWT
+            const token = jwt.sign(
+                { 
+                    userId: newUser.id, 
+                    email: newUser.email, 
+                    role: newUser.role 
+                },
+                authConfig.jwtSecret,
+                { expiresIn: authConfig.jwtExpire }
+            );
+            
+            res.status(201).json({
+                message: 'Usuario registrado exitosamente',
+                token,
+                user: {
+                    id: newUser.id,
+                    email: newUser.email,
+                    role: newUser.role
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error en registro:', error);
+            res.status(500).json({ 
+                message: 'Error interno del servidor' 
+            });
+        }
+    },
+    
+    // Inicio de sesión
+    async login(req, res) {
+        try {
+            const { email, password } = req.body;
+            
+            // Validaciones
+            if (!email || !password) {
+                return res.status(400).json({ 
+                    message: 'Email y contraseña son obligatorios' 
+                });
+            }
+            
+            // Buscar usuario
+            const user = await User.findByEmail(email);
+            if (!user) {
+                return res.status(401).json({ 
+                    message: 'Credenciales inválidas' 
+                });
+            }
+            
+            // Validar contraseña
+            const isValidPassword = await User.validatePassword(password, user.password);
+            if (!isValidPassword) {
+                return res.status(401).json({ 
+                    message: 'Credenciales inválidas' 
+                });
+            }
+            
+            // Actualizar último login
+            await User.updateLastLogin(user.id);
+            
+            // Generar JWT
+            const token = jwt.sign(
+                { 
+                    userId: user.id, 
+                    email: user.email, 
+                    role: user.role 
+                },
+                authConfig.jwtSecret,
+                { expiresIn: authConfig.jwtExpire }
+            );
+            
+            res.json({
+                message: 'Login exitoso',
+                token,
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    role: user.role
+                }
+            });
+            
+        } catch (error) {
+            console.error('Error en login:', error);
+            res.status(500).json({ 
+                message: 'Error interno del servidor' 
+            });
+        }
+    }
+};
+
+export default authController;</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Paso 8: Middleware de Autenticación -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">8</div>
+                <h2 class="section-title mb-0">Middleware de Autenticación</h2>
+            </div>
+
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+                Los middleware se ejecutan antes de los controladores y manejan la verificación de tokens y permisos.
+            </p>
+
+            <h3 class="subsection-title">Archivo middleware/auth.js</h3>
+            <div class="language-tag">📄 JavaScript (ES6 Module)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">middleware/auth.js</div>
+                <div class="code-content">
+                    <pre><code class="language-javascript">
+//middleware/auth.js
+import jwt from 'jsonwebtoken';
+import authConfig from '../config/auth.js';
+
+const authMiddleware = (req, res, next) => {
+    try {
+        // Obtener token del header
+        const authHeader = req.headers.authorization;
+        
+        if (!authHeader) {
+            return res.status(401).json({ 
+                message: 'Token de acceso requerido' 
+            });
+        }
+        
+        const token = authHeader.split(' ')[1]; // Bearer TOKEN
+        
+        if (!token) {
+            return res.status(401).json({ 
+                message: 'Formato de token inválido' 
+            });
+        }
+        
+        // Verificar token
+        const decoded = jwt.verify(token, authConfig.jwtSecret);
+        req.user = decoded;
+        
+        next();
+        
+    } catch (error) {
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({ 
+                message: 'Token expirado' 
+            });
+        }
+        
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ 
+                message: 'Token inválido' 
+            });
+        }
+        
+        console.error('Error en middleware de autenticación:', error);
+        res.status(500).json({ 
+            message: 'Error interno del servidor' 
+        });
+    }
+};
+
+export default authMiddleware;</code></pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Archivo middleware/roles.js</h3>
+            <div class="language-tag">📄 JavaScript (ES6 Module)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">middleware/roles.js</div>
+                <div class="code-content">
+                    <pre><code class="language-javascript">
+//middleware/roles.js
+const roleMiddleware = (allowedRoles) => {
+    return (req, res, next) => {
+        try {
+            const userRole = req.user.role;
+            
+            if (!allowedRoles.includes(userRole)) {
+                return res.status(403).json({ 
+                    message: 'No tienes permisos para acceder a este recurso' 
+                });
+            }
+            
+            next();
+            
+        } catch (error) {
+            console.error('Error en middleware de roles:', error);
+            res.status(500).json({ 
+                message: 'Error interno del servidor' 
+            });
+        }
+    };
+};
+
+export default roleMiddleware;</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-green-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-green-700 dark:text-green-400 mb-2">🛡️ Seguridad del Middleware</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li><strong>Bearer Token:</strong> Estándar para enviar tokens en headers HTTP</li>
+                    <li><strong>Verificación JWT:</strong> Valida firma y expiración automáticamente</li>
+                    <li><strong>Control de Roles:</strong> Implementa autorización granular por funcionalidad</li>
+                    <li><strong>Manejo de Errores:</strong> Respuestas específicas para diferentes tipos de error</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Paso 9: Rutas de la Aplicación -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">9</div>
+                <h2 class="section-title mb-0">Rutas de la Aplicación</h2>
+            </div>
+
+            <h3 class="subsection-title">Archivo routes/auth.js</h3>
+            <div class="language-tag">📄 JavaScript (ES6 Module)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">routes/auth.js</div>
+                <div class="code-content">
+                    <pre><code class="language-javascript">
+//routes/auth.js
+import express from 'express';
+import authController from '../controllers/authController.js';
+import authMiddleware from '../middleware/auth.js';
+
+const router = express.Router();
+
+// Rutas públicas
+router.post('/register', authController.register);
+router.post('/login', authController.login);
+
+// Rutas protegidas
+router.get('/verify', authMiddleware, (req, res) => {
+    res.json({
+        message: 'Token válido',
+        user: {
+            id: req.user.userId,
+            email: req.user.email,
+            role: req.user.role
+        }
+    });
+});
+
+export default router;</code></pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Archivo routes/users.js</h3>
+            <div class="language-tag">📄 JavaScript (ES6 Module)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">routes/users.js</div>
+                <div class="code-content">
+                    <pre><code class="language-javascript">
+//routes/users.js
+import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import authMiddleware from '../middleware/auth.js';
+import roleMiddleware from '../middleware/roles.js';
+
+// Configurar __dirname para ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const router = express.Router();
+
+// Rutas protegidas para usuarios autenticados
+router.get('/dashboard', authMiddleware, (req, res) => {
+    res.sendFile(path.join(__dirname, '../views', 'dashboard.html'));
+});
+
+// Rutas protegidas solo para administradores
+router.get('/admin', 
+    authMiddleware, 
+    roleMiddleware(['admin']), 
+    (req, res) => {
+        res.sendFile(path.join(__dirname, '../views', 'admin.html'));
+    }
+);
+
+export default router;</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-blue-700 dark:text-blue-400 mb-2">🛣️ Conceptos de Routing</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li><strong>Router Express:</strong> Módulos que permiten organizar rutas en archivos separados</li>
+                    <li><strong>Rutas Públicas:</strong> Accesibles sin autenticación (registro, login)</li>
+                    <li><strong>Rutas Protegidas:</strong> Requieren autenticación válida (dashboard, admin)</li>
+                    <li><strong>Middleware Stack:</strong> Se ejecutan en orden: auth → roles → controlador</li>
+                    <li><strong>Separación de Responsabilidades:</strong> Rutas de autenticación vs. rutas de usuarios</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Paso 10: Servidor Principal -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">10</div>
+                <h2 class="section-title mb-0">Servidor Principal</h2>
+            </div>
+
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+                El archivo server.js es el punto de entrada de la aplicación, donde configuramos Express y todas las rutas.
+            </p>
+
+            <h3 class="subsection-title">Archivo server.js</h3>
+            <div class="language-tag">📄 JavaScript (ES6 Module)</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">server.js</div>
+                <div class="code-content">
+                    <pre><code class="language-javascript">
+//server.js
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+import authRoutes from './routes/auth.js';
+import userRoutes from './routes/users.js';
+
+// Configurar __dirname para ES Modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Middleware de seguridad
+app.use(helmet());
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Servir archivos estáticos
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/views', express.static(path.join(__dirname, 'views')));
+
+// Rutas
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
+// Ruta principal
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+});
+
+// Manejo de errores 404
+app.use((req, res, next) => {
+    res.status(404).json({ message: 'Ruta no encontrada' });
+});
+
+// Manejo de errores global
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Error interno del servidor' });
+});
+
+app.listen(PORT, () => {
+    console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+});</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-blue-700 dark:text-blue-400 mb-2">🚀 Características del Servidor</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li><strong>ES Modules:</strong> Sintaxis moderna de JavaScript con import/export</li>
+                    <li><strong>Middleware de Seguridad:</strong> Helmet para headers seguros</li>
+                    <li><strong>CORS:</strong> Permite solicitudes desde diferentes dominios</li>
+                    <li><strong>Archivos Estáticos:</strong> Servir CSS, JS e imágenes</li>
+                    <li><strong>Manejo de Errores:</strong> Captura y responde a errores globalmente</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Paso 11: Comandos de Ejecución -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">11</div>
+                <h2 class="section-title mb-0">Comandos de Ejecución</h2>
+            </div>
+
+            <h3 class="subsection-title">Scripts de NPM</h3>
+            <div class="language-tag">🖥️ Terminal</div>
+            <div class="terminal-block">
+                <div class="terminal-content">
+<pre><span class="syntax-comment"># Instalar todas las dependencias</span>
+npm install
+
+<span class="syntax-comment"># Ejecutar en modo desarrollo (con reinicio automático)</span>
+npm run dev
+
+<span class="syntax-comment"># Ejecutar en modo producción</span>
+npm start
+
+<span class="syntax-comment"># Ejecutar tests (cuando se implementen)</span>
+npm test</pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">Comandos de Base de Datos</h3>
+            <div class="language-tag">🗄️ PostgreSQL Commands</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">PostgreSQL Terminal</div>
+                <div class="code-content">
+                    <pre><code class="language-sql">
+-- Conectar a PostgreSQL
+psql -h localhost -U postgres -W
+
+-- Si tienes postgres en otro puerto
+psql -h localhost -p 5433 -U postgres -W
+
+-- Crear la base de datos
+CREATE DATABASE auth_system;
+
+-- Conectar a la base de datos
+\c auth_system;
+
+-- Ver todas las tablas
+\dt
+
+-- Ver estructura de la tabla users
+\d users;</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-green-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-green-700 dark:text-green-400 mb-2">💡 Comandos Útiles Adicionales</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li><strong>Verificar conexión:</strong> <code class="bg-gray-200 dark:bg-dark-400 px-2 py-1 rounded">SELECT version();</code></li>
+                    <li><strong>Ver usuarios:</strong> <code class="bg-gray-200 dark:bg-dark-400 px-2 py-1 rounded">SELECT * FROM users LIMIT 5;</code></li>
+                    <li><strong>Salir de psql:</strong> <code class="bg-gray-200 dark:bg-dark-400 px-2 py-1 rounded">\q</code></li>
+                    <li><strong>Reiniciar servidor:</strong> <code class="bg-gray-200 dark:bg-dark-400 px-2 py-1 rounded">npm run dev</code> (detecta cambios automáticamente)</li>
+                </ul>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-blue-700 dark:text-blue-400 mb-2">🔧 Flujo de Desarrollo</h4>
+                <ol class="list-decimal list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li>Ejecutar <code class="bg-gray-200 dark:bg-dark-400 px-2 py-1 rounded">npm run dev</code> en una terminal</li>
+                    <li>Abrir otra terminal para comandos de PostgreSQL si es necesario</li>
+                    <li>El servidor se reiniciará automáticamente al hacer cambios en el código</li>
+                    <li>Usar herramientas como Postman o Thunder Client para probar endpoints</li>
+                    <li>Verificar logs en la consola para depurar errores</li>
+                </ol>
+            </div>
+
+            <div class="bg-yellow-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-yellow-700 dark:text-yellow-400 mb-2">⚠️ Importante</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li>Asegúrate de que PostgreSQL esté ejecutándose antes de iniciar la aplicación</li>
+                    <li>Verifica que las variables de entorno en .env sean correctas</li>
+                    <li>En desarrollo, usa <code>npm run dev</code> para reinicio automático</li>
+                    <li>Para producción, considera usar PM2 o Docker</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Paso 12: Páginas HTML Frontend -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">12</div>
+                <h2 class="section-title mb-0">Páginas HTML Frontend</h2>
+            </div>
+
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+                Ahora creamos las páginas HTML básicas para el frontend de la aplicación. Estas páginas son simples y funcionales, 
+                diseñadas para probar el sistema de autenticación sin estilos complejos.
+            </p>
+
+            <h3 class="subsection-title">1. Página de Inicio (views/index.html)</h3>
+            <div class="language-tag">📄 HTML</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">views/index.html</div>
+                <div class="code-content">
+                    <pre><code class="language-html">
+<!--<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Autenticación</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { text-align: center; }
+        .btn { padding: 10px 20px; margin: 10px; text-decoration: none; border: none; cursor: pointer; border-radius: 5px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn:hover { opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Sistema de Autenticación con JWT</h1>
+        <p>Bienvenido al sistema de autenticación. Por favor, inicia sesión o regístrate para continuar.</p>
+        
+        <div id="auth-section">
+            <a href="login.html" class="btn btn-primary">Iniciar Sesión</a>
+            <a href="register.html" class="btn btn-secondary">Registrarse</a>
+        </div>
+        
+        <div id="user-section" style="display: none;">
+            <h2>¡Bienvenido de vuelta!</h2>
+            <p>Estás autenticado como: <span id="user-email"></span></p>
+            <p>Tu rol es: <span id="user-role"></span></p>
+            <a href="dashboard.html" class="btn btn-primary">Dashboard</a>
+            <button onclick="logout()" class="btn btn-secondary">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <script>
+        // Verificar si el usuario está autenticado
+        const authToken = localStorage.getItem('token');
+        if (authToken) {
+            fetch('/api/auth/verify', {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.user) {
+                    document.getElementById('auth-section').style.display = 'none';
+                    document.getElementById('user-section').style.display = 'block';
+                    document.getElementById('user-email').textContent = data.user.email;
+                    document.getElementById('user-role').textContent = data.user.role;
+                }
+            })
+            .catch(() => {
+                localStorage.removeItem('token');
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.reload();
+        }
+    </script>
+</body>
+</html>-->
+
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;es&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Sistema de Autenticaci&oacute;n&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { text-align: center; }
+        .btn { padding: 10px 20px; margin: 10px; text-decoration: none; border: none; cursor: pointer; border-radius: 5px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-secondary { background-color: #6c757d; color: white; }
+        .btn:hover { opacity: 0.8; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;container&quot;&gt;
+        &lt;h1&gt;🔐 Sistema de Autenticaci&oacute;n con JWT&lt;/h1&gt;
+        &lt;p&gt;Bienvenido al sistema de autenticaci&oacute;n. Por favor, inicia sesi&oacute;n o reg&iacute;strate para continuar.&lt;/p&gt;
+        
+        &lt;div id=&quot;auth-section&quot;&gt;
+            &lt;a href=&quot;login.html&quot; class=&quot;btn btn-primary&quot;&gt;Iniciar Sesi&oacute;n&lt;/a&gt;
+            &lt;a href=&quot;register.html&quot; class=&quot;btn btn-secondary&quot;&gt;Registrarse&lt;/a&gt;
+        &lt;/div&gt;
+        
+        &lt;div id=&quot;user-section&quot; style=&quot;display: none;&quot;&gt;
+            &lt;h2&gt;&iexcl;Bienvenido de vuelta!&lt;/h2&gt;
+            &lt;p&gt;Est&aacute;s autenticado como: &lt;span id=&quot;user-email&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;p&gt;Tu rol es: &lt;span id=&quot;user-role&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+            &lt;a href=&quot;dashboard.html&quot; class=&quot;btn btn-primary&quot;&gt;Dashboard&lt;/a&gt;
+            &lt;button onclick=&quot;logout()&quot; class=&quot;btn btn-secondary&quot;&gt;Cerrar Sesi&oacute;n&lt;/button&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        // Verificar si el usuario est&aacute; autenticado
+        const authToken = localStorage.getItem('token');
+        if (authToken) {
+            fetch('/api/auth/verify', {
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                }
+            })
+            .then(response =&gt; response.json())
+            .then(data =&gt; {
+                if (data.user) {
+                    document.getElementById('auth-section').style.display = 'none';
+                    document.getElementById('user-section').style.display = 'block';
+                    document.getElementById('user-email').textContent = data.user.email;
+                    document.getElementById('user-role').textContent = data.user.role;
+                }
+            })
+            .catch(() =&gt; {
+                localStorage.removeItem('token');
+            });
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.reload();
+        }
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">2. Página de Login (views/login.html)</h3>
+            <div class="language-tag">📄 HTML</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">views/login.html</div>
+                <div class="code-content">
+                    <pre><code class="language-html">
+
+<!--<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .btn:hover { background-color: #0056b3; }
+        .error { color: red; margin-top: 10px; }
+        .success { color: green; margin-top: 10px; }
+        .links { text-align: center; margin-top: 20px; }
+        .links a { color: #007bff; text-decoration: none; margin: 0 10px; }
+    </style>
+</head>
+<body>
+    <h1>🔑 Iniciar Sesión</h1>
+    
+    <form id="loginForm">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        
+        <button type="submit" class="btn">Iniciar Sesión</button>
+    </form>
+    
+    <div id="message"></div>
+    
+    <div class="links">
+        <a href="register.html">¿No tienes cuenta? Regístrate</a>
+        <a href="index.html">Volver al inicio</a>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('message');
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    messageDiv.innerHTML = '<div class="success">¡Login exitoso! Redirigiendo...</div>';
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    messageDiv.innerHTML = `<div class="error">${data.message}</div>`;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = '<div class="error">Error de conexión. Verifica que el servidor esté ejecutándose.</div>';
+            }
+        });
+    </script>
+</body>
+</html>-->
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;es&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Iniciar Sesi&oacute;n&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .btn:hover { background-color: #0056b3; }
+        .error { color: red; margin-top: 10px; }
+        .success { color: green; margin-top: 10px; }
+        .links { text-align: center; margin-top: 20px; }
+        .links a { color: #007bff; text-decoration: none; margin: 0 10px; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;🔑 Iniciar Sesi&oacute;n&lt;/h1&gt;
+    
+    &lt;form id=&quot;loginForm&quot;&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt;
+            &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; required&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label for=&quot;password&quot;&gt;Contrase&ntilde;a:&lt;/label&gt;
+            &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot; required&gt;
+        &lt;/div&gt;
+        
+        &lt;button type=&quot;submit&quot; class=&quot;btn&quot;&gt;Iniciar Sesi&oacute;n&lt;/button&gt;
+    &lt;/form&gt;
+    
+    &lt;div id=&quot;message&quot;&gt;&lt;/div&gt;
+    
+    &lt;div class=&quot;links&quot;&gt;
+        &lt;a href=&quot;register.html&quot;&gt;&iquest;No tienes cuenta? Reg&iacute;strate&lt;/a&gt;
+        &lt;a href=&quot;index.html&quot;&gt;Volver al inicio&lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        document.getElementById('loginForm').addEventListener('submit', async (e) =&gt; {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageDiv = document.getElementById('message');
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    messageDiv.innerHTML = '&lt;div class=&quot;success&quot;&gt;&iexcl;Login exitoso! Redirigiendo...&lt;/div&gt;';
+                    setTimeout(() =&gt; {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    messageDiv.innerHTML = `&lt;div class=&quot;error&quot;&gt;${data.message}&lt;/div&gt;`;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = '&lt;div class=&quot;error&quot;&gt;Error de conexi&oacute;n. Verifica que el servidor est&eacute; ejecut&aacute;ndose.&lt;/div&gt;';
+            }
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">3. Página de Registro (views/register.html)</h3>
+            <div class="language-tag">📄 HTML</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">views/register.html</div>
+                <div class="code-content">
+                    <pre><code class="language-html">
+<!--<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .btn:hover { background-color: #218838; }
+        .error { color: red; margin-top: 10px; }
+        .success { color: green; margin-top: 10px; }
+        .links { text-align: center; margin-top: 20px; }
+        .links a { color: #007bff; text-decoration: none; margin: 0 10px; }
+        .password-requirements { font-size: 12px; color: #666; margin-top: 5px; }
+    </style>
+</head>
+<body>
+    <h1>📝 Registro de Usuario</h1>
+    
+    <form id="registerForm">
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required minlength="8">
+            <div class="password-requirements">Mínimo 8 caracteres</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="confirmPassword">Confirmar Contraseña:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+        </div>
+        
+        <button type="submit" class="btn">Registrarse</button>
+    </form>
+    
+    <div id="message"></div>
+    
+    <div class="links">
+        <a href="login.html">¿Ya tienes cuenta? Inicia sesión</a>
+        <a href="index.html">Volver al inicio</a>
+    </div>
+
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const messageDiv = document.getElementById('message');
+            
+            // Validar que las contraseñas coincidan
+            if (password !== confirmPassword) {
+                messageDiv.innerHTML = '<div class="error">Las contraseñas no coinciden</div>';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password, confirmPassword })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    messageDiv.innerHTML = '<div class="success">¡Registro exitoso! Redirigiendo...</div>';
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    messageDiv.innerHTML = `<div class="error">${data.message}</div>`;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = '<div class="error">Error de conexión. Verifica que el servidor esté ejecutándose.</div>';
+            }
+        });
+    </script>
+</body>
+</html>-->
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;es&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Registro&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: Arial, sans-serif; max-width: 400px; margin: 50px auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        .btn { width: 100%; padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; }
+        .btn:hover { background-color: #218838; }
+        .error { color: red; margin-top: 10px; }
+        .success { color: green; margin-top: 10px; }
+        .links { text-align: center; margin-top: 20px; }
+        .links a { color: #007bff; text-decoration: none; margin: 0 10px; }
+        .password-requirements { font-size: 12px; color: #666; margin-top: 5px; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;h1&gt;📝 Registro de Usuario&lt;/h1&gt;
+    
+    &lt;form id=&quot;registerForm&quot;&gt;
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label for=&quot;email&quot;&gt;Email:&lt;/label&gt;
+            &lt;input type=&quot;email&quot; id=&quot;email&quot; name=&quot;email&quot; required&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label for=&quot;password&quot;&gt;Contrase&ntilde;a:&lt;/label&gt;
+            &lt;input type=&quot;password&quot; id=&quot;password&quot; name=&quot;password&quot; required minlength=&quot;8&quot;&gt;
+            &lt;div class=&quot;password-requirements&quot;&gt;M&iacute;nimo 8 caracteres&lt;/div&gt;
+        &lt;/div&gt;
+        
+        &lt;div class=&quot;form-group&quot;&gt;
+            &lt;label for=&quot;confirmPassword&quot;&gt;Confirmar Contrase&ntilde;a:&lt;/label&gt;
+            &lt;input type=&quot;password&quot; id=&quot;confirmPassword&quot; name=&quot;confirmPassword&quot; required&gt;
+        &lt;/div&gt;
+        
+        &lt;button type=&quot;submit&quot; class=&quot;btn&quot;&gt;Registrarse&lt;/button&gt;
+    &lt;/form&gt;
+    
+    &lt;div id=&quot;message&quot;&gt;&lt;/div&gt;
+    
+    &lt;div class=&quot;links&quot;&gt;
+        &lt;a href=&quot;login.html&quot;&gt;&iquest;Ya tienes cuenta? Inicia sesi&oacute;n&lt;/a&gt;
+        &lt;a href=&quot;index.html&quot;&gt;Volver al inicio&lt;/a&gt;
+    &lt;/div&gt;
+
+    &lt;script&gt;
+        document.getElementById('registerForm').addEventListener('submit', async (e) =&gt; {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const messageDiv = document.getElementById('message');
+            
+            // Validar que las contrase&ntilde;as coincidan
+            if (password !== confirmPassword) {
+                messageDiv.innerHTML = '&lt;div class=&quot;error&quot;&gt;Las contrase&ntilde;as no coinciden&lt;/div&gt;';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password, confirmPassword })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    messageDiv.innerHTML = '&lt;div class=&quot;success&quot;&gt;&iexcl;Registro exitoso! Redirigiendo...&lt;/div&gt;';
+                    setTimeout(() =&gt; {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                } else {
+                    messageDiv.innerHTML = `&lt;div class=&quot;error&quot;&gt;${data.message}&lt;/div&gt;`;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = '&lt;div class=&quot;error&quot;&gt;Error de conexi&oacute;n. Verifica que el servidor est&eacute; ejecut&aacute;ndose.&lt;/div&gt;';
+            }
+        });
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">4. Dashboard de Usuario (views/dashboard.html)</h3>
+            <div class="language-tag">📄 HTML</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">views/dashboard.html</div>
+                <div class="code-content">
+                    <pre><code class="language-html">
+<!--<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .user-info { background-color: #e3f2fd; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .btn { padding: 10px 15px; margin: 5px; text-decoration: none; border: none; cursor: pointer; border-radius: 5px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-warning { background-color: #ffc107; color: black; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn:hover { opacity: 0.8; }
+        .actions { margin-top: 20px; }
+        .protected-content { background-color: #d4edda; padding: 15px; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Dashboard del Usuario</h1>
+        <p>Panel de control para usuarios autenticados</p>
+    </div>
+    
+    <div class="user-info">
+        <h3>Información del Usuario</h3>
+        <p><strong>Email:</strong> <span id="user-email">Cargando...</span></p>
+        <p><strong>Rol:</strong> <span id="user-role">Cargando...</span></p>
+        <p><strong>ID:</strong> <span id="user-id">Cargando...</span></p>
+    </div>
+    
+    <div class="protected-content">
+        <h3>🔒 Contenido Protegido</h3>
+        <p>Este contenido solo es visible para usuarios autenticados.</p>
+        <p>Tu token JWT está activo y es válido.</p>
+    </div>
+    
+    <div class="actions">
+        <h3>Acciones Disponibles</h3>
+        <button onclick="testAuthEndpoint()" class="btn btn-primary">Verificar Token</button>
+        <button id="admin-btn" onclick="goToAdmin()" class="btn btn-success" style="display: none;">Panel de Admin</button>
+        <a href="index.html" class="btn btn-warning">Volver al Inicio</a>
+        <button onclick="logout()" class="btn btn-danger">Cerrar Sesión</button>
+    </div>
+    
+    <div id="test-results" style="margin-top: 20px;"></div>
+
+    <script>
+        // Verificar autenticación al cargar la página
+        const userToken = localStorage.getItem('token');
+        if (!userToken) {
+            alert('No estás autenticado. Redirigiendo al login...');
+            window.location.href = 'login.html';
+        }
+
+        // Cargar información del usuario
+        async function loadUserInfo() {
+            try {
+                const response = await fetch('/api/auth/verify', {
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.user) {
+                    document.getElementById('user-email').textContent = data.user.email;
+                    document.getElementById('user-role').textContent = data.user.role;
+                    document.getElementById('user-id').textContent = data.user.id;
+                    
+                    // Mostrar botón de admin si es administrador
+                    if (data.user.role === 'admin') {
+                        document.getElementById('admin-btn').style.display = 'inline-block';
+                    }
+                } else {
+                    throw new Error('Token inválido');
+                }
+            } catch (error) {
+                alert('Error de autenticación. Redirigiendo al login...');
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Probar endpoint protegido
+        async function testAuthEndpoint() {
+            const resultsDiv = document.getElementById('test-results');
+            
+            try {
+                const response = await fetch('/api/auth/verify', {
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = `
+                        <div class="protected-content">
+                            <h4>✅ Test de Autenticación Exitoso</h4>
+                            <p>El token es válido y el endpoint responde correctamente.</p>
+                            <pre>${JSON.stringify(data, null, 2)}</pre>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px;">
+                        <h4>❌ Error en Test de Autenticación</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function goToAdmin() {
+            window.location.href = 'admin.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            alert('Sesión cerrada exitosamente');
+            window.location.href = 'index.html';
+        }
+
+        // Cargar información al inicializar
+        loadUserInfo();
+    </script>
+</body>
+</html>-->
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;es&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Dashboard&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .user-info { background-color: #e3f2fd; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .btn { padding: 10px 15px; margin: 5px; text-decoration: none; border: none; cursor: pointer; border-radius: 5px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-warning { background-color: #ffc107; color: black; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn:hover { opacity: 0.8; }
+        .actions { margin-top: 20px; }
+        .protected-content { background-color: #d4edda; padding: 15px; border-radius: 5px; margin: 10px 0; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;header&quot;&gt;
+        &lt;h1&gt;📊 Dashboard del Usuario&lt;/h1&gt;
+        &lt;p&gt;Panel de control para usuarios autenticados&lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;user-info&quot;&gt;
+        &lt;h3&gt;Informaci&oacute;n del Usuario&lt;/h3&gt;
+        &lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; &lt;span id=&quot;user-email&quot;&gt;Cargando...&lt;/span&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;Rol:&lt;/strong&gt; &lt;span id=&quot;user-role&quot;&gt;Cargando...&lt;/span&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; &lt;span id=&quot;user-id&quot;&gt;Cargando...&lt;/span&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;protected-content&quot;&gt;
+        &lt;h3&gt;🔒 Contenido Protegido&lt;/h3&gt;
+        &lt;p&gt;Este contenido solo es visible para usuarios autenticados.&lt;/p&gt;
+        &lt;p&gt;Tu token JWT est&aacute; activo y es v&aacute;lido.&lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;actions&quot;&gt;
+        &lt;h3&gt;Acciones Disponibles&lt;/h3&gt;
+        &lt;button onclick=&quot;testAuthEndpoint()&quot; class=&quot;btn btn-primary&quot;&gt;Verificar Token&lt;/button&gt;
+        &lt;button id=&quot;admin-btn&quot; onclick=&quot;goToAdmin()&quot; class=&quot;btn btn-success&quot; style=&quot;display: none;&quot;&gt;Panel de Admin&lt;/button&gt;
+        &lt;a href=&quot;index.html&quot; class=&quot;btn btn-warning&quot;&gt;Volver al Inicio&lt;/a&gt;
+        &lt;button onclick=&quot;logout()&quot; class=&quot;btn btn-danger&quot;&gt;Cerrar Sesi&oacute;n&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div id=&quot;test-results&quot; style=&quot;margin-top: 20px;&quot;&gt;&lt;/div&gt;
+
+    &lt;script&gt;
+        // Verificar autenticaci&oacute;n al cargar la p&aacute;gina
+        const userToken = localStorage.getItem('token');
+        if (!userToken) {
+            alert('No est&aacute;s autenticado. Redirigiendo al login...');
+            window.location.href = 'login.html';
+        }
+
+        // Cargar informaci&oacute;n del usuario
+        async function loadUserInfo() {
+            try {
+                const response = await fetch('/api/auth/verify', {
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok &amp;&amp; data.user) {
+                    document.getElementById('user-email').textContent = data.user.email;
+                    document.getElementById('user-role').textContent = data.user.role;
+                    document.getElementById('user-id').textContent = data.user.id;
+                    
+                    // Mostrar bot&oacute;n de admin si es administrador
+                    if (data.user.role === 'admin') {
+                        document.getElementById('admin-btn').style.display = 'inline-block';
+                    }
+                } else {
+                    throw new Error('Token inv&aacute;lido');
+                }
+            } catch (error) {
+                alert('Error de autenticaci&oacute;n. Redirigiendo al login...');
+                localStorage.removeItem('token');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Probar endpoint protegido
+        async function testAuthEndpoint() {
+            const resultsDiv = document.getElementById('test-results');
+            
+            try {
+                const response = await fetch('/api/auth/verify', {
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = `
+                        &lt;div class=&quot;protected-content&quot;&gt;
+                            &lt;h4&gt;✅ Test de Autenticaci&oacute;n Exitoso&lt;/h4&gt;
+                            &lt;p&gt;El token es v&aacute;lido y el endpoint responde correctamente.&lt;/p&gt;
+                            &lt;pre&gt;${JSON.stringify(data, null, 2)}&lt;/pre&gt;
+                        &lt;/div&gt;
+                    `;
+                } else {
+                    throw new Error(data.message);
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    &lt;div style=&quot;background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px;&quot;&gt;
+                        &lt;h4&gt;❌ Error en Test de Autenticaci&oacute;n&lt;/h4&gt;
+                        &lt;p&gt;${error.message}&lt;/p&gt;
+                    &lt;/div&gt;
+                `;
+            }
+        }
+
+        function goToAdmin() {
+            window.location.href = 'admin.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            alert('Sesi&oacute;n cerrada exitosamente');
+            window.location.href = 'index.html';
+        }
+
+        // Cargar informaci&oacute;n al inicializar
+        loadUserInfo();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">5. Panel de Administración (views/admin.html)</h3>
+            <div class="language-tag">📄 HTML</div>
+            <div class="code-block line-numbers">
+                <div class="code-header">views/admin.html</div>
+                <div class="code-content">
+                    <pre><code class="language-html">
+<!--<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #dc3545; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .admin-section { background-color: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #ffc107; }
+        .btn { padding: 10px 15px; margin: 5px; text-decoration: none; border: none; cursor: pointer; border-radius: 5px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-warning { background-color: #ffc107; color: black; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn:hover { opacity: 0.8; }
+        .user-info { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .restricted-message { background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚙️ Panel de Administración</h1>
+        <p>Área restringida - Solo para administradores</p>
+    </div>
+    
+    <div class="user-info">
+        <h3>Información del Administrador</h3>
+        <p><strong>Email:</strong> <span id="admin-email">Cargando...</span></p>
+        <p><strong>Rol:</strong> <span id="admin-role">Cargando...</span></p>
+        <p><strong>ID:</strong> <span id="admin-id">Cargando...</span></p>
+    </div>
+    
+    <div class="admin-section">
+        <h3>🔐 Contenido Exclusivo de Administrador</h3>
+        <p>Este contenido solo es visible para usuarios con rol de administrador.</p>
+        <p>Aquí podrías implementar funcionalidades como:</p>
+        <ul>
+            <li>Gestión de usuarios</li>
+            <li>Configuración del sistema</li>
+            <li>Reportes y estadísticas</li>
+            <li>Logs de auditoría</li>
+        </ul>
+    </div>
+    
+    <div class="admin-section">
+        <h3>📊 Estadísticas del Sistema</h3>
+        <p><strong>Total de usuarios registrados:</strong> <span id="user-count">Calculando...</span></p>
+        <p><strong>Última conexión:</strong> <span id="last-connection">Verificando...</span></p>
+        <p><strong>Estado del sistema:</strong> <span style="color: green;">✅ Operativo</span></p>
+    </div>
+    
+    <div class="actions">
+        <h3>Acciones de Administrador</h3>
+        <button onclick="testAdminEndpoint()" class="btn btn-primary">Verificar Permisos de Admin</button>
+        <a href="dashboard.html" class="btn btn-warning">Dashboard Usuario</a>
+        <button onclick="logout()" class="btn btn-danger">Cerrar Sesión</button>
+    </div>
+    
+    <div id="test-results" style="margin-top: 20px;"></div>
+
+    <script>
+        const adminToken = localStorage.getItem('token');
+        
+        // Verificar autenticación y permisos de admin
+        if (!adminToken) {
+            showAccessDenied('No estás autenticado');
+        }
+
+        async function loadAdminInfo() {
+            try {
+                // Primero verificar autenticación
+                const authResponse = await fetch('/api/auth/verify', {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+                
+                const authData = await authResponse.json();
+                
+                if (!authResponse.ok || !authData.user) {
+                    throw new Error('Token inválido');
+                }
+
+                // Verificar que es administrador
+                if (authData.user.role !== 'admin') {
+                    showAccessDenied('No tienes permisos de administrador');
+                    return;
+                }
+
+                // Cargar información del admin
+                document.getElementById('admin-email').textContent = authData.user.email;
+                document.getElementById('admin-role').textContent = authData.user.role;
+                document.getElementById('admin-id').textContent = authData.user.id;
+                
+                // Simular estadísticas (en una app real, estos vendrían de endpoints específicos)
+                document.getElementById('user-count').textContent = '5 usuarios';
+                document.getElementById('last-connection').textContent = new Date().toLocaleString();
+                
+            } catch (error) {
+                showAccessDenied('Error de autenticación');
+            }
+        }
+
+        function showAccessDenied(reason) {
+            document.body.innerHTML = `
+                <div class="restricted-message">
+                    <h2>🚫 Acceso Denegado</h2>
+                    <p><strong>Razón:</strong> ${reason}</p>
+                    <p>Esta página está restringida solo para administradores.</p>
+                    <div style="margin-top: 20px;">
+                        <a href="login.html" class="btn btn-primary">Iniciar Sesión</a>
+                        <a href="index.html" class="btn btn-warning">Volver al Inicio</a>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function testAdminEndpoint() {
+            const resultsDiv = document.getElementById('test-results');
+            
+            try {
+                // Intentar acceder a una ruta protegida de admin
+                const response = await fetch('/api/users/admin', {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = `
+                        <div class="admin-section">
+                            <h4>✅ Test de Permisos de Admin Exitoso</h4>
+                            <p>Tienes acceso completo a las funcionalidades de administrador.</p>
+                            <p>Endpoint /api/users/admin respondió correctamente.</p>
+                        </div>
+                    `;
+                } else if (response.status === 403) {
+                    throw new Error('No tienes permisos de administrador');
+                } else {
+                    throw new Error('Error en el servidor');
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="restricted-message">
+                        <h4>❌ Error en Test de Permisos</h4>
+                        <p>${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            alert('Sesión de administrador cerrada');
+            window.location.href = 'index.html';
+        }
+
+        // Cargar información al inicializar
+        loadAdminInfo();
+    </script>
+</body>
+</html>-->
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;es&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Panel de Administraci&oacute;n&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        .header { background-color: #dc3545; color: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .admin-section { background-color: #fff3cd; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #ffc107; }
+        .btn { padding: 10px 15px; margin: 5px; text-decoration: none; border: none; cursor: pointer; border-radius: 5px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-warning { background-color: #ffc107; color: black; }
+        .btn-danger { background-color: #dc3545; color: white; }
+        .btn:hover { opacity: 0.8; }
+        .user-info { background-color: #f8f9fa; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        .restricted-message { background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 20px 0; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class=&quot;header&quot;&gt;
+        &lt;h1&gt;⚙️ Panel de Administraci&oacute;n&lt;/h1&gt;
+        &lt;p&gt;&Aacute;rea restringida - Solo para administradores&lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;user-info&quot;&gt;
+        &lt;h3&gt;Informaci&oacute;n del Administrador&lt;/h3&gt;
+        &lt;p&gt;&lt;strong&gt;Email:&lt;/strong&gt; &lt;span id=&quot;admin-email&quot;&gt;Cargando...&lt;/span&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;Rol:&lt;/strong&gt; &lt;span id=&quot;admin-role&quot;&gt;Cargando...&lt;/span&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;ID:&lt;/strong&gt; &lt;span id=&quot;admin-id&quot;&gt;Cargando...&lt;/span&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;admin-section&quot;&gt;
+        &lt;h3&gt;🔐 Contenido Exclusivo de Administrador&lt;/h3&gt;
+        &lt;p&gt;Este contenido solo es visible para usuarios con rol de administrador.&lt;/p&gt;
+        &lt;p&gt;Aqu&iacute; podr&iacute;as implementar funcionalidades como:&lt;/p&gt;
+        &lt;ul&gt;
+            &lt;li&gt;Gesti&oacute;n de usuarios&lt;/li&gt;
+            &lt;li&gt;Configuraci&oacute;n del sistema&lt;/li&gt;
+            &lt;li&gt;Reportes y estad&iacute;sticas&lt;/li&gt;
+            &lt;li&gt;Logs de auditor&iacute;a&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;admin-section&quot;&gt;
+        &lt;h3&gt;📊 Estad&iacute;sticas del Sistema&lt;/h3&gt;
+        &lt;p&gt;&lt;strong&gt;Total de usuarios registrados:&lt;/strong&gt; &lt;span id=&quot;user-count&quot;&gt;Calculando...&lt;/span&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;&Uacute;ltima conexi&oacute;n:&lt;/strong&gt; &lt;span id=&quot;last-connection&quot;&gt;Verificando...&lt;/span&gt;&lt;/p&gt;
+        &lt;p&gt;&lt;strong&gt;Estado del sistema:&lt;/strong&gt; &lt;span style=&quot;color: green;&quot;&gt;✅ Operativo&lt;/span&gt;&lt;/p&gt;
+    &lt;/div&gt;
+    
+    &lt;div class=&quot;actions&quot;&gt;
+        &lt;h3&gt;Acciones de Administrador&lt;/h3&gt;
+        &lt;button onclick=&quot;testAdminEndpoint()&quot; class=&quot;btn btn-primary&quot;&gt;Verificar Permisos de Admin&lt;/button&gt;
+        &lt;a href=&quot;dashboard.html&quot; class=&quot;btn btn-warning&quot;&gt;Dashboard Usuario&lt;/a&gt;
+        &lt;button onclick=&quot;logout()&quot; class=&quot;btn btn-danger&quot;&gt;Cerrar Sesi&oacute;n&lt;/button&gt;
+    &lt;/div&gt;
+    
+    &lt;div id=&quot;test-results&quot; style=&quot;margin-top: 20px;&quot;&gt;&lt;/div&gt;
+
+    &lt;script&gt;
+        const adminToken = localStorage.getItem('token');
+        
+        // Verificar autenticaci&oacute;n y permisos de admin
+        if (!adminToken) {
+            showAccessDenied('No est&aacute;s autenticado');
+        }
+
+        async function loadAdminInfo() {
+            try {
+                // Primero verificar autenticaci&oacute;n
+                const authResponse = await fetch('/api/auth/verify', {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+                
+                const authData = await authResponse.json();
+                
+                if (!authResponse.ok || !authData.user) {
+                    throw new Error('Token inv&aacute;lido');
+                }
+
+                // Verificar que es administrador
+                if (authData.user.role !== 'admin') {
+                    showAccessDenied('No tienes permisos de administrador');
+                    return;
+                }
+
+                // Cargar informaci&oacute;n del admin
+                document.getElementById('admin-email').textContent = authData.user.email;
+                document.getElementById('admin-role').textContent = authData.user.role;
+                document.getElementById('admin-id').textContent = authData.user.id;
+                
+                // Simular estad&iacute;sticas (en una app real, estos vendr&iacute;an de endpoints espec&iacute;ficos)
+                document.getElementById('user-count').textContent = '5 usuarios';
+                document.getElementById('last-connection').textContent = new Date().toLocaleString();
+                
+            } catch (error) {
+                showAccessDenied('Error de autenticaci&oacute;n');
+            }
+        }
+
+        function showAccessDenied(reason) {
+            document.body.innerHTML = `
+                &lt;div class=&quot;restricted-message&quot;&gt;
+                    &lt;h2&gt;🚫 Acceso Denegado&lt;/h2&gt;
+                    &lt;p&gt;&lt;strong&gt;Raz&oacute;n:&lt;/strong&gt; ${reason}&lt;/p&gt;
+                    &lt;p&gt;Esta p&aacute;gina est&aacute; restringida solo para administradores.&lt;/p&gt;
+                    &lt;div style=&quot;margin-top: 20px;&quot;&gt;
+                        &lt;a href=&quot;login.html&quot; class=&quot;btn btn-primary&quot;&gt;Iniciar Sesi&oacute;n&lt;/a&gt;
+                        &lt;a href=&quot;index.html&quot; class=&quot;btn btn-warning&quot;&gt;Volver al Inicio&lt;/a&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            `;
+        }
+
+        async function testAdminEndpoint() {
+            const resultsDiv = document.getElementById('test-results');
+            
+            try {
+                // Intentar acceder a una ruta protegida de admin
+                const response = await fetch('/api/users/admin', {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    resultsDiv.innerHTML = `
+                        &lt;div class=&quot;admin-section&quot;&gt;
+                            &lt;h4&gt;✅ Test de Permisos de Admin Exitoso&lt;/h4&gt;
+                            &lt;p&gt;Tienes acceso completo a las funcionalidades de administrador.&lt;/p&gt;
+                            &lt;p&gt;Endpoint /api/users/admin respondi&oacute; correctamente.&lt;/p&gt;
+                        &lt;/div&gt;
+                    `;
+                } else if (response.status === 403) {
+                    throw new Error('No tienes permisos de administrador');
+                } else {
+                    throw new Error('Error en el servidor');
+                }
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    &lt;div class=&quot;restricted-message&quot;&gt;
+                        &lt;h4&gt;❌ Error en Test de Permisos&lt;/h4&gt;
+                        &lt;p&gt;${error.message}&lt;/p&gt;
+                    &lt;/div&gt;
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            alert('Sesi&oacute;n de administrador cerrada');
+            window.location.href = 'index.html';
+        }
+
+        // Cargar informaci&oacute;n al inicializar
+        loadAdminInfo();
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+                </div>
+            </div>
+
+            <div class="bg-blue-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-blue-700 dark:text-blue-400 mb-2">🎯 Características de las Páginas HTML</h4>
+                <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li><strong>Simplicidad:</strong> Diseño minimalista enfocado en funcionalidad</li>
+                    <li><strong>Responsividad:</strong> Se adaptan a diferentes tamaños de pantalla</li>
+                    <li><strong>Validación:</strong> Verificación de formularios en frontend y backend</li>
+                    <li><strong>Gestión de JWT:</strong> Almacenamiento y uso de tokens para autenticación</li>
+                    <li><strong>Control de Acceso:</strong> Redirección automática según permisos</li>
+                    <li><strong>Feedback Visual:</strong> Mensajes de error y éxito claros</li>
+                </ul>
+            </div>
+
+            <div class="bg-green-50 dark:bg-dark-300 p-4 rounded-lg mt-4">
+                <h4 class="font-semibold text-green-700 dark:text-green-400 mb-2">🔄 Flujo de Navegación</h4>
+                <ol class="list-decimal list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                    <li><strong>index.html</strong> → Página de inicio con opciones de login/registro</li>
+                    <li><strong>register.html</strong> → Registro de nuevos usuarios → Dashboard</li>
+                    <li><strong>login.html</strong> → Autenticación de usuarios existentes → Dashboard</li>
+                    <li><strong>dashboard.html</strong> → Panel principal para usuarios autenticados</li>
+                    <li><strong>admin.html</strong> → Panel exclusivo para administradores</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Paso 13: Consideraciones de Seguridad -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <div class="flex items-center mb-4">
+                <div class="step-number mr-4">13</div>
+                <h2 class="section-title mb-0">Consideraciones de Seguridad</h2>
+            </div>
+
+            <h3 class="subsection-title">✅ Implementadas en el Proyecto</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                    <h4 class="font-semibold text-green-700 dark:text-green-400 mb-2">Autenticación</h4>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Hash de contraseñas con bcrypt (12 rounds)</li>
+                        <li>JWT con expiración configurable</li>
+                        <li>Validación de entrada robusta</li>
+                        <li>Protección contra ataques de fuerza bruta</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                    <h4 class="font-semibold text-blue-700 dark:text-blue-400 mb-2">Autorización</h4>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Control de acceso basado en roles (RBAC)</li>
+                        <li>Middleware de verificación de permisos</li>
+                        <li>Separación de rutas públicas y privadas</li>
+                        <li>Tokens con información mínima necesaria</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+                    <h4 class="font-semibold text-purple-700 dark:text-purple-400 mb-2">Aplicación</h4>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Headers de seguridad con Helmet</li>
+                        <li>Configuración CORS adecuada</li>
+                        <li>Variables de entorno para secretos</li>
+                        <li>Manejo de errores sin exponer información</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
+                    <h4 class="font-semibold text-orange-700 dark:text-orange-400 mb-2">Base de Datos</h4>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Consultas parametrizadas (previene SQL injection)</li>
+                        <li>Índices para optimizar rendimiento</li>
+                        <li>UUIDs para IDs no predecibles</li>
+                        <li>Timestamps para auditoría</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3 class="subsection-title">🚀 Recomendaciones para Producción</h3>
+            <div class="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg">
+                <ul class="list-disc list-inside space-y-2 text-gray-700 dark:text-gray-300 text-sm">
+                    <li><strong>HTTPS:</strong> Usa siempre HTTPS en producción para proteger tokens en tránsito</li>
+                    <li><strong>Rate Limiting:</strong> Implementa límites de velocidad para prevenir abuso</li>
+                    <li><strong>Logging:</strong> Registra eventos de seguridad y accesos</li>
+                    <li><strong>Monitoreo:</strong> Configura alertas para intentos de acceso sospechosos</li>
+                    <li><strong>Backup:</strong> Implementa respaldos regulares de la base de datos</li>
+                    <li><strong>Actualizaciones:</strong> Mantén las dependencias actualizadas</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Tecnologías Utilizadas -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="section-title">🛠️ Tecnologías Utilizadas</h2>
+            <div class="overflow-x-auto">
+                <table class="min-w-full dark:bg-dark-300 border border-gray-300 dark:border-gray-600">
+                    <thead class="bg-gray-100 dark:bg-dark-400">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Tecnología</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Versión</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Propósito</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200 dark:divide-gray-600">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">Node.js</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">≥18.0.0</td>
+                            <td class="px-6 py-4 text-gray-700 dark:text-gray-300">Runtime de JavaScript</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">Express.js</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">^4.18.2</td>
+                            <td class="px-6 py-4 text-gray-700 dark:text-gray-300">Framework web</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">PostgreSQL</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">≥13.0</td>
+                            <td class="px-6 py-4 text-gray-700 dark:text-gray-300">Base de datos</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">JWT</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">^9.0.2</td>
+                            <td class="px-6 py-4 text-gray-700 dark:text-gray-300">Autenticación</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">bcryptjs</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">^2.4.3</td>
+                            <td class="px-6 py-4 text-gray-700 dark:text-gray-300">Hashing de contraseñas</td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap font-medium text-gray-900 dark:text-gray-100">UUID</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-gray-700 dark:text-gray-300">^9.0.1</td>
+                            <td class="px-6 py-4 text-gray-700 dark:text-gray-300">Generación de IDs únicos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Criterios de Evaluación -->
+        <section class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="section-title">🏆 Criterios de Evaluación</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div class="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                    <h3 class="font-semibold text-green-700 dark:text-green-400 mb-2">Funcionamiento (30%)</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Registro de usuarios</li>
+                        <li>Inicio de sesión</li>
+                        <li>Protección de rutas</li>
+                        <li>Gestión de tokens</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                    <h3 class="font-semibold text-blue-700 dark:text-blue-400 mb-2">JWT y Seguridad (25%)</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Implementación correcta de JWT</li>
+                        <li>Hash de contraseñas</li>
+                        <li>Middleware de autenticación</li>
+                        <li>Control de roles</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg">
+                    <h3 class="font-semibold text-purple-700 dark:text-purple-400 mb-2">Arquitectura MVC (20%)</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Separación de responsabilidades</li>
+                        <li>Estructura de carpetas</li>
+                        <li>Modelos bien definidos</li>
+                        <li>Controladores organizados</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-orange-50 dark:bg-orange-900/20 p-4 rounded-lg">
+                    <h3 class="font-semibold text-orange-700 dark:text-orange-400 mb-2">Base de Datos (15%)</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Diseño de esquema</li>
+                        <li>Consultas optimizadas</li>
+                        <li>Manejo de conexiones</li>
+                        <li>Validación de datos</li>
+                    </ul>
+                </div>
+                
+                <div class="bg-pink-50 dark:bg-pink-900/20 p-4 rounded-lg">
+                    <h3 class="font-semibold text-pink-700 dark:text-pink-400 mb-2">Presentación (10%)</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300 text-sm">
+                        <li>Documentación clara</li>
+                        <li>Código comentado</li>
+                        <li>Estructura organizada</li>
+                        <li>Buenas prácticas</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Resumen Final -->
+        <section class="bg-gradient-to-r from-blue-500 to-purple-600 shadow-lg rounded-lg p-8 text-white">
+            <h2 class="text-3xl font-bold mb-4 text-center">🎉 ¡Felicitaciones!</h2>
+            <p class="text-lg text-center mb-6">
+                Has completado la implementación de un sistema completo de autenticación con JWT, 
+                siguiendo las mejores prácticas de seguridad y la arquitectura MVC.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div>
+                    <div class="text-4xl mb-2">🔐</div>
+                    <h3 class="font-bold mb-2">Seguridad</h3>
+                    <p class="text-sm">Autenticación robusta con JWT y bcrypt</p>
+                </div>
+                <div>
+                    <div class="text-4xl mb-2">🏗️</div>
+                    <h3 class="font-bold mb-2">Arquitectura</h3>
+                    <p class="text-sm">Estructura MVC escalable y mantenible</p>
+                </div>
+                <div>
+                    <div class="text-4xl mb-2">🚀</div>
+                    <h3 class="font-bold mb-2">Producción</h3>
+                    <p class="text-sm">Listo para desplegar en entornos reales</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-6">
+                <p class="text-lg font-semibold">
+                    ¡Desarrollado con ❤️ para el aprendizaje de tecnologías web!
+                </p>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- Script para el modo oscuro -->
+    <script>
+        // alert("hola");
+    const navbar1 = document.getElementById('navbar1');
+    const darkModeToggle = navbar1.querySelector('#darkModeToggle');
+    const root = document.documentElement;
+    // Función para aplicar el tema
+    const applyTheme = (theme) => {
+        if (theme === 'dark') {
+            root.classList.add('dark');
+        } else {
+            root.classList.remove('dark');
+        }
+        localStorage.setItem('theme', theme);
+    };
+
+    // Event listener para el botón
+    darkModeToggle.addEventListener('click', () => {
+        const isDark = root.classList.contains('dark');
+        applyTheme(isDark ? 'light' : 'dark');
+    });
+
+    // Cargar tema al iniciar
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    } else if (prefersDark) {
+        applyTheme('dark');
+    } else {
+        applyTheme('light');
+    }
+    
+    // Inicializar Prism.js cuando la página esté lista
+    document.addEventListener('DOMContentLoaded', function() {
+        reinitializePrism();
+    });
+</script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Prism.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-sql.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-powershell.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+
+  
+
+    <!-- Configuración de Prism.js -->
+    <script>
+        // Configurar Prism.js
+        window.Prism = window.Prism || {};
+        Prism.plugins.toolbar.registerButton('copy-to-clipboard', {
+            text: '📋 Copiar',
+            className: 'copy-button',
+            onClick: function (env) {
+                navigator.clipboard.writeText(env.code).then(() => {
+                    this.textContent = '✅ ¡Copiado!';
+                    setTimeout(() => {
+                        this.textContent = '📋 Copiar';
+                    }, 2000);
+                });
+            }
+        });
+        
+        // Configurar toolbar para todos los bloques de código
+        Prism.plugins.toolbar.defaults = {
+            'copy-to-clipboard': true,
+            'label': 'Copiar al portapapeles'
+        };
+        
+        // Reinicializar Prism.js después de cambios de tema
+        function reinitializePrism() {
+            setTimeout(() => {
+                Prism.highlightAll();
+            }, 100);
+        }
+    </script>
+
+ 
+</body>
+</html>

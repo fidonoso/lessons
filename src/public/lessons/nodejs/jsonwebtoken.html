@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección Completa sobre JSON Web Tokens (JWT)</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Estilos personalizados para complementar Tailwind */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* bg-gray-900 */
+            color: #d1d5db; /* text-gray-300 */
+        }
+
+        /* Estilo para la barra de scroll */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937; /* bg-gray-800 */
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #38bdf8; /* bg-sky-500 */
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #0ea5e9; /* bg-sky-600 */
+        }
+        
+        .code-block {
+            position: relative;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background-color: #374151; /* bg-gray-700 */
+            color: #d1d5db; /* text-gray-300 */
+            border: none;
+            padding: 0.3rem 0.6rem;
+            border-radius: 0.375rem; /* rounded-md */
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            font-size: 0.8rem;
+        }
+
+        .copy-button:hover {
+            background-color: #4b5563; /* bg-gray-600 */
+        }
+        
+        .copy-button:active {
+             transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="bg-gray-900">
+
+    <!-- Header y Navegación -->
+    <header class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-700">
+        <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-sky-400"><i class="bi bi-key-fill"></i> JWT</span>
+                    <span class="ml-4 text-xl font-medium text-white hidden md:block">Lección Completa</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#que-es-jwt" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Conceptos</a>
+                        <a href="#como-funciona" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Flujo</a>
+                        <a href="#implementacion" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Implementación</a>
+                        <a href="#seguridad" class="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium">Seguridad</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-5 md:p-10">
+
+        <!-- Título principal -->
+        <section class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4">
+                JSON Web Tokens <span class="text-sky-400">(JWT)</span>
+            </h1>
+            <p class="text-lg text-gray-400">Una guía completa para la autenticación moderna con Node.js y Express.</p>
+        </section>
+
+        <!-- 1. ¿Qué es JWT? -->
+        <section id="que-es-jwt" class="mb-12">
+            <h2 class="text-3xl font-bold text-sky-400 border-b-2 border-sky-500/30 pb-2 mb-6">1. ¿Qué es un JSON Web Token?</h2>
+            <p class="mb-4">
+                Un JSON Web Token (JWT), pronunciado "jot", es un estándar abierto (RFC 7519) que define una forma compacta y autónoma para transmitir información de forma segura entre partes como un objeto JSON. Esta información puede ser verificada y confiada porque está firmada digitalmente.
+            </p>
+            <p class="mb-6">
+                Son "autónomos" porque contienen toda la información necesaria sobre el usuario, evitando la necesidad de consultar la base de datos en cada petición.
+            </p>
+
+            <h3 class="text-2xl font-semibold text-white mb-4">La Estructura de un JWT</h3>
+            <p class="mb-4">Un JWT se compone de tres partes separadas por puntos (<code class="bg-gray-800 text-pink-400 px-1 rounded">.</code>):</p>
+            <div class="bg-gray-800 border border-gray-700 p-4 rounded-lg text-center font-mono text-sm break-all mb-6">
+                <span class="text-red-400">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9</span>.<span class="text-purple-400">eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ</span>.<span class="text-sky-400">SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</span>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <!-- Header -->
+                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-red-500">
+                    <h4 class="font-bold text-lg text-red-400 mb-2">Header (Encabezado)</h4>
+                    <p class="text-sm text-gray-400">Contiene metadatos: el tipo de token (JWT) y el algoritmo de firma utilizado (ej. HS256).</p>
+                    <pre class="mt-2 text-xs bg-gray-900 p-2 rounded break-all"><code>{"alg": "HS256", "typ": "JWT"}</code></pre>
+                </div>
+                <!-- Payload -->
+                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-purple-500">
+                    <h4 class="font-bold text-lg text-purple-400 mb-2">Payload (Carga Útil)</h4>
+                    <p class="text-sm text-gray-400">Contiene los "claims" o declaraciones. Son datos sobre una entidad (normalmente el usuario) y metadatos adicionales.</p>
+                     <pre class="mt-2 text-xs bg-gray-900 p-2 rounded break-all"><code>{"sub": "user-123", "name": "Jane Doe", "iat": 1516239022}</code></pre>
+                </div>
+                <!-- Signature -->
+                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-sky-500">
+                    <h4 class="font-bold text-lg text-sky-400 mb-2">Signature (Firma)</h4>
+                    <p class="text-sm text-gray-400">Se usa para verificar que el mensaje no ha sido alterado. Se crea firmando el encabezado y el payload codificados con un secreto.</p>
+                    <pre class="mt-2 text-xs bg-gray-900 p-2 rounded break-all"><code>HMACSHA256(header, payload, secret)</code></pre>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 bg-yellow-900/30 border border-yellow-500/50 rounded-lg">
+                <p><i class="bi bi-exclamation-triangle-fill text-yellow-400"></i> <strong class="text-yellow-300">Importante:</strong> La información en el Header y el Payload está codificada en Base64Url, no cifrada. Cualquiera puede decodificarla. ¡Nunca guardes información sensible como contraseñas en el payload!</p>
+            </div>
+        </section>
+
+        <!-- 2. ¿Cómo funciona? -->
+        <section id="como-funciona" class="mb-12">
+            <h2 class="text-3xl font-bold text-sky-400 border-b-2 border-sky-500/30 pb-2 mb-6">2. ¿Cómo Funciona el Flujo de Autenticación?</h2>
+            <p class="mb-6">
+                El flujo de autenticación basado en tokens es simple y efectivo para APIs y aplicaciones modernas.
+            </p>
+            <ol class="relative border-l border-gray-700 space-y-10 pl-6">
+                <li class="ml-4">
+                    <div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                    <h3 class="text-lg font-semibold text-white">1. Solicitud de Autenticación</h3>
+                    <p class="text-gray-400">El usuario envía sus credenciales (generalmente email y contraseña) a un endpoint de login en el servidor.</p>
+                </li>
+                <li class="ml-4">
+                    <div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                    <h3 class="text-lg font-semibold text-white">2. Verificación y Creación del Token</h3>
+                    <p class="text-gray-400">El servidor verifica las credenciales. Si son correctas, crea un JWT (lo firma con una clave secreta) y lo devuelve al cliente.</p>
+                </li>
+                <li class="ml-4">
+                    <div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                    <h3 class="text-lg font-semibold text-white">3. Almacenamiento del Token</h3>
+                    <p class="text-gray-400">El cliente (navegador, app móvil) almacena el JWT de forma segura (por ejemplo, en `localStorage` o en una cookie `HttpOnly`).</p>
+                </li>
+                <li class="ml-4">
+                    <div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                    <h3 class="text-lg font-semibold text-white">4. Solicitudes Autenticadas</h3>
+                    <p class="text-gray-400">Para cada solicitud a una ruta protegida, el cliente envía el JWT en el encabezado de autorización (Authorization Header) usando el esquema `Bearer`.</p>
+                    <pre class="mt-2 text-sm bg-gray-950 p-3 rounded-md"><code>Authorization: Bearer &lt;token&gt;</code></pre>
+                </li>
+                 <li class="ml-4">
+                    <div class="absolute w-3 h-3 bg-sky-500 rounded-full mt-1.5 -left-1.5 border border-white"></div>
+                    <h3 class="text-lg font-semibold text-white">5. Verificación del Token en el Servidor</h3>
+                    <p class="text-gray-400">El servidor recibe la solicitud, extrae el token y verifica su firma usando la clave secreta. Si la firma es válida, procesa la solicitud. Si no, devuelve un error de autenticación (401 Unauthorized).</p>
+                </li>
+            </ol>
+        </section>
+
+        <!-- 3. Implementación Práctica -->
+        <section id="implementacion" class="mb-12">
+            <h2 class="text-3xl font-bold text-sky-400 border-b-2 border-sky-500/30 pb-2 mb-6">3. Implementación Práctica con Node.js y Express</h2>
+            <p class="mb-4">
+                Vamos a construir una pequeña API con Express que utiliza JWT para proteger una ruta. Usaremos Módulos de ES (`import`/`export`).
+            </p>
+
+            <h3 class="text-2xl font-semibold text-white mb-4">Paso 1: Configuración del Proyecto</h3>
+            <p class="mb-4">
+                Crea una nueva carpeta, inicializa un proyecto de Node.js y configura `package.json` para usar ES Modules.
+            </p>
+            <div class="code-block bg-gray-950 rounded-lg my-4">
+                <button class="copy-button" onclick="copyCode(this)">
+                    <i class="bi bi-clipboard"></i> Copiar
+                </button>
+                <pre class="p-4 text-sm text-white overflow-x-auto"><code class="language-bash">mkdir jwt-example
+cd jwt-example
+npm init -y
+# Añadimos la siguiente línea a nuestro package.json
+echo '"type": "module",' >> package.json # Manera rápida, o edita el archivo manualmente
+</code></pre>
+            </div>
+            
+            <p class="mb-4">Tu <code class="bg-gray-800 text-pink-400 px-1 rounded">package.json</code> debería tener la línea <code class="bg-gray-800 text-pink-400 px-1 rounded">"type": "module"</code>.</p>
+
+            <h3 class="text-2xl font-semibold text-white mb-4 mt-6">Paso 2: Instalar Dependencias</h3>
+            <div class="code-block bg-gray-950 rounded-lg my-4">
+                <button class="copy-button" onclick="copyCode(this)">
+                    <i class="bi bi-clipboard"></i> Copiar
+                </button>
+                <pre class="p-4 text-sm text-white overflow-x-auto"><code class="language-bash">npm install express jsonwebtoken dotenv</code></pre>
+            </div>
+            <ul class="list-disc list-inside space-y-2 mb-4">
+                <li><strong class="text-sky-300">express:</strong> El framework para nuestro servidor.</li>
+                <li><strong class="text-sky-300">jsonwebtoken:</strong> La librería para crear y verificar tokens JWT.</li>
+                <li><strong class="text-sky-300">dotenv:</strong> Para manejar variables de entorno (nuestra clave secreta).</li>
+            </ul>
+
+            <h3 class="text-2xl font-semibold text-white mb-4 mt-6">Paso 3: Crear el Archivo <code class="text-yellow-400">.env</code></h3>
+            <p class="mb-4">
+                Crea un archivo llamado <code class="bg-gray-800 text-pink-400 px-1 rounded">.env</code> en la raíz del proyecto para guardar tu clave secreta.
+            </p>
+            <div class="code-block bg-gray-950 rounded-lg my-4">
+                 <button class="copy-button" onclick="copyCode(this)">
+                    <i class="bi bi-clipboard"></i> Copiar
+                </button>
+                <pre class="p-4 text-sm text-white overflow-x-auto"><code class="language-bash"># .env
+JWT_SECRET=este_es_un_secreto_muy_largo_y_seguro_que_nadie_sabe
+</code></pre>
+            </div>
+            <div class="mt-4 p-4 bg-blue-900/30 border border-blue-500/50 rounded-lg">
+                 <p><i class="bi bi-info-circle-fill text-blue-400"></i> <strong class="text-blue-300">Tip:</strong> En producción, usa un secreto mucho más complejo, generado aleatoriamente. ¡Y nunca subas tu archivo <code class="bg-gray-800 text-pink-400 px-1 rounded">.env</code> a un repositorio de Git!</p>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-white mb-4 mt-8">Paso 4: Escribir el Código del Servidor</h3>
+            <p class="mb-4">
+                Crea un archivo <code class="bg-gray-800 text-pink-400 px-1 rounded">index.js</code>. Aquí estará toda la lógica de nuestra API.
+            </p>
+            <div class="code-block bg-gray-950 rounded-lg my-4">
+                <button class="copy-button" onclick="copyCode(this)">
+                    <i class="bi bi-clipboard"></i> Copiar
+                </button>
+                <pre class="p-4 text-sm text-white overflow-x-auto"><code class="language-javascript">// index.js
+
+// 1. Importaciones
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+// 2. Configuraciones iniciales
+dotenv.config(); // Cargar variables de entorno del .env
+const app = express();
+const PORT = process.env.PORT || 3000;
+const JWT_SECRET = process.env.JWT_SECRET;
+
+// 3. Middlewares
+app.use(express.json()); // Para poder entender los JSON que nos envían
+
+// Middleware de autenticación para proteger rutas
+const authenticateToken = (req, res, next) => {
+    // Obtenemos el token del encabezado 'Authorization'
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Formato "Bearer TOKEN"
+
+    if (token == null) {
+        // Si no hay token, devolvemos un error 401 Unauthorized
+        return res.status(401).json({ error: 'Acceso denegado: token no proporcionado.' });
+    }
+
+    // Verificamos el token
+    jwt.verify(token, JWT_SECRET, (err, user) => {
+        if (err) {
+            // Si el token no es válido (expirado, manipulado...), devolvemos 403 Forbidden
+            return res.status(403).json({ error: 'Acceso denegado: token inválido.' });
+        }
+        // Si el token es válido, guardamos la información del usuario en la request
+        req.user = user;
+        next(); // Pasamos al siguiente middleware o a la ruta final
+    });
+};
+
+// 4. Rutas
+// Ruta pública para el login (no necesita autenticación)
+app.post('/login', (req, res) => {
+    // En una aplicación real, aquí verificarías el usuario y contraseña contra la base de datos
+    const { username, password } = req.body;
+    
+    // Simulación de un usuario válido
+    if (username === 'admin' && password === 'password123') {
+        // Creamos el payload del token
+        const userPayload = {
+            id: 'user-123',
+            username: 'admin',
+            role: 'administrator'
+        };
+
+        // Creamos el token con el payload y el secreto
+        const token = jwt.sign(userPayload, JWT_SECRET, { expiresIn: '1h' }); // Expira en 1 hora
+
+        res.json({ message: 'Login exitoso', token: token });
+    } else {
+        res.status(401).json({ error: 'Credenciales inválidas.' });
+    }
+});
+
+// Ruta protegida (requiere un token válido)
+app.get('/profile', authenticateToken, (req, res) => {
+    // Gracias al middleware `authenticateToken`, aquí tenemos acceso a `req.user`
+    res.json({ 
+        message: 'Bienvenido a tu perfil protegido',
+        user: req.user 
+    });
+});
+
+// Ruta pública de bienvenida
+app.get('/', (req, res) => {
+    res.send('API de ejemplo con JWT está funcionando!');
+});
+
+
+// 5. Iniciar el servidor
+app.listen(PORT, () => {
+    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});
+</code></pre>
+            </div>
+            
+            <h3 class="text-2xl font-semibold text-white mb-4 mt-8">Paso 5: Probar la API</h3>
+            <p class="mb-4">Inicia el servidor:</p>
+            <div class="code-block bg-gray-950 rounded-lg my-4">
+                 <button class="copy-button" onclick="copyCode(this)">
+                    <i class="bi bi-clipboard"></i> Copiar
+                </button>
+                <pre class="p-4 text-sm text-white overflow-x-auto"><code class="language-bash">node index.js</code></pre>
+            </div>
+            
+            <p class="mb-4">Ahora puedes usar una herramienta como <a href="https://www.postman.com/" target="_blank" class="text-sky-400 hover:underline">Postman</a> o `curl` para probar los endpoints.</p>
+
+            <p class="mb-2 font-semibold text-lg">A. Intenta acceder a la ruta protegida sin token:</p>
+            <div class="code-block bg-gray-950 rounded-lg my-4">
+                 <button class="copy-button" onclick="copyCode(this)">
+                    <i class="bi bi-clipboard"></i> Copiar
+                </button>
+                <pre class="p-4 text-sm text-white overflow-x-auto"><code class="language-bash">curl http://localhost:3000/profile</code></pre>
+            </div>
+            <p class="mb-4">Recibirás un error 401.</p>
+
+            <p class="mb-2 font-semibold text-lg">B. Obtén un token haciendo login:</p>
+            <div class="code-block bg-gray-950 rounded-lg my-4">
+                 <button class="copy-button" onclick="copyCode(this)">
+                    <i class="bi bi-clipboard"></i> Copiar
+                </button>
+                <pre class="p-4 text-sm text-white overflow-x-auto"><code class="language-bash">curl -X POST -H "Content-Type: application/json" -d '{"username": "admin", "password": "password123"}' http://localhost:3000/login</code></pre>
+            </div>
+            <p class="mb-4">Recibirás una respuesta JSON con el token. Cópialo.</p>
+
+            <p class="mb-2 font-semibold text-lg">C. Accede a la ruta protegida con el token:</p>
+            <div class="code-block bg-gray-950 rounded-lg my-4">
+                 <button class="copy-button" onclick="copyCode(this)">
+                    <i class="bi bi-clipboard"></i> Copiar
+                </button>
+                <pre class="p-4 text-sm text-white overflow-x-auto"><code class="language-bash"># Reemplaza TU_TOKEN_AQUI con el token que obtuviste
+curl -H "Authorization: Bearer TU_TOKEN_AQUI" http://localhost:3000/profile</code></pre>
+            </div>
+            <p>¡Ahora sí! Recibirás la información del perfil protegido.</p>
+        </section>
+
+        <!-- 4. Consideraciones de Seguridad -->
+        <section id="seguridad" class="mb-12">
+            <h2 class="text-3xl font-bold text-sky-400 border-b-2 border-sky-500/30 pb-2 mb-6">4. Consideraciones de Seguridad Clave</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-yellow-500">
+                    <h4 class="font-bold text-lg text-yellow-400 mb-2">Mantén el Secreto, Secreto</h4>
+                    <p class="text-sm text-gray-400">La clave secreta nunca debe ser expuesta en el lado del cliente. Usa variables de entorno y asegúrate de que tu <code class="bg-gray-900 text-pink-400 px-1 rounded">.env</code> no esté en tu control de versiones.</p>
+                </div>
+                 <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-green-500">
+                    <h4 class="font-bold text-lg text-green-400 mb-2">Usa HTTPS</h4>
+                    <p class="text-sm text-gray-400">Los tokens se envían en cada solicitud. Sin HTTPS, un atacante podría interceptar el token y suplantar al usuario (ataque Man-in-the-Middle).</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-purple-500">
+                    <h4 class="font-bold text-lg text-purple-400 mb-2">Payload Ligero y con Expiración</h4>
+                    <p class="text-sm text-gray-400">No incluyas datos sensibles en el payload. Establece siempre una fecha de expiración corta (<code class="bg-gray-900 text-pink-400 px-1 rounded">expiresIn</code>) para limitar la ventana de oportunidad si un token es robado.</p>
+                </div>
+                 <div class="bg-gray-800 p-4 rounded-lg border-l-4 border-red-500">
+                    <h4 class="font-bold text-lg text-red-400 mb-2">Revocación de Tokens</h4>
+                    <p class="text-sm text-gray-400">Por diseño, los JWT son difíciles de invalidar antes de que expiren. Si necesitas una forma de "cerrar sesión" forzosamente, deberás implementar una lista negra (blacklist) en tu base de datos (por ejemplo, en Redis) para almacenar los tokens revocados y consultarla en tu middleware de autenticación.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Referencias -->
+        <footer class="mt-16 pt-8 border-t border-gray-700 text-center text-gray-500">
+            <h3 class="text-xl font-semibold text-white mb-4">Referencias y Recursos</h3>
+            <div class="flex justify-center space-x-6 mb-4">
+                <a href="https://jwt.io/" target="_blank" class="hover:text-sky-400">JWT.io - Sitio Oficial</a>
+                <a href="https://www.rfc-editor.org/rfc/rfc7519" target="_blank" class="hover:text-sky-400">RFC 7519</a>
+                <a href="https://github.com/auth0/node-jsonwebtoken" target="_blank" class="hover:text-sky-400">Librería node-jsonwebtoken</a>
+            </div>
+            <p>Lección creada con <i class="bi bi-heart-fill text-red-500"></i> por Fernando Donoso</p>
+        </footer>
+
+    </main>
+    
+    <script>
+        // Función para copiar el código al portapapeles
+        function copyCode(button) {
+            const pre = button.parentElement;
+            const code = pre.querySelector('code');
+            const text = code.innerText;
+            
+            // Usamos document.execCommand como fallback para entornos de iFrame
+            // donde navigator.clipboard puede estar restringido.
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                button.innerHTML = '<i class="bi bi-check-lg"></i> Copiado';
+                button.style.backgroundColor = '#10B981'; // green-500
+            } catch (err) {
+                console.error('No se pudo copiar el texto: ', err);
+                button.innerHTML = '<i class="bi bi-x-lg"></i> Error';
+                button.style.backgroundColor = '#EF4444'; // red-500
+            }
+            document.body.removeChild(textArea);
+
+            setTimeout(() => {
+                button.innerHTML = '<i class="bi bi-clipboard"></i> Copiar';
+                button.style.backgroundColor = '#374151'; // bg-gray-700
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

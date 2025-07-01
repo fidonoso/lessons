@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía - Sistema de Autenticación con Roles</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuración de Tailwind para modo oscuro -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            100: '#111827', // gray-900
+                            200: '#1F2937', // gray-800
+                            300: '#374151', // gray-700
+                            400: '#4B5563', // gray-600
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Estilos personalizados -->
+    <style>
+        .section-title {
+            @apply text-2xl font-bold mb-4 text-blue-600 dark:text-gray-100;
+        }
+        .subsection-title {
+            @apply text-xl font-semibold mb-3 text-blue-500 dark:text-gray-200;
+        }
+        .code-block {
+            @apply bg-gray-100 dark:bg-dark-400 p-4 rounded-lg my-3 font-mono text-sm dark:text-gray-200;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 dark:bg-dark-100 dark:text-gray-300 transition-colors duration-200">
+    <nav class="bg-gray-50 dark:bg-dark-200 shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="/lessons/nodejs/guia-jwt" class="text-xl font-bold text-gray-800 dark:text-gray-100">
+                    Guía del Proyecto
+                </a>
+                <div class="flex items-center space-x-6">
+                    <a href="resolucion.html" class="font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                        Ver Resolución
+                    </a>
+                    <button id="darkModeToggle" class="p-2 rounded-full bg-gray-200 dark:bg-dark-300 hover:bg-gray-300 dark:hover:bg-dark-400 transition-colors duration-200">
+                        <svg class="w-6 h-6 text-gray-800 dark:hidden" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                        </svg>
+                        <svg class="w-6 h-6 hidden dark:block text-yellow-300" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-bold text-center text-blue-700 dark:text-gray-100 mb-8">
+            Sistema de Autenticación con Roles (JWT y Node.js)
+        </h1>
+
+        <!-- Índice -->
+        <div class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="text-2xl font-bold mb-4 dark:text-gray-100">Índice</h2>
+            <ul class="list-disc list-inside space-y-2">
+                <li><a href="#objetivo" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Objetivo General</a></li>
+                <li><a href="#requisitos-tecnicos" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Requisitos Técnicos</a></li>
+                <li><a href="#requisitos-funcionales" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Requisitos Funcionales</a></li>
+                <li><a href="#arquitectura" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Arquitectura MVC</a></li>
+                <li><a href="#evaluacion" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Criterios de Evaluación</a></li>
+                <li><a href="#entregables" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300">Entregables</a></li>
+            </ul>
+        </div>
+
+        <!-- Objetivo General -->
+        <section id="objetivo" class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="section-title">Objetivo General</h2>
+            <p class="text-gray-700 dark:text-gray-300">
+                Desarrollar una aplicación web backend que implemente:
+            </p>
+            <ul class="list-disc list-inside space-y-2 mt-3 text-gray-700 dark:text-gray-300">
+                <li>Sistema de registro y autenticación usando JWT</li>
+                <li>Gestión de roles de usuario</li>
+                <li>Protección de rutas según rol</li>
+                <li>Arquitectura MVC</li>
+            </ul>
+        </section>
+
+        <!-- Requisitos Técnicos -->
+        <section id="requisitos-tecnicos" class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="section-title">Requisitos Técnicos</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 dark:bg-dark-300 p-4 rounded-lg">
+                    <h3 class="font-semibold mb-2 text-gray-800 dark:text-gray-100">Backend</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                        <li>Node.js</li>
+                        <li>Express.js</li>
+                        <li>PostgreSQL</li>
+                    </ul>
+                </div>
+                <div class="bg-blue-50 dark:bg-dark-300 p-4 rounded-lg">
+                    <h3 class="font-semibold mb-2 text-gray-800 dark:text-gray-100">Autenticación</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                        <li>JSON Web Tokens (jsonwebtoken)</li>
+                        <li>bcrypt.js</li>
+                        <li>pg o Sequelize (ORM)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Requisitos Funcionales -->
+        <section id="requisitos-funcionales" class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="section-title">Requisitos Funcionales</h2>
+            
+            <h3 class="subsection-title">Vistas Públicas</h3>
+            <div class="space-y-4">
+                <div class="border-l-4 border-blue-500 dark:border-blue-400 pl-4">
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100">Página de Inicio (/)</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Página de bienvenida simple</p>
+                </div>
+                <div class="border-l-4 border-blue-500 dark:border-blue-400 pl-4">
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100">Registro (/register)</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Formulario de registro con email y contraseña</p>
+                </div>
+                <div class="border-l-4 border-blue-500 dark:border-blue-400 pl-4">
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100">Login (/login)</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Formulario de inicio de sesión</p>
+                </div>
+            </div>
+
+            <h3 class="subsection-title mt-6">Rutas Protegidas</h3>
+            <div class="space-y-4">
+                <div class="border-l-4 border-green-500 dark:border-green-400 pl-4">
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100">Dashboard (/dashboard)</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Accesible para usuarios autenticados (user/admin)</p>
+                </div>
+                <div class="border-l-4 border-red-500 dark:border-red-400 pl-4">
+                    <h4 class="font-semibold text-gray-800 dark:text-gray-100">Panel Admin (/admin)</h4>
+                    <p class="text-gray-600 dark:text-gray-300">Accesible solo para rol "admin"</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Arquitectura MVC -->
+        <section id="arquitectura" class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="section-title">Arquitectura MVC</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-green-50 dark:bg-dark-300 p-4 rounded-lg">
+                    <h3 class="font-semibold text-green-700 dark:text-green-400">Modelos</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                        <li>Modelo User</li>
+                        <li>Campos: id, email, password, role</li>
+                        <li>Interacción con PostgreSQL</li>
+                    </ul>
+                </div>
+                <div class="bg-blue-50 dark:bg-dark-300 p-4 rounded-lg">
+                    <h3 class="font-semibold text-blue-700 dark:text-blue-400">Vistas</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                        <li>HTML estático o motor de plantillas</li>
+                        <li>Manejo de JWT en cliente</li>
+                        <li>Envío de formularios a API</li>
+                    </ul>
+                </div>
+                <div class="bg-purple-50 dark:bg-dark-300 p-4 rounded-lg">
+                    <h3 class="font-semibold text-purple-700 dark:text-purple-400">Controladores</h3>
+                    <ul class="list-disc list-inside space-y-1 text-gray-700 dark:text-gray-300">
+                        <li>Lógica de registro</li>
+                        <li>Lógica de autenticación</li>
+                        <li>Manejo de rutas protegidas</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Criterios de Evaluación -->
+        <section id="evaluacion" class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="section-title">Criterios de Evaluación</h2>
+            <div class="space-y-4">
+                <div class="flex items-center">
+                    <div class="w-1/2 text-gray-800 dark:text-gray-200">Funcionamiento</div>
+                    <div class="w-1/2">
+                        <div class="bg-blue-500 dark:bg-blue-300 text-white dark:text-blue-900 font-semibold text-center rounded-full py-1">30%</div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-1/2 text-gray-800 dark:text-gray-200">JWT y Seguridad</div>
+                    <div class="w-1/2">
+                        <div class="bg-blue-500 dark:bg-blue-300 text-white dark:text-blue-900 font-semibold text-center rounded-full py-1">25%</div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-1/2 text-gray-800 dark:text-gray-200">Arquitectura MVC</div>
+                    <div class="w-1/2">
+                        <div class="bg-blue-500 dark:bg-blue-300 text-white dark:text-blue-900 font-semibold text-center rounded-full py-1">20%</div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-1/2 text-gray-800 dark:text-gray-200">Base de Datos</div>
+                    <div class="w-1/2">
+                        <div class="bg-blue-500 dark:bg-blue-300 text-white dark:text-blue-900 font-semibold text-center rounded-full py-1">15%</div>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-1/2 text-gray-800 dark:text-gray-200">Presentación</div>
+                    <div class="w-1/2">
+                        <div class="bg-blue-500 dark:bg-blue-300 text-white dark:text-blue-900 font-semibold text-center rounded-full py-1">10%</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Entregables -->
+        <section id="entregables" class="bg-gray-50 dark:bg-dark-200 shadow-lg rounded-lg p-6 mb-8">
+            <h2 class="section-title">Entregables</h2>
+            <div class="space-y-4">
+                <div class="bg-yellow-50 dark:bg-dark-300 p-4 rounded-lg">
+                    <h3 class="font-semibold text-gray-800 dark:text-gray-100">1. Repositorio Git</h3>
+                    <p class="text-gray-700 dark:text-gray-300">Código fuente completo del proyecto en GitHub/GitLab</p>
+                </div>
+                <div class="bg-yellow-50 dark:bg-dark-300 p-4 rounded-lg">
+                    <h3 class="font-semibold text-gray-800 dark:text-gray-100">2. Presentación en Vivo</h3>
+                    <p class="text-gray-700 dark:text-gray-300">Demostración del proyecto funcionando</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Script para el modo oscuro -->
+    <script>
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const root = document.documentElement;
+
+        // Función para aplicar el tema
+        const applyTheme = (theme) => {
+            if (theme === 'dark') {
+                root.classList.add('dark');
+            } else {
+                root.classList.remove('dark');
+            }
+            localStorage.setItem('theme', theme);
+        };
+
+        // Event listener para el botón
+        darkModeToggle.addEventListener('click', () => {
+            const isDark = root.classList.contains('dark');
+            applyTheme(isDark ? 'light' : 'dark');
+        });
+
+        // Cargar tema al iniciar
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        if (savedTheme) {
+            applyTheme(savedTheme);
+        } else if (prefersDark) {
+            applyTheme('dark');
+        } else {
+            applyTheme('light');
+        }
+    </script>
+</body>
+</html>
