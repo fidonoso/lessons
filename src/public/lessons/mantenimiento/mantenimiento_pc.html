@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lección: Armado y Mantenimiento Seguro de PC</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Bootstrap CSS (solo para componentes específicos si se desea, aunque Tailwind es prioritario) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome (para iconos) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Estilos personalizados para complementar Tailwind y Bootstrap */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #111827; /* Gris oscuro de Tailwind */
+            color: #d1d5db; /* Texto gris claro */
+        }
+
+        .card-custom {
+            background-color: #1f2937; /* Gris más claro para las tarjetas */
+            border: 1px solid #374151;
+            border-radius: 0.75rem;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .card-custom:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2, h3 {
+            color: #f9fafb; /* Blanco para los títulos */
+            font-weight: 700;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            background-color: #374151;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-left: 4px solid #4f46e5; /* Acento índigo */
+        }
+
+        .checklist-item .icon {
+            margin-right: 1rem;
+            color: #a5b4fc;
+            transition: color 0.3s, transform 0.3s;
+        }
+
+        .checklist-item.completed {
+            background-color: #166534; /* Verde oscuro */
+            border-left: 4px solid #22c55e;
+        }
+        
+        .checklist-item.completed span {
+            text-decoration: line-through;
+            color: #a7f3d0;
+        }
+
+        .checklist-item.completed .icon {
+            color: #22c55e;
+            transform: scale(1.2);
+        }
+
+        .img-placeholder {
+            background-color: #374151;
+            border: 2px dashed #4b5563;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #9ca3af;
+        }
+
+        /* Estilos para navbar mejorado */
+        .navbar-brand:hover {
+            transform: scale(1.05);
+        }
+
+        .nav-link-custom {
+            color: #d1d5db !important;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex !important;
+            align-items: center;
+            text-decoration: none !important;
+            font-weight: 500;
+            white-space: nowrap;
+            background: rgba(55, 65, 81, 0.3);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+        }
+
+        .nav-link-custom:hover {
+            color: #ffffff !important;
+            background: linear-gradient(45deg, rgba(79, 70, 229, 0.4), rgba(124, 58, 237, 0.4)) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            border-color: #4f46e5;
+        }
+
+        .nav-link-custom.active {
+            background: linear-gradient(45deg, #4f46e5, #7c3aed) !important;
+            color: #ffffff !important;
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.4);
+            border-color: #7c3aed;
+        }
+
+        .nav-link-custom .icon-wrapper {
+            width: 20px;
+            height: 20px;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            margin-right: 8px;
+        }
+
+        .nav-link-custom .link-text {
+            display: inline !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            font-size: 14px;
+        }
+
+        .nav-link-custom:hover .icon-wrapper {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .nav-link-custom.active .icon-wrapper {
+            transform: scale(1.1);
+        }
+
+        /* Asegurar visibilidad en TODOS los tamaños de pantalla */
+        .navbar-nav {
+            display: flex !important;
+        }
+
+        .navbar-nav .nav-item {
+            display: block !important;
+        }
+
+        /* Efectos adicionales para responsive */
+        @media (max-width: 991.98px) {
+            .nav-link-custom {
+                margin: 4px 0 !important;
+                border-radius: 8px !important;
+                padding: 12px 16px !important;
+                width: 100% !important;
+                justify-content: flex-start !important;
+                min-height: 44px;
+            }
+            
+            .navbar-nav {
+                background: rgba(31, 41, 55, 0.95) !important;
+                backdrop-filter: blur(10px);
+                border-radius: 12px;
+                padding: 16px !important;
+                margin-top: 12px;
+                border: 1px solid #374151;
+                width: 100% !important;
+            }
+
+            .navbar-nav .nav-item {
+                width: 100% !important;
+                display: block !important;
+            }
+        }
+
+        /* Asegurar visibilidad en escritorio */
+        @media (min-width: 992px) {
+            .navbar-nav {
+                display: flex !important;
+                flex-direction: row !important;
+                align-items: center !important;
+            }
+            
+            .nav-link-custom {
+                display: flex !important;
+                padding: 10px 16px !important;
+                margin: 0 4px !important;
+                border-radius: 8px !important;
+                min-width: 120px;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .navbar-nav .nav-item {
+                display: inline-block !important;
+            }
+        }
+
+        /* Animación de carga */
+        @keyframes pulse-glow {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(79, 70, 229, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 25px rgba(79, 70, 229, 0.6);
+            }
+        }
+
+        .navbar-brand > div:first-child {
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        /* Scroll indicator */
+        .progress-bar-bottom {
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-300">
+
+    <!-- Barra de navegación moderna -->
+    <nav class="navbar navbar-expand-lg sticky-top mb-8" style="background: linear-gradient(135deg, #1f2937 0%, #111827 50%, #0f172a 100%); backdrop-filter: blur(10px); border-bottom: 1px solid #374151; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);">
+        <div class="container-fluid">
+            <!-- Brand mejorado -->
+            <a class="navbar-brand d-flex align-items-center text-decoration-none" href="#" style="transition: all 0.3s ease;">
+                <div class="d-flex align-items-center" style="background: linear-gradient(45deg, #4f46e5, #7c3aed); padding: 8px 16px; border-radius: 8px; margin-right: 12px; box-shadow: 0 0 15px rgba(79, 70, 229, 0.3);">
+                    <i class="fas fa-microchip text-white" style="font-size: 1.2rem;"></i>
+                </div>
+                <div>
+                    <span class="text-white font-bold fs-5 d-block mb-0">Mantenimiento PC</span>
+                    <small class="text-indigo-400 d-none d-lg-block">Guía Técnica Profesional</small>
+                </div>
+            </a>
+            
+            <!-- Toggle button mejorado -->
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="background: rgba(79, 70, 229, 0.1); border-radius: 8px; padding: 8px 12px;">
+                <span class="navbar-toggler-icon" style="filter: brightness(0.8);"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- Enlaces de navegación mejorados -->
+                <ul class="navbar-nav ms-auto d-flex align-items-center">
+                    <li class="nav-item position-relative">
+                        <a class="nav-link-custom px-3 py-2 mx-1 rounded-lg text-decoration-none d-flex align-items-center" href="#seguridad" data-section="seguridad">
+                            <div class="icon-wrapper me-2">
+                                <i class="fas fa-shield-halved"></i>
+                            </div>
+                            <span class="link-text">Seguridad</span>
+                        </a>
+                    </li>
+                    <li class="nav-item position-relative">
+                        <a class="nav-link-custom px-3 py-2 mx-1 rounded-lg text-decoration-none d-flex align-items-center" href="#armado" data-section="armado">
+                            <div class="icon-wrapper me-2">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <span class="link-text">Armado/Desarmado</span>
+                        </a>
+                    </li>
+                    <li class="nav-item position-relative">
+                        <a class="nav-link-custom px-3 py-2 mx-1 rounded-lg text-decoration-none d-flex align-items-center" href="#alimentacion" data-section="alimentacion">
+                            <div class="icon-wrapper me-2">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <span class="link-text">Alimentación</span>
+                        </a>
+                    </li>
+                    <li class="nav-item position-relative">
+                        <a class="nav-link-custom px-3 py-2 mx-1 rounded-lg text-decoration-none d-flex align-items-center" href="#drivers" data-section="drivers">
+                            <div class="icon-wrapper me-2">
+                                <i class="fab fa-windows"></i>
+                            </div>
+                            <span class="link-text">Drivers</span>
+                        </a>
+                    </li>
+                    <li class="nav-item position-relative">
+                        <a class="nav-link-custom px-3 py-2 mx-1 rounded-lg text-decoration-none d-flex align-items-center" href="#mantenimiento" data-section="mantenimiento">
+                            <div class="icon-wrapper me-2">
+                                <i class="fas fa-screwdriver-wrench"></i>
+                            </div>
+                            <span class="link-text">Mantenimiento</span>
+                        </a>
+                    </li>
+                    
+                    <!-- Botón de progreso -->
+                    <li class="nav-item ms-3 d-none d-lg-block">
+                        <div class="progress-indicator" style="background: rgba(79, 70, 229, 0.1); border: 1px solid #4f46e5; border-radius: 20px; padding: 6px 12px;">
+                            <i class="fas fa-chart-line text-indigo-400 me-2"></i>
+                            <span class="text-indigo-400 fw-bold" id="progressText">0%</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Indicador de progreso en la parte inferior -->
+        <div class="progress-bar-bottom" style="position: absolute; bottom: 0; left: 0; height: 3px; background: linear-gradient(90deg, #4f46e5, #7c3aed); width: 0%; transition: width 0.3s ease;"></div>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8">
+        
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">Guía Completa de Mantenimiento de PC</h1>
+            <p class="text-lg text-indigo-400">Desde el Ensamblaje Físico hasta la Optimización del Software</p>
+            <div class="mt-6">
+                <div class="inline-flex items-center bg-gray-800 rounded-lg p-4">
+                    <i class="fas fa-info-circle text-blue-400 mr-3"></i>
+                    <span class="text-sm">Haz clic en los elementos de las listas para marcar tu progreso</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sección 1: Medidas de Seguridad -->
+        <section id="seguridad" class="mb-12">
+            <div class="card-custom p-6 md:p-8">
+                <h2 class="text-3xl mb-4 flex items-center"><i class="fas fa-shield-halved text-yellow-400 mr-3"></i>I. Medidas de Seguridad y Precauciones</h2>
+                <p class="mb-6">Antes de tocar cualquier componente, la seguridad es tu prioridad número uno. Ignorar estos pasos puede causar daños irreparables a tu equipo y, en casos raros, a ti mismo.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3">Checklist de Seguridad</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item" data-task="seguridad-1" data-original-icon="fa-power-off">
+                                <i class="icon fas fa-power-off"></i>
+                                <span>Desconectar el PC de la corriente eléctrica.</span>
+                            </li>
+                            <li class="checklist-item" data-task="seguridad-2" data-original-icon="fa-hand-paper">
+                                <i class="icon fas fa-hand-paper"></i>
+                                <span>Presionar el botón de encendido por 5-10 seg para descargar energía residual.</span>
+                            </li>
+                            <li class="checklist-item" data-task="seguridad-3" data-original-icon="fa-bolt">
+                                <i class="icon fas fa-bolt"></i>
+                                <span>Utilizar una pulsera antiestática (ESD) conectada a una parte metálica sin pintar del chasis. <strong>Si no cuentas con pulsera antiestática,</strong> toca una superficie metálica sin pintar del chasis o gabinete por 5-10 segundos antes de tocar cualquier componente</span>
+                            </li>
+                            <li class="checklist-item" data-task="seguridad-4" data-original-icon="fa-desktop">
+                                <i class="icon fas fa-desktop"></i>
+                                <span>Trabajar sobre una superficie limpia, despejada y no conductora (madera, no alfombra).</span>
+                            </li>
+                             <li class="checklist-item" data-task="seguridad-5" data-original-icon="fa-tools">
+                                <i class="icon fas fa-tools"></i>
+                                <span>Tener todas las herramientas y componentes a mano.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div id="seguridadCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#seguridadCarousel" data-bs-slide-to="0" class="active"></button>
+                            <button type="button" data-bs-target="#seguridadCarousel" data-bs-slide-to="1"></button>
+                            <button type="button" data-bs-target="#seguridadCarousel" data-bs-slide-to="2"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-user-shield text-5xl mb-4"></i>
+                                    <span>Técnico usando pulsera antiestática</span>
+                                    <img src="/img/mantenimiento_pc/tec-metal1.png" alt="Pulsera antiestática" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-power-off text-5xl mb-4"></i>
+                                    <span>Desconexión segura de la corriente</span>
+                                    <img src="/img/mantenimiento_pc/desconexion_segura.png" alt="Desconexión segura de la corriente" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-tools text-5xl mb-4"></i>
+                                    <span>Herramientas necesarias para el trabajo</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#seguridadCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#seguridadCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Nota importante sobre alternativas a la pulsera antiestática -->
+                <div class="mt-6 p-4 bg-orange-900 border-l-4 border-orange-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-exclamation-triangle text-orange-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-orange-300 mb-2">¿No tienes pulsera antiestática?</h4>
+                            <p class="text-orange-100 mb-3">Si no cuentas con una pulsera antiestática, puedes aplicar estas alternativas para descargar la electricidad estática:</p>
+                            <ul class="text-sm text-orange-200 space-y-2">
+                                <li>✔️<strong>Toca una superficie metálica sin pintar</strong> del chasis o gabinete por 5-10 segundos antes de tocar cualquier componente</li>
+                                <li>✔️<strong>Mantén contacto frecuente</strong> con el chasis metálico durante todo el proceso de trabajo</li>
+                                <li>✔️<strong>Evita usar ropa sintética</strong> que genere más electricidad estática (preferir algodón)</li>
+                                <li>✔️<strong>Trabaja en un ambiente húmedo</strong> si es posible (la humedad reduce la estática)</li>
+                                <li>⚠️<strong>Quítate zapatos con suela de goma</strong> y trabaja descalzo o con calcetines
+                                <div class="text-sm text-red-200 ms-4">
+
+                                    <p>✔️ Si el piso no es aislante (como cerámica o concreto), estar descalzo o en calcetines puede ayudar a disipar carga.</p>
+                                <p>   ⚠️ Si el piso es alfombrado, plástico o vinílico, podrías acumular más estática incluso estando descalzo.</p>
+
+                                </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cuadro educativo sobre medidas de seguridad -->
+                <div class="mt-8">
+                    <div class="bg-gradient-to-r from-blue-900 to-indigo-900 rounded-lg p-6 border border-blue-700">
+                        <h3 class="text-xl font-bold text-blue-300 mb-4 flex items-center">
+                            <i class="fas fa-graduation-cap mr-3"></i>Cuadro Educativo: ¿Por qué son importantes estas medidas?
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-blue-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-blue-200 mb-2 flex items-center">
+                                        <i class="fas fa-bolt text-yellow-400 mr-2"></i>Electricidad Estática (ESD)
+                                    </h4>
+                                    <p class="text-sm text-blue-100">Los componentes electrónicos pueden dañarse con descargas de tan solo <strong>100 voltios</strong>, pero el cuerpo humano puede acumular hasta <strong>35,000 voltios</strong> de electricidad estática sin que lo sientas.</p>
+                                </div>
+                                
+                                <div class="bg-green-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-green-200 mb-2 flex items-center">
+                                        <i class="fas fa-microchip text-green-400 mr-2"></i>Componentes Sensibles
+                                    </h4>
+                                    <p class="text-sm text-green-100">Los más vulnerables son: <strong>CPU, RAM, SSD, tarjetas gráficas</strong> y cualquier chip integrado. Un componente dañado por ESD puede fallar inmediatamente o desarrollar fallas intermitentes.</p>
+                                </div>
+                                
+                                <div class="bg-red-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-red-200 mb-2 flex items-center">
+                                        <i class="fas fa-exclamation-circle text-red-400 mr-2"></i>Energía Residual
+                                    </h4>
+                                    <p class="text-sm text-red-100">Incluso desconectado, un PC puede mantener energía en los capacitores de la placa madre por varios minutos. <strong>Siempre presiona el botón de encendido</strong> con el cable desconectado.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="bg-purple-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-purple-200 mb-2 flex items-center">
+                                        <i class="fas fa-shield-alt text-purple-400 mr-2"></i>Superficie de Trabajo
+                                    </h4>
+                                    <p class="text-sm text-purple-100">Las alfombras y superficies sintéticas generan mucha estática. <strong>Siempre trabaja sobre madera, metal o superficies antiestáticas</strong>. Evita movimientos bruscos.</p>
+                                </div>
+                                
+                                <div class="bg-yellow-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-yellow-200 mb-2 flex items-center">
+                                        <i class="fas fa-tools text-yellow-400 mr-2"></i>Herramientas Adecuadas
+                                    </h4>
+                                    <p class="text-sm text-yellow-100">Usa <strong>destornilladores con mango aislante</strong> y evita herramientas metálicas sin protección. Mantén un kit básico: destornilladores Phillips, clips, bridas para cables.</p>
+                                </div>
+                                
+                                <div class="bg-teal-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-teal-200 mb-2 flex items-center">
+                                        <i class="fas fa-lightbulb text-teal-400 mr-2"></i>Consejo Profesional
+                                    </h4>
+                                    <p class="text-sm text-teal-100"><strong>Antes de abrir cualquier embalaje</strong> de componentes nuevos, asegúrate de haber descargado la estática. Los componentes vienen en bolsas antiestáticas por una razón.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 p-4 bg-indigo-800 rounded-lg border-2 border-indigo-600">
+                            <p class="text-center text-indigo-200 font-medium">
+                                <i class="fas fa-quote-left mr-2"></i>
+                                "Un técnico preparado vale más que un componente caro. La prevención siempre será más barata que la reparación."
+                                <i class="fas fa-quote-right ml-2"></i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 2: Armado y Desarmado -->
+        <section id="armado" class="mb-12">
+            <div class="card-custom p-6 md:p-8">
+                <h2 class="text-3xl mb-4"><i class="fas fa-cogs text-blue-400 mr-3"></i>II. Armado y Desarmado de un PC</h2>
+                <p class="mb-6">Este proceso es metódico. Sigue los pasos en orden para evitar problemas. El armado es esencialmente el proceso inverso al desarmado.</p>
+                
+                <!-- Desarmado -->
+                <div class="mb-8">
+                    <h3 class="text-2xl font-semibold mb-4 border-l-4 border-red-500 pl-4">Proceso de Desarmado Seguro</h3>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="text-xl mb-3">Checklist de Desarmado</h4>
+                            <ul class="checklist">
+                                <li class="checklist-item" data-task="desarmado-1" data-original-icon="fa-box-open"><i class="icon fas fa-box-open"></i><span>Retirar los paneles laterales del gabinete.</span></li>
+                                <li class="checklist-item" data-task="desarmado-2" data-original-icon="fa-plug"><i class="icon fas fa-plug"></i><span>Desconectar todos los cables de la placa madre y componentes (GPU, discos).</span></li>
+                                <li class="checklist-item" data-task="desarmado-3" data-original-icon="fa-memory"><i class="icon fas fa-memory"></i><span>Retirar las tarjetas de expansión (GPU primero).</span></li>
+                                <li class="checklist-item" data-task="desarmado-4" data-original-icon="fa-hdd"><i class="icon fas fa-hdd"></i><span>Retirar los módulos de RAM.</span></li>
+                                <li class="checklist-item" data-task="desarmado-5" data-original-icon="fa-compact-disc"><i class="icon fas fa-compact-disc"></i><span>Retirar las unidades de almacenamiento (SSD/HDD).</span></li>
+                                <li class="checklist-item" data-task="desarmado-6" data-original-icon="fa-microchip"><i class="icon fas fa-microchip"></i><span>Desatornillar y retirar la placa madre con cuidado.</span></li>
+                                <li class="checklist-item" data-task="desarmado-7" data-original-icon="fa-power-off"><i class="icon fas fa-power-off"></i><span>Retirar la fuente de poder (PSU).</span></li>
+                            </ul>
+                        </div>
+                        <div id="desarmajoCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#desarmajoCarousel" data-bs-slide-to="0" class="active"></button>
+                                <button type="button" data-bs-target="#desarmajoCarousel" data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#desarmajoCarousel" data-bs-slide-to="2"></button>
+                                <button type="button" data-bs-target="#desarmajoCarousel" data-bs-slide-to="3"></button>
+                            </div>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="img-placeholder h-64">
+                                        <i class="fas fa-screwdriver-wrench text-5xl mb-4"></i>
+                                        <span>Componentes internos de un PC</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="img-placeholder h-64">
+                                        <i class="fas fa-memory text-5xl mb-4"></i>
+                                        <span>Módulos de RAM y su extracción</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="img-placeholder h-64">
+                                        <i class="fas fa-microchip text-5xl mb-4"></i>
+                                        <span>Placa madre y sus conectores</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="img-placeholder h-64">
+                                        <i class="fas fa-hdd text-5xl mb-4"></i>
+                                        <span>Unidades de almacenamiento</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#desarmajoCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#desarmajoCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Armado -->
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4 border-l-4 border-green-500 pl-4">Proceso de Armado</h3>
+                     <div class="grid md:grid-cols-2 gap-6">
+                        <div id="armadoCarousel" class="carousel slide order-last md:order-first" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#armadoCarousel" data-bs-slide-to="0" class="active"></button>
+                                <button type="button" data-bs-target="#armadoCarousel" data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#armadoCarousel" data-bs-slide-to="2"></button>
+                                <button type="button" data-bs-target="#armadoCarousel" data-bs-slide-to="3"></button>
+                            </div>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="img-placeholder h-64">
+                                        <i class="fas fa-puzzle-piece text-5xl mb-4"></i>
+                                        <span>Conexión de cables del panel frontal</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="img-placeholder h-64">
+                                        <i class="fas fa-plug text-5xl mb-4"></i>
+                                        <span>Conexiones de alimentación ATX</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="img-placeholder h-64">
+                                        <i class="fas fa-database text-5xl mb-4"></i>
+                                        <span>Cables SATA de datos y poder</span>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="img-placeholder h-64">
+                                        <i class="fas fa-wind text-5xl mb-4"></i>
+                                        <span>Gestión de cables y flujo de aire</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#armadoCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#armadoCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div>
+                            <h4 class="text-xl mb-3">Checklist de Armado</h4>
+                            <ul class="checklist">
+                                <li class="checklist-item" data-task="armado-1" data-original-icon="fa-microchip"><i class="icon fas fa-microchip"></i><span>Instalar CPU, cooler y RAM en la placa madre (fuera del gabinete).</span></li>
+                                <li class="checklist-item" data-task="armado-2" data-original-icon="fa-download"><i class="icon fas fa-download"></i><span>Instalar la placa madre en el gabinete, alineando con los postes.</span></li>
+                                <li class="checklist-item" data-task="armado-3" data-original-icon="fa-power-off"><i class="icon fas fa-power-off"></i><span>Instalar la fuente de poder (PSU).</span></li>
+                                <li class="checklist-item" data-task="armado-4" data-original-icon="fa-memory"><i class="icon fas fa-memory"></i><span>Instalar tarjetas de expansión (GPU).</span></li>
+                                <li class="checklist-item" data-task="armado-5" data-original-icon="fa-hdd"><i class="icon fas fa-hdd"></i><span>Instalar unidades de almacenamiento.</span></li>
+                                <li class="checklist-item" data-task="armado-6" data-original-icon="fa-plug"><i class="icon fas fa-plug"></i><span>Conectar cables de poder (ATX 24-pin, CPU 8-pin, PCIe para GPU).</span></li>
+                                <li class="checklist-item" data-task="armado-7" data-original-icon="fa-database"><i class="icon fas fa-database"></i><span>Conectar cables de datos (SATA para discos).</span></li>
+                                <li class="checklist-item" data-task="armado-8" data-original-icon="fa-toggle-on"><i class="icon fas fa-toggle-on"></i><span>Conectar cables del panel frontal (Power, Reset, LEDs, USB, Audio).</span></li>
+                                <li class="checklist-item" data-task="armado-9" data-original-icon="fa-wind"><i class="icon fas fa-wind"></i><span>Realizar una gestión de cables básica para un buen flujo de aire.</span></li>
+                                <li class="checklist-item" data-task="armado-10" data-original-icon="fa-box"><i class="icon fas fa-box"></i><span>Cerrar los paneles laterales.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notas importantes sobre errores comunes -->
+                <div class="mt-8 p-4 bg-red-900 border-l-4 border-red-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-exclamation-circle text-red-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-red-300 mb-2">⚠️ Errores Comunes que Debes Evitar</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-red-100 mb-3 font-medium">Durante el Desarmado:</p>
+                                    <ul class="text-sm text-red-200 space-y-2">
+                                        <li>❌ <strong>NO fuerces ningún componente.</strong> Si resiste, revisa si hay clips o tornillos que lo sujetan</li>
+                                        <li>❌ <strong>NO tires de los cables.</strong> Siempre toma el conector, no el cable</li>
+                                        <li>❌ <strong>NO olvides etiquetar cables complejos</strong> como los del panel frontal</li>
+                                        <li>❌ <strong>NO coloques componentes sobre superficies conductivas</strong> o alfombradas</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="text-red-100 mb-3 font-medium">Durante el Armado:</p>
+                                    <ul class="text-sm text-red-200 space-y-2">
+                                        <li>❌ <strong>NO olvides los postes separadores</strong> (standoffs) antes de instalar la placa madre</li>
+                                        <li>❌ <strong>NO aprietes demasiado los tornillos</strong> - solo hasta que hagan contacto firme</li>
+                                        <li>❌ <strong>NO olvides conectar el cable de 8 pines del CPU</strong> - error muy común</li>
+                                        <li>❌ <strong>NO instales RAM en slots incorrectos</strong> - revisa el manual de la placa</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consejo de organización -->
+                <div class="mt-6 p-4 bg-green-900 border-l-4 border-green-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-lightbulb text-green-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-green-300 mb-2">💡 Consejo de Organización</h4>
+                            <p class="text-green-100 mb-3">La organización es clave para un trabajo exitoso:</p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <ul class="text-sm text-green-200 space-y-2">
+                                    <li>📱 <strong>Toma fotos</strong> antes de desconectar cables complejos</li>
+                                    <li>🏷️ <strong>Usa etiquetas</strong> para cables del panel frontal (Power, Reset, etc.)</li>
+                                    <li>📦 <strong>Recipientes pequeños</strong> para organizar tornillos por tipo</li>
+                                </ul>
+                                <ul class="text-sm text-green-200 space-y-2">
+                                    <li>📝 <strong>Lleva un registro</strong> del orden en que retiras los componentes</li>
+                                    <li>🧼 <strong>Área limpia</strong> y bien iluminada para trabajar</li>
+                                    <li>📖 <strong>Manual de la placa madre</strong> siempre a mano</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cuadro educativo sobre armado y desarmado -->
+                <div class="mt-8">
+                    <div class="bg-gradient-to-r from-purple-900 to-pink-900 rounded-lg p-6 border border-purple-700">
+                        <h3 class="text-xl font-bold text-purple-300 mb-4 flex items-center">
+                            <i class="fas fa-cogs mr-3"></i>Cuadro Educativo: Técnicas y Mejores Prácticas
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-purple-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-purple-200 mb-2 flex items-center">
+                                        <i class="fas fa-microchip text-purple-400 mr-2"></i>Orden de Instalación del CPU
+                                    </h4>
+                                    <p class="text-sm text-purple-100">Siempre instala: <strong>1) CPU, 2) RAM, 3) Cooler</strong> ANTES de colocar la placa en el gabinete. Es más fácil trabajar en una superficie plana y evitas presión innecesaria sobre la placa.</p>
+                                </div>
+                                
+                                <div class="bg-pink-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-pink-200 mb-2 flex items-center">
+                                        <i class="fas fa-puzzle-piece text-pink-400 mr-2"></i>Conectores del Panel Frontal
+                                    </h4>
+                                    <p class="text-sm text-pink-100">Los cables más confusos. <strong>Power LED, HDD LED, Power SW, Reset SW</strong>. La polaridad importa en los LEDs (+/-), pero no en los switches. El manual de la placa es ESENCIAL aquí.</p>
+                                </div>
+                                
+                                <div class="bg-indigo-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-indigo-200 mb-2 flex items-center">
+                                        <i class="fas fa-plug text-indigo-400 mr-2"></i>Gestión de Cables
+                                    </h4>
+                                    <p class="text-sm text-indigo-100">Un buen cable management no es solo estético: <strong>mejora el flujo de aire y facilita futuras actualizaciones</strong>. Conecta primero lo esencial, luego organiza.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="bg-blue-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-blue-200 mb-2 flex items-center">
+                                        <i class="fas fa-memory text-blue-400 mr-2"></i>Compatibilidad RAM
+                                    </h4>
+                                    <p class="text-sm text-blue-100">Para dual-channel, usa slots <strong>A2 y B2</strong> (usualmente slots 2 y 4). Para cuatro módulos, llena A1, A2, B1, B2 en ese orden. Cada placa es diferente - <strong>consulta el manual.</strong></p>
+                                </div>
+                                
+                                <div class="bg-cyan-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-cyan-200 mb-2 flex items-center">
+                                        <i class="fas fa-screwdriver text-cyan-400 mr-2"></i>Torque de Tornillos
+                                    </h4>
+                                    <p class="text-sm text-cyan-100">Los tornillos deben estar <strong>"snug" (ajustados pero no apretados)</strong>. Muy flojos = mala conexión. Muy apretados = roscas dañadas o placas agrietadas. Si cruje, es demasiado.</p>
+                                </div>
+                                
+                                <div class="bg-teal-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-teal-200 mb-2 flex items-center">
+                                        <i class="fas fa-wind text-teal-400 mr-2"></i>Flujo de Aire
+                                    </h4>
+                                    <p class="text-sm text-teal-100">El aire debe fluir de <strong>frontal/inferior hacia posterior/superior</strong>. Entrada fría por adelante, salida caliente por atrás. Los cables mal organizados interrumpen este flujo crítico.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 grid md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-gradient-to-r from-green-800 to-emerald-800 rounded-lg border-2 border-green-600">
+                                <h5 class="font-semibold text-green-200 mb-2 flex items-center">
+                                    <i class="fas fa-check-circle text-green-400 mr-2"></i>Primera Vez Exitosa
+                                </h5>
+                                <p class="text-xs text-green-100">Si es tu primera vez y el PC enciende al primer intento, ¡felicitaciones! Pero no te confíes - revisa temperaturas y funcionamiento por unos días.</p>
+                            </div>
+                            
+                            <div class="p-4 bg-gradient-to-r from-amber-800 to-yellow-800 rounded-lg border-2 border-amber-600">
+                                <h5 class="font-semibold text-amber-200 mb-2 flex items-center">
+                                    <i class="fas fa-redo text-amber-400 mr-2"></i>No Enciende
+                                </h5>
+                                <p class="text-xs text-amber-100">No entres en pánico. 90% de las veces es un cable mal conectado (CPU 8-pin o RAM mal instalada). Revisa paso a paso, con paciencia.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 3: Diagnóstico de Alimentación -->
+        <section id="alimentacion" class="mb-12">
+            <div class="card-custom p-6 md:p-8">
+                <h2 class="text-3xl mb-4"><i class="fas fa-bolt-lightning text-yellow-400 mr-3"></i>III. Diagnóstico de Alimentación</h2>
+                <p class="mb-6">Una fuente de poder (PSU) defectuosa o una mala conexión eléctrica son causas comunes de fallas. Aprende a verificar los voltajes de forma segura con un multímetro.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3">Checklist de Diagnóstico</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item" data-task="alimentacion-1" data-original-icon="fa-plug-circle-check"><i class="icon fas fa-plug-circle-check"></i><span>Verificar que el enchufe de pared tenga el voltaje correcto (~220V o ~110V según el país).</span></li>
+                            <li class="checklist-item" data-task="alimentacion-2" data-original-icon="fa-toggle-off"><i class="icon fas fa-toggle-off"></i><span>Asegurarse que el interruptor de la PSU esté en la posición correcta (I).</span></li>
+                            <li class="checklist-item" data-task="alimentacion-3" data-original-icon="fa-paperclip"><i class="icon fas fa-paperclip"></i><span>Realizar el "puenteo" de la PSU (con un clip, pines verde y negro del conector de 24 pines) para encenderla fuera del PC.</span></li>
+                            <li class="checklist-item" data-task="alimentacion-4" data-original-icon="fa-tachometer-alt"><i class="icon fas fa-tachometer-alt"></i><span>Medir los voltajes principales de la PSU con un multímetro (+3.3V, +5V, +12V).</span></li>
+                        </ul>
+                    </div>
+                    <div id="alimentacionCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#alimentacionCarousel" data-bs-slide-to="0" class="active"></button>
+                            <button type="button" data-bs-target="#alimentacionCarousel" data-bs-slide-to="1"></button>
+                            <button type="button" data-bs-target="#alimentacionCarousel" data-bs-slide-to="2"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-charging-station text-5xl mb-4"></i>
+                                    <span>Pines del conector ATX de 24 pines</span>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-tachometer-alt text-5xl mb-4"></i>
+                                    <span>Uso del multímetro para medir voltajes</span>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-paperclip text-5xl mb-4"></i>
+                                    <span>Puenteo de PSU con clip metálico</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#alimentacionCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#alimentacionCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advertencias críticas de seguridad eléctrica -->
+                <div class="mt-8 p-4 bg-red-900 border-l-4 border-red-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-skull-crossbones text-red-400 text-2xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-red-300 mb-2">⚡ PELIGRO: Seguridad Eléctrica</h4>
+                            <p class="text-red-100 mb-3 font-medium">El trabajo con fuentes de poder implica riesgos eléctricos reales. Sigue estas reglas SIEMPRE:</p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-red-200 mb-2 font-medium">🚨 NUNCA hagas esto:</p>
+                                    <ul class="text-sm text-red-200 space-y-2">
+                                        <li>❌ <strong>NO abras una PSU</strong> - contiene capacitores que mantienen carga letal incluso desconectada</li>
+                                        <li>❌ <strong>NO trabajes con manos húmedas</strong> o en ambiente húmedo</li>
+                                        <li>❌ <strong>NO uses herramientas metálicas</strong> cerca de circuitos energizados</li>
+                                        <li>❌ <strong>NO toques terminales</strong> o conectores con los dedos directamente</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="text-red-200 mb-2 font-medium">✅ SIEMPRE haz esto:</p>
+                                    <ul class="text-sm text-red-200 space-y-2">
+                                        <li>✅ <strong>Desconecta TODO</strong> antes de medir - PSU desenchufada 5+ minutos</li>
+                                        <li>✅ <strong>Usa solo el método del clip</strong> para puentear la PSU</li>
+                                        <li>✅ <strong>Mantén un pie firme</strong> en el suelo mientras trabajas</li>
+                                        <li>✅ <strong>Ten un extintor clase C</strong> cerca (para fuegos eléctricos)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabla de valores de voltaje y tolerancias -->
+                <div class="mt-6 p-4 bg-blue-900 border-l-4 border-blue-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-chart-line text-blue-400 text-xl mr-3 mt-1"></i>
+                        <div class="w-full">
+                            <h4 class="text-lg font-semibold text-blue-300 mb-3">📊 Valores de Voltaje y Tolerancias</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm text-blue-100 border border-blue-700">
+                                    <thead class="bg-blue-800">
+                                        <tr>
+                                            <th class="border border-blue-600 px-3 py-2 text-left">Voltaje</th>
+                                            <th class="border border-blue-600 px-3 py-2 text-left">Valor Nominal</th>
+                                            <th class="border border-blue-600 px-3 py-2 text-left">Tolerancia</th>
+                                            <th class="border border-blue-600 px-3 py-2 text-left">Rango Aceptable</th>
+                                            <th class="border border-blue-600 px-3 py-2 text-left">Color Cable</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="bg-blue-850">
+                                            <td class="border border-blue-600 px-3 py-2 font-semibold">+12V</td>
+                                            <td class="border border-blue-600 px-3 py-2">12.00V</td>
+                                            <td class="border border-blue-600 px-3 py-2">±5%</td>
+                                            <td class="border border-blue-600 px-3 py-2">11.40V - 12.60V</td>
+                                            <td class="border border-blue-600 px-3 py-2"><span class="bg-yellow-600 text-black px-2 py-1 rounded">Amarillo</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-blue-600 px-3 py-2 font-semibold">+5V</td>
+                                            <td class="border border-blue-600 px-3 py-2">5.00V</td>
+                                            <td class="border border-blue-600 px-3 py-2">±5%</td>
+                                            <td class="border border-blue-600 px-3 py-2">4.75V - 5.25V</td>
+                                            <td class="border border-blue-600 px-3 py-2"><span class="bg-red-600 text-white px-2 py-1 rounded">Rojo</span></td>
+                                        </tr>
+                                        <tr class="bg-blue-850">
+                                            <td class="border border-blue-600 px-3 py-2 font-semibold">+3.3V</td>
+                                            <td class="border border-blue-600 px-3 py-2">3.30V</td>
+                                            <td class="border border-blue-600 px-3 py-2">±5%</td>
+                                            <td class="border border-blue-600 px-3 py-2">3.14V - 3.47V</td>
+                                            <td class="border border-blue-600 px-3 py-2"><span class="bg-orange-600 text-white px-2 py-1 rounded">Naranja</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="border border-blue-600 px-3 py-2 font-semibold">-12V</td>
+                                            <td class="border border-blue-600 px-3 py-2">-12.00V</td>
+                                            <td class="border border-blue-600 px-3 py-2">±10%</td>
+                                            <td class="border border-blue-600 px-3 py-2">-10.80V a -13.20V</td>
+                                            <td class="border border-blue-600 px-3 py-2"><span class="bg-blue-600 text-white px-2 py-1 rounded">Azul</span></td>
+                                        </tr>
+                                        <tr class="bg-blue-850">
+                                            <td class="border border-blue-600 px-3 py-2 font-semibold">+5VSB</td>
+                                            <td class="border border-blue-600 px-3 py-2">5.00V</td>
+                                            <td class="border border-blue-600 px-3 py-2">±5%</td>
+                                            <td class="border border-blue-600 px-3 py-2">4.75V - 5.25V</td>
+                                            <td class="border border-blue-600 px-3 py-2"><span class="bg-purple-600 text-white px-2 py-1 rounded">Morado</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p class="text-xs text-blue-200 mt-2"><strong>Nota:</strong> +5VSB (Standby) debe estar presente incluso con la PC "apagada" pero enchufada.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guía de síntomas y diagnóstico -->
+                <div class="mt-6 p-4 bg-yellow-900 border-l-4 border-yellow-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-stethoscope text-yellow-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-yellow-300 mb-2">🔍 Síntomas y Diagnóstico Rápido</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-yellow-100 mb-3 font-medium">Síntomas Comunes:</p>
+                                    <ul class="text-sm text-yellow-200 space-y-2">
+                                        <li>🔴 <strong>PC no enciende:</strong> Verificar +5VSB, cable de 24 pines, interruptor PSU</li>
+                                        <li>🟡 <strong>Enciende pero se apaga:</strong> Sobrecalentamiento, voltajes inestables, sobrecarga</li>
+                                        <li>🔵 <strong>Reinicios aleatorios:</strong> +12V inestable, PSU insuficiente para la carga</li>
+                                        <li>🟢 <strong>Ventilador PSU no gira:</strong> PSU moderna (ventilador inteligente) o PSU defectuosa</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="text-yellow-100 mb-3 font-medium">Pasos de Diagnóstico:</p>
+                                    <ul class="text-sm text-yellow-200 space-y-2">
+                                        <li>1️⃣ <strong>Verificar enchufe y cable:</strong> Fusible, toma corriente, cable PSU</li>
+                                        <li>2️⃣ <strong>Test de puenteo:</strong> ¿Enciende la PSU sin la placa madre?</li>
+                                        <li>3️⃣ <strong>Medición de voltajes:</strong> ¿Están en rango?</li>
+                                        <li>4️⃣ <strong>Test bajo carga:</strong> ¿Se mantienen estables los voltajes?</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cuadro educativo técnico -->
+                <div class="mt-8">
+                    <div class="bg-gradient-to-r from-orange-900 to-red-900 rounded-lg p-6 border border-orange-700">
+                        <h3 class="text-xl font-bold text-orange-300 mb-4 flex items-center">
+                            <i class="fas fa-bolt-lightning mr-3"></i>Cuadro Educativo: Fundamentos de Alimentación PC
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-orange-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-orange-200 mb-2 flex items-center">
+                                        <i class="fas fa-industry text-orange-400 mr-2"></i>Conector ATX de 24 Pines
+                                    </h4>
+                                    <p class="text-sm text-orange-100">Es el conector principal. Pin 16 (verde) es PS_ON - conectar a tierra (pin 15-17) enciende la PSU. Pin 9 es +5VSB (standby) - siempre debe tener voltaje.</p>
+                                </div>
+                                
+                                <div class="bg-red-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-red-200 mb-2 flex items-center">
+                                        <i class="fas fa-microchip text-red-400 mr-2"></i>Línea +12V: La Más Crítica
+                                    </h4>
+                                    <p class="text-sm text-red-100">CPU y GPU dependen del +12V. Una caída de voltaje aquí causa inestabilidad inmediata. Componentes modernos pueden consumir 200W+ solo del +12V.</p>
+                                </div>
+                                
+                                <div class="bg-yellow-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-yellow-200 mb-2 flex items-center">
+                                        <i class="fas fa-calculator text-yellow-400 mr-2"></i>Calculando Potencia
+                                    </h4>
+                                    <p class="text-sm text-yellow-100">P = V × I. Una GPU que consume 10A en +12V usa 120W. Siempre calcula 20% extra de margen de seguridad al elegir PSU.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="bg-pink-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-pink-200 mb-2 flex items-center">
+                                        <i class="fas fa-thermometer-half text-pink-400 mr-2"></i>Eficiencia y Calor
+                                    </h4>
+                                    <p class="text-sm text-pink-100">PSU 80+ consume menos y genera menos calor. Una PSU al 80% de carga es más eficiente que al 100%. El calor excesivo reduce vida útil.</p>
+                                </div>
+                                
+                                <div class="bg-purple-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-purple-200 mb-2 flex items-center">
+                                        <i class="fas fa-shield-virus text-purple-400 mr-2"></i>Protecciones de la PSU
+                                    </h4>
+                                    <p class="text-sm text-purple-100">OCP (sobrecorriente), OVP (sobrevoltaje), UVP (bajo voltaje), SCP (cortocircuito). Una PSU de calidad debe tener todas estas protecciones.</p>
+                                </div>
+                                
+                                <div class="bg-indigo-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-indigo-200 mb-2 flex items-center">
+                                        <i class="fas fa-tools text-indigo-400 mr-2"></i>Herramientas de Diagnóstico
+                                    </h4>
+                                    <p class="text-sm text-indigo-100">Multímetro es básico. PSU tester avanzado muestra todas las líneas. Software como HWiNFO64 monitorea voltajes en tiempo real desde sensores de la placa.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 p-4 bg-gradient-to-r from-red-800 to-orange-800 rounded-lg border-2 border-red-600">
+                            <p class="text-center text-red-200 font-medium">
+                                <i class="fas fa-exclamation-triangle mr-2"></i>
+                                "La PSU es el corazón del sistema. Una PSU barata puede destruir componentes costosos. Nunca economices en la fuente de poder."
+                                <i class="fas fa-exclamation-triangle ml-2"></i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 4: Drivers -->
+        <section id="drivers" class="mb-12">
+            <div class="card-custom p-6 md:p-8">
+                <h2 class="text-3xl mb-4"><i class="fab fa-windows text-sky-400 mr-3"></i>IV. Instalación de Drivers</h2>
+                <p class="mb-6">Los drivers son el software que permite al sistema operativo comunicarse con el hardware. Sin ellos, tus componentes no funcionarán o lo harán con un rendimiento muy bajo.</p>
+                 <div class="grid md:grid-cols-2 gap-6">
+                    <div id="driversCarousel" class="carousel slide order-last md:order-first" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#driversCarousel" data-bs-slide-to="0" class="active"></button>
+                            <button type="button" data-bs-target="#driversCarousel" data-bs-slide-to="1"></button>
+                            <button type="button" data-bs-target="#driversCarousel" data-bs-slide-to="2"></button>
+                            <button type="button" data-bs-target="#driversCarousel" data-bs-slide-to="3"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="img-placeholder h-64">
+                                    <i class="fab fa-nvidia text-5xl mb-4"></i>
+                                    <span>Logo de fabricantes: NVIDIA</span>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="img-placeholder h-64">
+                                    <i class="fab fa-amd text-5xl mb-4"></i>
+                                    <span>Logo de fabricantes: AMD</span>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="img-placeholder h-64">
+                                    <i class="fab fa-intel text-5xl mb-4"></i>
+                                    <span>Logo de fabricantes: Intel</span>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-download text-5xl mb-4"></i>
+                                    <span>Descarga de drivers desde sitios oficiales</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#driversCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#driversCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                    <div>
+                         <h3 class="text-xl font-semibold mb-3">Checklist de Drivers Esenciales</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item" data-task="drivers-1" data-original-icon="fa-microchip"><i class="icon fas fa-microchip"></i><span>Driver del Chipset: El más importante. Instalar primero desde la web del fabricante de la placa madre.</span></li>
+                            <li class="checklist-item" data-task="drivers-2" data-original-icon="fa-gamepad"><i class="icon fas fa-gamepad"></i><span>Driver de Video (GPU): Descargar desde la web de NVIDIA, AMD o Intel.</span></li>
+                            <li class="checklist-item" data-task="drivers-3" data-original-icon="fa-volume-up"><i class="icon fas fa-volume-up"></i><span>Driver de Audio: Usualmente de Realtek, disponible en la web de la placa madre.</span></li>
+                            <li class="checklist-item" data-task="drivers-4" data-original-icon="fa-network-wired"><i class="icon fas fa-network-wired"></i><span>Driver de Red (LAN/Wi-Fi): Esencial para tener internet. Descargar desde la web de la placa madre.</span></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Identificación de hardware ANTES de instalar drivers -->
+                <div class="mt-8 p-4 bg-purple-900 border-l-4 border-purple-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-search text-purple-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-purple-300 mb-2">🔍 PASO PREVIO: Identificación de Hardware</h4>
+                            <p class="text-purple-100 mb-3 font-medium">Antes de instalar cualquier driver, debes saber exactamente qué hardware tienes:</p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-purple-200 mb-2 font-medium">🛠️ Herramientas de Identificación:</p>
+                                    <ul class="text-sm text-purple-200 space-y-2">
+                                        <li>💻 <strong>Administrador de Dispositivos</strong> - devmgmt.msc (para ver dispositivos sin driver)</li>
+                                        <li>⚙️ <strong>Información del Sistema</strong> - msinfo32.exe (hardware detallado)</li>
+                                        <li>🔧 <strong>CPU-Z / GPU-Z</strong> - herramientas gratuitas especializadas</li>
+                                        <li>📝 <strong>Comando CMD:</strong> wmic baseboard get product,manufacturer</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="text-purple-200 mb-2 font-medium">🎯 Datos Necesarios:</p>
+                                    <ul class="text-sm text-purple-200 space-y-2">
+                                        <li>🔖 <strong>Modelo exacto de la placa madre</strong> (ej: ASUS ROG B550-F)</li>
+                                        <li>🎮 <strong>GPU exacta</strong> (ej: RTX 4060 Ti, no solo "NVIDIA")</li>
+                                        <li>📡 <strong>Chipset de red/Wi-Fi</strong> (ej: Intel AX200, Realtek RTL8125)</li>
+                                        <li>🔊 <strong>Código de audio</strong> (ej: Realtek ALC1220)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orden correcto y errores comunes -->
+                <div class="mt-6 p-4 bg-orange-900 border-l-4 border-orange-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-list-ol text-orange-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-orange-300 mb-2">📋 Orden de Instalación CORRECTO</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-orange-100 mb-3 font-medium">✅ Secuencia obligatoria:</p>
+                                    <ol class="text-sm text-orange-200 space-y-2 list-decimal list-inside">
+                                        <li><strong>1º Chipset</strong> - Base de todo el sistema</li>
+                                        <li><strong>2º CPU</strong> - Drivers del procesador (si aplica)</li>
+                                        <li><strong>3º Red (LAN/Wi-Fi)</strong> - Para poder descargar el resto</li>
+                                        <li><strong>4º Audio</strong> - Realtek, Creative, etc.</li>
+                                        <li><strong>5º GPU</strong> - NVIDIA/AMD drivers al final</li>
+                                        <li><strong>6º Periféricos</strong> - USB, Bluetooth, etc.</li>
+                                    </ol>
+                                </div>
+                                <div>
+                                    <p class="text-orange-100 mb-3 font-medium">❌ Errores que generan problemas:</p>
+                                    <ul class="text-sm text-orange-200 space-y-2">
+                                        <li>🚫 <strong>GPU antes que chipset</strong> - Conflictos y rendimiento bajo</li>
+                                        <li>🚫 <strong>Drivers genéricos de Windows</strong> - Funcionalidad limitada</li>
+                                        <li>🚫 <strong>Múltiples versiones</strong> - No desinstalar driver anterior</li>
+                                        <li>🚫 <strong>Fuentes no oficiales</strong> - DriverPack, sitios sospechosos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Problemas comunes y soluciones -->
+                <div class="mt-6 p-4 bg-red-900 border-l-4 border-red-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-bug text-red-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-red-300 mb-2">🐛 Problemas Comunes con Drivers</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-red-100 mb-3 font-medium">⚠️ Síntomas típicos:</p>
+                                    <ul class="text-sm text-red-200 space-y-2">
+                                        <li>💔 <strong>Pantalla azul (BSOD)</strong> - Driver incompatible o corrupto</li>
+                                        <li>🔇 <strong>Sin audio</strong> - Driver audio no instalado o conflicto</li>
+                                        <li>🌐 <strong>Sin internet</strong> - Driver de red faltante</li>
+                                        <li>🐌 <strong>GPU lenta</strong> - Driver genérico de Windows</li>
+                                        <li>❓ <strong>Dispositivos desconocidos</strong> - Hardware sin driver</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="text-red-100 mb-3 font-medium">🔧 Soluciones rápidas:</p>
+                                    <ul class="text-sm text-red-200 space-y-2">
+                                        <li>🔄 <strong>Rollback:</strong> Volver a driver anterior funcional</li>
+                                        <li>🗑️ <strong>DDU (Display Driver Uninstaller):</strong> Para drivers GPU problemáticos</li>
+                                        <li>💿 <strong>Modo seguro:</strong> Desinstalar drivers problemáticos</li>
+                                        <li>🎯 <strong>Driver específico:</strong> Buscar por Hardware ID exact</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cuadro educativo sobre drivers -->
+                <div class="mt-8">
+                    <div class="bg-gradient-to-r from-blue-900 to-cyan-900 rounded-lg p-6 border border-blue-700">
+                        <h3 class="text-xl font-bold text-blue-300 mb-4 flex items-center">
+                            <i class="fas fa-graduation-cap mr-3"></i>Cuadro Educativo: Drivers y Compatibilidad
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-blue-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-blue-200 mb-2 flex items-center">
+                                        <i class="fas fa-code text-blue-400 mr-2"></i>¿Qué es un Driver?
+                                    </h4>
+                                    <p class="text-sm text-blue-100">Un driver es un <strong>traductor entre hardware y sistema operativo</strong>. Sin él, Windows no sabe cómo comunicarse con tu GPU, audio o red. Es código específico para cada modelo de hardware.</p>
+                                </div>
+                                
+                                <div class="bg-cyan-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-cyan-200 mb-2 flex items-center">
+                                        <i class="fas fa-fingerprint text-cyan-400 mr-2"></i>Hardware ID y Compatibilidad
+                                    </h4>
+                                    <p class="text-sm text-cyan-100">Cada dispositivo tiene un <strong>Hardware ID único</strong> (ej: PCI\VEN_10DE&DEV_2684). Los drivers se emparejan con estos IDs. Un driver incorrecto puede funcionar parcialmente o dañar el sistema.</p>
+                                </div>
+                                
+                                <div class="bg-indigo-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-indigo-200 mb-2 flex items-center">
+                                        <i class="fas fa-shield-alt text-indigo-400 mr-2"></i>WHQL vs. Beta Drivers
+                                    </h4>
+                                    <p class="text-sm text-indigo-100"><strong>WHQL</strong> son drivers certificados por Microsoft - estables pero menos actuales. <strong>Beta</strong> tienen nuevas características pero pueden tener bugs. Para gaming usa beta, para oficina usa WHQL.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="bg-purple-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-purple-200 mb-2 flex items-center">
+                                        <i class="fas fa-download text-purple-400 mr-2"></i>Fuentes Confiables SOLAMENTE
+                                    </h4>
+                                    <p class="text-sm text-purple-100">📍 <strong>NVIDIA:</strong> nvidia.com/drivers<br>📍 <strong>AMD:</strong> amd.com/support<br>📍 <strong>Intel:</strong> intel.com/content/www/us/en/support<br>📍 <strong>Placa madre:</strong> Sitio del fabricante</p>
+                                </div>
+                                
+                                <div class="bg-pink-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-pink-200 mb-2 flex items-center">
+                                        <i class="fas fa-history text-pink-400 mr-2"></i>Versionado y Actualizaciones
+                                    </h4>
+                                    <p class="text-sm text-pink-100">Los drivers tienen <strong>números de versión</strong> (ej: 531.29). Más nuevo no siempre es mejor. Si un driver funciona perfectamente, <strong>no lo actualices sin razón específica</strong>.</p>
+                                </div>
+                                
+                                <div class="bg-green-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-green-200 mb-2 flex items-center">
+                                        <i class="fas fa-wifi text-green-400 mr-2"></i>Drivers Offline
+                                    </h4>
+                                    <p class="text-sm text-green-100">Siempre descarga drivers de <strong>red LAN/Wi-Fi en otro PC</strong> y cópialos a USB. Sin internet no puedes descargar otros drivers. El driver de red es tu "llave" a internet.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 grid md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-gradient-to-r from-yellow-800 to-orange-800 rounded-lg border-2 border-yellow-600">
+                                <h5 class="font-semibold text-yellow-200 mb-2 flex items-center">
+                                    <i class="fas fa-lightbulb text-yellow-400 mr-2"></i>Consejo Profesional
+                                </h5>
+                                <p class="text-xs text-yellow-100">Crea una carpeta "Drivers_Backup" en tu USB con todos los drivers funcionando. Te ahorrarás horas si necesitas reinstalar Windows.</p>
+                            </div>
+                            
+                            <div class="p-4 bg-gradient-to-r from-red-800 to-pink-800 rounded-lg border-2 border-red-600">
+                                <h5 class="font-semibold text-red-200 mb-2 flex items-center">
+                                    <i class="fas fa-exclamation-triangle text-red-400 mr-2"></i>Nunca Hagas Esto
+                                </h5>
+                                <p class="text-xs text-red-100">NUNCA uses "driver updaters" automáticos o sitios como DriverPack. Instalan drivers genéricos, adware, o versiones incorrectas que pueden dañar tu sistema.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección 5: Mantenimiento Remoto -->
+        <section id="mantenimiento">
+            <div class="card-custom p-6 md:p-8">
+                <h2 class="text-3xl mb-4"><i class="fas fa-headset text-teal-400 mr-3"></i>V. Mantenimiento del Sistema Operativo</h2>
+                <p class="mb-6">Un sistema operativo saludable es clave para un buen rendimiento. Estas herramientas de Windows ayudan a mantener la integridad de los datos y la velocidad del disco.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-3">Checklist de Mantenimiento</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item" data-task="mantenimiento-1" data-original-icon="fa-terminal"><i class="icon fas fa-terminal"></i><span>Ejecutar CHKDSK (Check Disk) para buscar y reparar errores en el disco. (Comando: `chkdsk /f /r`).</span></li>
+                            <li class="checklist-item" data-task="mantenimiento-2" data-original-icon="fa-hdd"><i class="icon fas fa-hdd"></i><span>Ejecutar Defrag/Optimizar Unidades para reorganizar los datos en discos duros (HDD) y optimizar SSDs.</span></li>
+                            <li class="checklist-item" data-task="mantenimiento-3" data-original-icon="fa-trash-alt"><i class="icon fas fa-trash-alt"></i><span>Usar el Liberador de espacio en disco para eliminar archivos temporales.</span></li>
+                             <li class="checklist-item" data-task="mantenimiento-4" data-original-icon="fa-sync-alt"><i class="icon fas fa-sync-alt"></i><span>Mantener el sistema operativo y las aplicaciones actualizadas.</span></li>
+                        </ul>
+                    </div>
+                    <div id="mantenimientoCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#mantenimientoCarousel" data-bs-slide-to="0" class="active"></button>
+                            <button type="button" data-bs-target="#mantenimientoCarousel" data-bs-slide-to="1"></button>
+                            <button type="button" data-bs-target="#mantenimientoCarousel" data-bs-slide-to="2"></button>
+                            <button type="button" data-bs-target="#mantenimientoCarousel" data-bs-slide-to="3"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-broom text-5xl mb-4"></i>
+                                    <span>Herramienta "Optimizar Unidades" de Windows</span>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-terminal text-5xl mb-4"></i>
+                                    <span>Ejecutando CHKDSK desde línea de comandos</span>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-trash-alt text-5xl mb-4"></i>
+                                    <span>Liberador de espacio en disco</span>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <div class="img-placeholder h-64">
+                                    <i class="fas fa-sync-alt text-5xl mb-4"></i>
+                                    <span>Windows Update para mantener el sistema actualizado</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#mantenimientoCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#mantenimientoCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Comandos avanzados de mantenimiento -->
+                <div class="mt-8 p-4 bg-green-900 border-l-4 border-green-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-code text-green-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-green-300 mb-2">💻 Comandos Avanzados de Mantenimiento</h4>
+                            <p class="text-green-100 mb-3 font-medium">Herramientas de línea de comandos que todo técnico debe conocer:</p>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-green-200 mb-2 font-medium">🔧 Reparación del Sistema:</p>
+                                    <ul class="text-sm text-green-200 space-y-2 font-mono">
+                                        <li>📟 <strong>sfc /scannow</strong> - Repara archivos del sistema corruptos</li>
+                                        <li>📟 <strong>DISM /Online /Cleanup-Image /RestoreHealth</strong> - Repara imagen de Windows</li>
+                                        <li>📟 <strong>chkdsk C: /f /r</strong> - Repara errores de disco (requiere reinicio)</li>
+                                        <li>📟 <strong>bootrec /fixmbr /fixboot</strong> - Repara sector de arranque</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="text-green-200 mb-2 font-medium">🧹 Limpieza y Optimización:</p>
+                                    <ul class="text-sm text-green-200 space-y-2 font-mono">
+                                        <li>📟 <strong>cleanmgr</strong> - Liberador de espacio en disco GUI</li>
+                                        <li>📟 <strong>temp</strong> - Abre carpeta de archivos temporales</li>
+                                        <li>📟 <strong>%temp%</strong> - Carpeta temp del usuario actual</li>
+                                        <li>📟 <strong>powercfg /h off</strong> - Desactiva hibernación (libera GB)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diferencias HDD vs SSD en mantenimiento -->
+                <div class="mt-6 p-4 bg-blue-900 border-l-4 border-blue-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-hdd text-blue-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-blue-300 mb-2">💾 HDD vs SSD: Mantenimiento Diferenciado</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div class="bg-blue-800 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-blue-200 mb-2 flex items-center">
+                                        <i class="fas fa-hdd text-blue-400 mr-2"></i>Discos Duros (HDD)
+                                    </h5>
+                                    <ul class="text-sm text-blue-100 space-y-2">
+                                        <li>✅ <strong>SÍ desfragmentar</strong> - Reagrupa datos dispersos</li>
+                                        <li>✅ <strong>CHKDSK útil</strong> - Detecta sectores dañados físicos</li>
+                                        <li>✅ <strong>Mantenimiento semanal</strong> - Los HDD necesitan más atención</li>
+                                        <li>⚠️ <strong>Temperatura crítica</strong> - Monitorear con CrystalDiskInfo</li>
+                                        <li>📊 <strong>S.M.A.R.T.</strong> - Indicadores de salud importantes</li>
+                                    </ul>
+                                </div>
+                                <div class="bg-cyan-800 p-4 rounded-lg">
+                                    <h5 class="font-semibold text-cyan-200 mb-2 flex items-center">
+                                        <i class="fas fa-microchip text-cyan-400 mr-2"></i>Discos Sólidos (SSD)
+                                    </h5>
+                                    <ul class="text-sm text-cyan-100 space-y-2">
+                                        <li>❌ <strong>NO desfragmentar</strong> - Reduce vida útil innecesariamente</li>
+                                        <li>✅ <strong>TRIM habilitado</strong> - Limpieza automática de bloques</li>
+                                        <li>✅ <strong>Optimización mensual</strong> - Windows ejecuta TRIM</li>
+                                        <li>📈 <strong>Ciclos de escritura</strong> - TBW (Terabytes Written)</li>
+                                        <li>🔥 <strong>Menos calor</strong> - Pero igual monitorear temperatura</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Herramientas profesionales adicionales -->
+                <div class="mt-6 p-4 bg-purple-900 border-l-4 border-purple-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-toolbox text-purple-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-purple-300 mb-2">🛠️ Herramientas Profesionales Adicionales</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-purple-200 mb-2 font-medium">🆓 Herramientas Gratuitas:</p>
+                                    <ul class="text-sm text-purple-200 space-y-2">
+                                        <li>💎 <strong>CrystalDiskInfo</strong> - Estado de salud de discos</li>
+                                        <li>🔍 <strong>HWiNFO64</strong> - Monitoreo completo del sistema</li>
+                                        <li>🧼 <strong>CCleaner</strong> - Limpieza avanzada (usar con cuidado)</li>
+                                        <li>🔧 <strong>Malwarebytes</strong> - Detección de malware</li>
+                                        <li>📊 <strong>Process Monitor</strong> - Diagnóstico avanzado</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="text-purple-200 mb-2 font-medium">⚡ Técnicas Profesionales:</p>
+                                    <ul class="text-sm text-purple-200 space-y-2">
+                                        <li>🔄 <strong>Puntos de restauración</strong> - Crear antes de cambios importantes</li>
+                                        <li>🗂️ <strong>Limpieza de registro</strong> - Solo con herramientas confiables</li>
+                                        <li>📈 <strong>Monitor de rendimiento</strong> - perfmon.msc para análisis</li>
+                                        <li>🎯 <strong>Servicios innecesarios</strong> - Deshabilitar con services.msc</li>
+                                        <li>🚀 <strong>Programa de inicio</strong> - msconfig o Task Manager</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Síntomas y diagnóstico de problemas -->
+                <div class="mt-6 p-4 bg-yellow-900 border-l-4 border-yellow-500 rounded-r-lg">
+                    <div class="flex items-start">
+                        <i class="fas fa-stethoscope text-yellow-400 text-xl mr-3 mt-1"></i>
+                        <div>
+                            <h4 class="text-lg font-semibold text-yellow-300 mb-2">🩺 Síntomas y Diagnóstico de Problemas</h4>
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-yellow-100 mb-3 font-medium">⚠️ Señales de Alarma:</p>
+                                    <ul class="text-sm text-yellow-200 space-y-2">
+                                        <li>🐌 <strong>Lentitud extrema:</strong> Disco al 100%, RAM insuficiente, malware</li>
+                                        <li>💔 <strong>Errores frecuentes:</strong> Archivos corruptos, registro dañado</li>
+                                        <li>🔄 <strong>Reinicios espontáneos:</strong> Sobrecalentamiento, PSU, RAM</li>
+                                        <li>🔵 <strong>Pantallas azules:</strong> Drivers, hardware defectuoso</li>
+                                        <li>❄️ <strong>Cuelgues del sistema:</strong> Conflictos software, hardware</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p class="text-yellow-100 mb-3 font-medium">🔍 Plan de Diagnóstico:</p>
+                                    <ol class="text-sm text-yellow-200 space-y-2 list-decimal list-inside">
+                                        <li><strong>Event Viewer</strong> - Revisar logs de errores del sistema</li>
+                                        <li><strong>Task Manager</strong> - Identificar procesos problemáticos</li>
+                                        <li><strong>Resource Monitor</strong> - Analizar uso de recursos detallado</li>
+                                        <li><strong>Modo seguro</strong> - Aislar problemas de software</li>
+                                        <li><strong>Herramientas de diagnóstico</strong> - MemTest, CrystalDiskInfo</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cuadro educativo sobre sistema operativo -->
+                <div class="mt-8">
+                    <div class="bg-gradient-to-r from-teal-900 to-green-900 rounded-lg p-6 border border-teal-700">
+                        <h3 class="text-xl font-bold text-teal-300 mb-4 flex items-center">
+                            <i class="fas fa-cogs mr-3"></i>Cuadro Educativo: Anatomía del Sistema Operativo
+                        </h3>
+                        
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div class="bg-teal-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-teal-200 mb-2 flex items-center">
+                                        <i class="fas fa-database text-teal-400 mr-2"></i>El Registro de Windows
+                                    </h4>
+                                    <p class="text-sm text-teal-100">Base de datos jerárquica que almacena <strong>configuraciones del sistema y aplicaciones</strong>. Daños aquí causan errores graves. Siempre hacer backup antes de editar con regedit.</p>
+                                </div>
+                                
+                                <div class="bg-green-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-green-200 mb-2 flex items-center">
+                                        <i class="fas fa-folder-tree text-green-400 mr-2"></i>Sistema de Archivos
+                                    </h4>
+                                    <p class="text-sm text-green-100"><strong>NTFS</strong> es el estándar moderno - soporta archivos >4GB, permisos, compresión. <strong>FAT32</strong> es compatible pero limitado. El MFT (Master File Table) es crítico.</p>
+                                </div>
+                                
+                                <div class="bg-cyan-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-cyan-200 mb-2 flex items-center">
+                                        <i class="fas fa-memory text-cyan-400 mr-2"></i>Memoria Virtual
+                                    </h4>
+                                    <p class="text-sm text-cyan-100">Combina <strong>RAM física + archivo de paginación</strong>. Cuando la RAM se llena, datos se mueven al disco (más lento). Un pagefile bien configurado evita cuelgues.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="bg-blue-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-blue-200 mb-2 flex items-center">
+                                        <i class="fas fa-shield-check text-blue-400 mr-2"></i>Integridad del Sistema
+                                    </h4>
+                                    <p class="text-sm text-blue-100"><strong>WRP (Windows Resource Protection)</strong> protege archivos críticos. SFC usa checksums para detectar corrupción. DISM repara la imagen base de Windows.</p>
+                                </div>
+                                
+                                <div class="bg-indigo-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-indigo-200 mb-2 flex items-center">
+                                        <i class="fas fa-rocket text-indigo-400 mr-2"></i>Optimización Automática
+                                    </h4>
+                                    <p class="text-sm text-indigo-100">Windows <strong>Task Scheduler</strong> ejecuta mantenimiento automático: desfragmentación, TRIM, actualizaciones. Revisar en "Control Panel > System Security > Security and Maintenance".</p>
+                                </div>
+                                
+                                <div class="bg-purple-800 p-4 rounded-lg">
+                                    <h4 class="font-semibold text-purple-200 mb-2 flex items-center">
+                                        <i class="fas fa-chart-line text-purple-400 mr-2"></i>Monitoreo de Rendimiento
+                                    </h4>
+                                    <p class="text-sm text-purple-100"><strong>Performance Monitor</strong> registra contadores de CPU, RAM, disco, red. Útil para identificar cuellos de botella y tendencias de uso a largo plazo.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-6 grid md:grid-cols-3 gap-4">
+                            <div class="p-4 bg-gradient-to-r from-green-800 to-teal-800 rounded-lg border-2 border-green-600">
+                                <h5 class="font-semibold text-green-200 mb-2 flex items-center">
+                                    <i class="fas fa-calendar-check text-green-400 mr-2"></i>Mantenimiento Preventivo
+                                </h5>
+                                <p class="text-xs text-green-100">Rutina semanal/mensual evita problemas mayores. Es más barato prevenir que reparar.</p>
+                            </div>
+                            
+                            <div class="p-4 bg-gradient-to-r from-blue-800 to-cyan-800 rounded-lg border-2 border-blue-600">
+                                <h5 class="font-semibold text-blue-200 mb-2 flex items-center">
+                                    <i class="fas fa-wrench text-blue-400 mr-2"></i>Mantenimiento Correctivo
+                                </h5>
+                                <p class="text-xs text-blue-100">Reparar problemas después de que ocurren. Más costoso en tiempo y potencial pérdida de datos.</p>
+                            </div>
+
+                            <div class="p-4 bg-gradient-to-r from-purple-800 to-pink-800 rounded-lg border-2 border-purple-600">
+                                <h5 class="font-semibold text-purple-200 mb-2 flex items-center">
+                                    <i class="fas fa-brain text-purple-400 mr-2"></i>Mantenimiento Predictivo
+                                </h5>
+                                <p class="text-xs text-purple-100">Monitoreo continuo para predecir fallas. S.M.A.R.T., temperaturas, logs de eventos.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de progreso y consejos adicionales -->
+        <section class="mt-16 mb-8">
+            <div class="card-custom p-6 md:p-8 text-center">
+                <h2 class="text-2xl mb-4"><i class="fas fa-trophy text-yellow-400 mr-3"></i>¡Excelente Trabajo!</h2>
+                <p class="mb-6">Has completado la guía de mantenimiento de PC. Recuerda que la práctica hace al maestro.</p>
+                
+                <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                    <button id="resetProgress" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition duration-300">
+                        <i class="fas fa-undo mr-2"></i>Reiniciar Progreso
+                    </button>
+                    
+                    <div class="text-left">
+                        <h3 class="text-lg font-semibold mb-2">Consejos importantes:</h3>
+                        <ul class="text-sm space-y-1">
+                            <li>• Siempre documenta tus configuraciones antes de hacer cambios</li>
+                            <li>• Mantén una copia de seguridad de los drivers funcionando</li>
+                            <li>• Nunca fuerces un componente; si no entra fácilmente, algo está mal</li>
+                            <li>• La paciencia es tu mejor herramienta</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <footer class="bg-gray-800 text-center p-6 mt-8 border-t border-gray-700">
+        <div class="container mx-auto">
+            <p class="text-gray-400 mb-2">Lección interactiva creada para técnicos en formación</p>
+            <p class="text-sm text-gray-500">Versión 2.0 - Incluye carruseles interactivos y seguimiento de progreso</p>
+            <div class="mt-4 flex justify-center space-x-6">
+                <span class="text-xs text-gray-600"><i class="fas fa-check-circle mr-1"></i>Checklists interactivos</span>
+                <span class="text-xs text-gray-600"><i class="fas fa-images mr-1"></i>Carruseles de imágenes</span>
+                <span class="text-xs text-gray-600"><i class="fas fa-mobile-alt mr-1"></i>Diseño responsivo</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS (necesario para los carruseles) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript consolidado para toda la funcionalidad -->
+    <script>
+        // Variables globales
+        let navLinks, progressBar, progressText, sections;
+
+        // Funcionalidad completa de la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // console.log('=== INICIANDO APLICACIÓN ===');
+            
+            // ========================================
+            // 1. INICIALIZACIÓN DE ELEMENTOS
+            // ========================================
+            navLinks = document.querySelectorAll('.nav-link-custom');
+            progressBar = document.querySelector('.progress-bar-bottom');
+            progressText = document.getElementById('progressText');
+            sections = document.querySelectorAll('section[id]');
+            
+            // console.log('Elementos encontrados:', {
+            //     navLinks: navLinks.length,
+            //     sections: sections.length,
+            //     progressBar: !!progressBar,
+            //     progressText: !!progressText
+            // });
+            
+            // ========================================
+            // 2. FUNCIONES AUXILIARES
+            // ========================================
+            
+            // Función para actualizar el progreso
+            function updateProgress() {
+                const checklistItems = document.querySelectorAll('.checklist-item');
+                const completedItems = document.querySelectorAll('.checklist-item.completed');
+                const progress = checklistItems.length > 0 ? Math.round((completedItems.length / checklistItems.length) * 100) : 0;
+                
+                if (progressBar) {
+                    progressBar.style.width = progress + '%';
+                }
+                if (progressText) {
+                    progressText.textContent = progress + '%';
+                }
+            }
+            
+            // Función para activar el link correspondiente a la sección visible
+            function setActiveLink() {
+                let current = '';
+                const scrollPosition = window.scrollY + 100; // Offset for navbar height
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-section') === current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            // ========================================
+            // 3. VERIFICACIÓN DE SECCIONES
+            // ========================================
+            
+            // console.log('🔍 Verificando secciones disponibles:');
+            const availableSections = [];
+            sections.forEach(section => {
+                availableSections.push(section.id);
+                // console.log(`  ✓ Sección encontrada: ${section.id}`);
+            });
+
+            // Verificar que todos los enlaces del navbar tengan secciones correspondientes
+            // console.log('🔍 Verificando enlaces del navbar:');
+            navLinks.forEach((link, index) => {
+                const href = link.getAttribute('href');
+                const targetId = href ? href.substring(1) : null;
+                const exists = targetId && document.getElementById(targetId);
+                // console.log(`  Link ${index}: ${href} → ${exists ? '✅' : '❌'} ${exists ? 'OK' : 'NO ENCONTRADO'}`);
+            });
+
+            // ========================================
+            // 4. CONFIGURACIÓN DEL NAVBAR
+            // ========================================
+            
+            // console.log('⚙️ Configurando navbar...');
+            navLinks.forEach((link, index) => {
+                const href = link.getAttribute('href');
+                
+                // Marcar el link como visible en el log
+                // console.log(`🔗 Configurando link ${index}: ${href} - Visible: ${window.getComputedStyle(link).display !== 'none'}`);
+                
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // console.log('👆 CLICK en navbar link:', href);
+                    
+                    if (!href || href === '#' || href.length <= 1) {
+                        // console.warn('❌ Href inválido:', href);
+                        return;
+                    }
+                    
+                    const targetId = href.substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    // console.log(`🎯 Navegando a sección: ${targetId}`);
+                    
+                    if (targetSection) {
+                        // console.log('✅ Sección encontrada, realizando scroll...');
+                        
+                        // Remover clase activa de todos los links
+                        navLinks.forEach(l => l.classList.remove('active'));
+                        // Agregar clase activa al link clickeado
+                        this.classList.add('active');
+                        
+                        const navbar = document.querySelector('nav');
+                        const navbarHeight = navbar ? navbar.offsetHeight : 80;
+                        const targetPosition = targetSection.offsetTop - navbarHeight - 20;
+                        
+                        // console.log(`📍 Posición de scroll: ${targetPosition}`);
+                        
+                        // Scroll suave
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Cerrar navbar móvil si está abierto
+                        const navbarCollapse = document.querySelector('.navbar-collapse');
+                        if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                            setTimeout(() => {
+                                try {
+                                    if (window.bootstrap && window.bootstrap.Collapse) {
+                                        const bsCollapse = new window.bootstrap.Collapse(navbarCollapse);
+                                        bsCollapse.hide();
+                                    } else {
+                                        navbarCollapse.classList.remove('show');
+                                    }
+                                } catch (error) {
+                                    // console.log('⚠️ Error cerrando navbar móvil:', error);
+                                    navbarCollapse.classList.remove('show');
+                                }
+                            }, 100);
+                        }
+                        
+                    } else {
+                        // console.error('❌ ERROR: No se encontró la sección:', targetId);
+                        // console.log('📋 Secciones disponibles:', availableSections);
+                    }
+                });
+
+                // Agregar evento hover para debug
+                // link.addEventListener('mouseenter', function() {
+                //     console.log('🖱️ Hover en link:', href);
+                // });
+            });
+            
+                         // ========================================
+             // 5. CONFIGURACIÓN DE CHECKLISTS
+             // ========================================
+            
+            // console.log('Configurando checklists...');
+            const checklistItems = document.querySelectorAll('.checklist-item');
+            // console.log(`Elementos de checklist encontrados: ${checklistItems.length}`);
+
+            checklistItems.forEach((item, index) => {
+                const taskId = item.getAttribute('data-task');
+                
+                // Cargar estado guardado
+                if (localStorage.getItem(taskId) === 'completed') {
+                    item.classList.add('completed');
+                    const icon = item.querySelector('.icon');
+                    icon.classList.remove('fa-power-off', 'fa-hand-paper', 'fa-bolt', 'fa-desktop', 'fa-tools', 'fa-box-open', 'fa-plug', 'fa-memory', 'fa-hdd', 'fa-microchip', 'fa-download', 'fa-toggle-on', 'fa-database', 'fa-wind', 'fa-box', 'fa-plug-circle-check', 'fa-toggle-off', 'fa-paperclip', 'fa-tachometer-alt', 'fa-gamepad', 'fa-volume-up', 'fa-network-wired', 'fa-terminal', 'fa-trash-alt', 'fa-sync-alt');
+                    icon.classList.add('fa-check-circle');
+                }
+
+                // Agregar event listener
+                item.addEventListener('click', function () {
+                    this.classList.toggle('completed');
+                    const icon = this.querySelector('.icon');
+                    
+                    if (this.classList.contains('completed')) {
+                        localStorage.setItem(taskId, 'completed');
+                        icon.className = icon.className.replace(/\bfa-[a-z-]+\b/g, '');
+                        icon.classList.add('fas', 'fa-check-circle');
+                    } else {
+                        localStorage.removeItem(taskId);
+                        const originalIcon = this.getAttribute('data-original-icon');
+                        if (originalIcon) {
+                            icon.className = 'icon fas ' + originalIcon;
+                        } else {
+                            icon.className = 'icon fas fa-circle';
+                        }
+                    }
+                    
+                    // Actualizar progreso inmediatamente
+                    updateProgress();
+                });
+            });
+            
+                         // ========================================
+             // 6. OTROS EVENT LISTENERS
+             // ========================================
+            
+            // Scroll detection
+            window.addEventListener('scroll', function() {
+                setActiveLink();
+                updateProgress();
+            });
+            
+            // Botón de reset
+            const resetButton = document.getElementById('resetProgress');
+            if (resetButton) {
+                resetButton.addEventListener('click', function() {
+                    if (confirm('¿Estás seguro de que quieres reiniciar todo tu progreso? Esta acción no se puede deshacer.')) {
+                        Object.keys(localStorage).forEach(key => {
+                            if (key.includes('seguridad-') || key.includes('armado-') || key.includes('desarmado-') || 
+                                key.includes('alimentacion-') || key.includes('drivers-') || key.includes('mantenimiento-')) {
+                                localStorage.removeItem(key);
+                            }
+                        });
+                        location.reload();
+                    }
+                });
+            }
+            
+            // Smooth scroll para otros enlaces
+            document.querySelectorAll('a[href^="#"]:not(.nav-link-custom)').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    if (href && href.length > 1) {
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            target.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Observer para cambios en checklist
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        updateProgress();
+                    }
+                });
+            });
+            
+            checklistItems.forEach(item => {
+                observer.observe(item, { attributes: true, attributeFilter: ['class'] });
+            });
+            
+                         // ========================================
+             // 7. INICIALIZACIÓN FINAL
+             // ========================================
+            
+                         updateProgress();
+             setActiveLink();
+             
+             // ========================================
+             // 8. TEST FINAL DE FUNCIONALIDAD
+             // ========================================
+             
+             setTimeout(() => {
+                //  console.log('🧪 EJECUTANDO TESTS DE FUNCIONALIDAD...');
+                 
+                 // Test 1: Verificar visibilidad de links del navbar
+                 let visibleLinks = 0;
+                 navLinks.forEach((link, index) => {
+                     const computedStyle = window.getComputedStyle(link);
+                     const isVisible = computedStyle.display !== 'none' && computedStyle.visibility !== 'hidden' && computedStyle.opacity !== '0';
+                     if (isVisible) visibleLinks++;
+                    //  console.log(`  Link ${index}: ${isVisible ? '✅ Visible' : '❌ Oculto'} - Display: ${computedStyle.display}`);
+                 });
+                 
+                //  console.log(`📊 RESULTADO: ${visibleLinks}/${navLinks.length} links visibles`);
+                 
+                 // Test 2: Verificar que todas las secciones tengan su link correspondiente
+                 let matchedSections = 0;
+                 sections.forEach(section => {
+                     const sectionId = section.id;
+                     const correspondingLink = document.querySelector(`a[href="#${sectionId}"]`);
+                     if (correspondingLink) matchedSections++;
+                    //  console.log(`  Sección "${sectionId}": ${correspondingLink ? '✅ Tiene link' : '❌ Sin link'}`);
+                 });
+                 
+                //  console.log(`📊 RESULTADO: ${matchedSections}/${sections.length} secciones con link`);
+                 
+                 // Test 3: Simular click en el primer link para verificar funcionalidad
+                 if (navLinks.length > 0) {
+                    //  console.log('🔬 TEST DE CLICK: Simulando click en primer link...');
+                     const firstLink = navLinks[0];
+                     const href = firstLink.getAttribute('href');
+                    //  console.log(`  Preparando click en: ${href}`);
+                     
+                     // No ejecutar el click real, solo verificar que esté configurado
+                     const hasClickHandler = firstLink.onclick !== null || firstLink.addEventListener;
+                    //  console.log(`  Handler de click: ${hasClickHandler ? '✅ Configurado' : '❌ Faltante'}`);
+                 }
+                 
+                //  console.log('🎯 DIAGNÓSTICO FINAL:');
+                //  console.log(`  - Links del navbar: ${visibleLinks > 0 ? '✅ VISIBLES' : '❌ OCULTOS'}`);
+                //  console.log(`  - Secciones disponibles: ${sections.length > 0 ? '✅ OK' : '❌ FALTANTES'}`);
+                //  console.log(`  - Coincidencias link-sección: ${matchedSections === sections.length ? '✅ COMPLETO' : '❌ INCOMPLETO'}`);
+                 
+                //  if (visibleLinks > 0 && matchedSections === sections.length) {
+                //      console.log('🎉 ¡NAVBAR FUNCIONANDO CORRECTAMENTE!');
+                //  } else {
+                //      console.log('⚠️ NAVBAR REQUIERE ATENCIÓN');
+                //  }
+                 
+             }, 500);
+             
+            //  console.log('✅ Aplicación completamente inicializada');
+            //  console.log('=== FIN DE INICIALIZACIÓN ===');
+        });
+    </script>
+
+</body>
+</html>
+
