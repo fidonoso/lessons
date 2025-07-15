@@ -32,4 +32,8 @@ router.get('/lessons/nodejs/guia-jwt', (req, res) => {
 router.get('/lessons/mantenimiento/mantenimiento_pc', (req, res) => {
     res.sendFile(path.join(__dirname, '../', 'public', 'lessons', 'mantenimiento', 'mantenimiento_pc.html'));
 });
+
+router.get('/diurno', (req, res) => {
+    res.sendFile(path.join(__dirname, '../', 'public', 'diurno', 'diurno.html'));
+});
 export default router;
